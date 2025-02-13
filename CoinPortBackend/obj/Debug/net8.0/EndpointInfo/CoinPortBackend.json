@@ -1,0 +1,124 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "CoinPortBackend",
+    "version": "1.0"
+  },
+  "paths": {
+    "/coins/portfolio": {
+      "get": {
+        "tags": [
+          "Coin"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Coin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Coin"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Coin"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Coin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/coins/coingecko/current-market": {
+      "get": {
+        "tags": [
+          "Coin"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/coins/portfolio/{id}": {
+      "delete": {
+        "tags": [
+          "Coin"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Coin": {
+        "required": [
+          "coinId",
+          "name",
+          "price",
+          "ticker"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "coinId": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "ticker": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

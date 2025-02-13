@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "3xpEJlo2TKyKXySvc3X/06dkMNW1bA5ZLHkksv40HK8=",
+  "Source": "CoinPortBackend",
+  "BasePath": "_content/CoinPortBackend",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
