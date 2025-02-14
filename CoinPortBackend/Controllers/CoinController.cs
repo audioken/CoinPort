@@ -25,7 +25,6 @@ namespace CoinPortBackend.Controllers
         }
 
         /// API ENDPOINTS ///
-
         // Hämta och visa alla coins som är sparade i portfolion
         [HttpGet("portfolio")]
         public IActionResult GetPortfolio()
@@ -43,20 +42,18 @@ namespace CoinPortBackend.Controllers
                 _httpClient.DefaultRequestHeaders.Add("x-cg-demo-api-key", _apiKey);
             }
 
-            // Lägg till API-nyckel i header
-            _httpClient.DefaultRequestHeaders.Add("x-cg-demo-api-key", _apiKey);
-
             // Gör ett GET-anrop till CoinGecko API
-            var response = await _httpClient.GetStringAsync("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=false");
+            var response = await _httpClient.GetStringAsync("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false");
 
             // Parsa JSON-svaret och skapa en lista med objekt. JArray är en del av Newtonsoft.Json som används för att hantera JSON
             var coins = JArray.Parse(response).Select(c => new
             {
-                CoinId = c["id"].ToString(),
-                Name = c["name"].ToString(),
-                Ticker = c["symbol"].ToString().ToUpper(),
-                Price = (decimal)c["current_price"],
-                Change24hPercent = Math.Round((decimal)c["price_change_percentage_24h"], 2)
+                CoinId = c["id"]?.ToString() ?? "N/A",
+                Name = c["name"]?.ToString() ?? "Unknown",
+                Ticker = c["symbol"]?.ToString().ToUpper() ?? "N/A",
+                Price = c["current_price"]?.Value<decimal>() ?? 0m,
+                Change24hPercent = Math.Round(c["price_change_percentage_24h"]?.Value<decimal>() ?? 0m, 2),
+                MarketCap = c["market_cap"]?.Value<decimal>() ?? 0m
             });
 
             return Ok(coins); // Returnera en lista med coins

@@ -7,20 +7,12 @@
       "RelativeMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|solutionrelative:controllers\\coincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Migrations\\20250214183657_rollbackTyp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20250214183657_rollbackTyp.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|c:\\users\\kenza\\onedrive\\skrivbord\\newton\\01. kurser\\05. objektorienterad programmering, forts\u00E4ttning\\egna projekt\\coinport\\coinportbackend\\models\\coin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|solutionrelative:models\\coin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Migrations\\20250214113402_addedChangeHoldingsValueToCoinModel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20250214113402_addedChangeHoldingsValueToCoinModel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|c:\\users\\kenza\\onedrive\\skrivbord\\newton\\01. kurser\\05. objektorienterad programmering, forts\u00E4ttning\\egna projekt\\coinport\\coinportbackend\\data\\coindbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|solutionrelative:data\\coindbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|c:\\users\\kenza\\onedrive\\skrivbord\\newton\\01. kurser\\05. objektorienterad programmering, forts\u00E4ttning\\egna projekt\\coinport\\coinportbackend\\migrations\\20250214113719_addedchangeholdingsvaluetocoinmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|solutionrelative:migrations\\20250214113719_addedchangeholdingsvaluetocoinmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 13,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Bookmark",
@@ -74,39 +66,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "20250214113719_addedChangeHoldingsValueToCoinModel.cs",
-              "DocumentMoniker": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Migrations\\20250214113719_addedChangeHoldingsValueToCoinModel.cs",
-              "RelativeDocumentMoniker": "Migrations\\20250214113719_addedChangeHoldingsValueToCoinModel.cs",
-              "ToolTip": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Migrations\\20250214113719_addedChangeHoldingsValueToCoinModel.cs",
-              "RelativeToolTip": "Migrations\\20250214113719_addedChangeHoldingsValueToCoinModel.cs",
+              "DocumentIndex": 1,
+              "Title": "20250214183657_rollbackTyp.cs",
+              "DocumentMoniker": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Migrations\\20250214183657_rollbackTyp.cs",
+              "RelativeDocumentMoniker": "Migrations\\20250214183657_rollbackTyp.cs",
+              "ToolTip": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Migrations\\20250214183657_rollbackTyp.cs",
+              "RelativeToolTip": "Migrations\\20250214183657_rollbackTyp.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-14T11:37:19.331Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "CoinDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Data\\CoinDbContext.cs",
-              "RelativeDocumentMoniker": "Data\\CoinDbContext.cs",
-              "ToolTip": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Data\\CoinDbContext.cs",
-              "RelativeToolTip": "Data\\CoinDbContext.cs",
-              "ViewState": "AgIAAAIAAAAAAAAAAAAmwBAAAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-14T11:34:28.385Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "20250214113402_addedChangeHoldingsValueToCoinModel.cs",
-              "DocumentMoniker": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Migrations\\20250214113402_addedChangeHoldingsValueToCoinModel.cs",
-              "RelativeDocumentMoniker": "Migrations\\20250214113402_addedChangeHoldingsValueToCoinModel.cs",
-              "ToolTip": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Migrations\\20250214113402_addedChangeHoldingsValueToCoinModel.cs",
-              "RelativeToolTip": "Migrations\\20250214113402_addedChangeHoldingsValueToCoinModel.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAmAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-14T11:34:02.266Z"
+              "WhenOpened": "2025-02-14T18:36:57.335Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -116,22 +85,23 @@
               "RelativeDocumentMoniker": "Controllers\\CoinController.cs",
               "ToolTip": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Controllers\\CoinController.cs",
               "RelativeToolTip": "Controllers\\CoinController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACsAAAANAAAAAAAAAA==",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAAADkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-12T18:51:24.274Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Coin.cs",
               "DocumentMoniker": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Models\\Coin.cs",
               "RelativeDocumentMoniker": "Models\\Coin.cs",
               "ToolTip": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Models\\Coin.cs",
               "RelativeToolTip": "Models\\Coin.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-12T18:50:56.072Z"
+              "WhenOpened": "2025-02-12T18:50:56.072Z",
+              "EditorCaption": ""
             }
           ]
         }
