@@ -68,6 +68,23 @@ namespace CoinPortBackend.Controllers
             return Ok();
         }
 
+        // Uppdatera holdings för ett coin i portfolion
+        [HttpPut("portfolio/{id}")]
+        public async Task<IActionResult> UpdateCoin(int id, [FromBody] Coin updatedCoin)
+        {
+            var coin = await _context.Coins.FindAsync(id);
+            if (coin == null)
+            {
+                return NotFound();
+            }
+
+            coin.Holdings = updatedCoin.Holdings;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         // Ta bort en coin från portfolio
         [HttpDelete("portfolio/{id}")]
         public IActionResult RemoveFromPortfolio(int id)

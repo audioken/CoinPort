@@ -18,7 +18,7 @@ const coins_tbody = document.getElementById('coins-tbody');
 
 // Starta sidan och hämta data från CoinGecko och API
 function start() {
-    loadCoinGeckoCoins().then(loadCoins);
+    loadCoinGeckoCoins().then(loadPortfolioCoins);
 }
 
 // Hämta senaste marknadsdata för coins från CoinGecko och fyll i CoinGecko-tabellen
@@ -45,13 +45,10 @@ async function loadCoinGeckoCoins() {
     
         const tickerCell = document.createElement('td');
         tickerCell.textContent = coin.ticker;
-    
-        // const priceCell = document.createElement('td');
-        // priceCell.textContent = '$' + parseFloat(coin.price).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 
-        // Format the price dynamically based on value
+        // Formatera priset med hjälp av formatPrice-funktionen
         const priceCell = document.createElement('td');
-        priceCell.textContent = formatPrice(parseFloat(coin.price)); // Format price
+        priceCell.textContent = formatPrice(parseFloat(coin.price));
         
         const change24hCell = document.createElement('td');
         change24hCell.textContent = parseFloat(coin.change24hPercent).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
@@ -62,7 +59,7 @@ async function loadCoinGeckoCoins() {
         // Skapa en cell för knappen som lägger till coinet i portfolion
         const actionCell = document.createElement('td');
         const addButton = document.createElement('button'); // Skapa knappen
-        addButton.textContent = 'Add to Portfolio'; // Text på knappen
+        addButton.textContent = '➕'; // Text på knappen
     
         // Lägg till en eventlistener på knappen som anropar funktionen för att lägga till coinet i portfolion
         addButton.onclick = () => addCoinToPortfolio(coin.coinId, coin.name, coin.ticker, coin.price, coin.change24hPercent);
@@ -76,7 +73,7 @@ async function loadCoinGeckoCoins() {
 }
 
 // Hämta coins från API och fyll i portfolio-tabellen
-async function loadCoins() {
+async function loadPortfolioCoins() {
     const url = api + '/coins/portfolio';  // Hämta fullständig URL
     const response = await fetch(url); // Hämta data från URL
     const coins = await response.json(); // Konvertera data till JSON
@@ -118,18 +115,31 @@ async function loadCoins() {
         holdingsCell.textContent = coin.holdings; 
 
         const valueCell = document.createElement('td');
-        valueCell.textContent = '$' + (updatedPrice * coin.holdings).toFixed(0);
+        valueCell.textContent = formatPrice(parseFloat(updatedPrice * coin.holdings)); 
 
         // Skapa en cell för knappen som tar bort coinet från portfolion
         const actionCell = document.createElement('td');
-        const removeButton = document.createElement('button'); // Skapa knappen
-        removeButton.textContent = 'Remove from Portfolio'; // Text på knappen
+
+        const removeButton = document.createElement('button');
+        removeButton.textContent = '❌';
+
+        const coinAmountInput = document.createElement('input');
+        coinAmountInput.type = 'number';
+        coinAmountInput.min = '0';
+        coinAmountInput.step = 'any';
+        coinAmountInput.placeholder = 'Amount';
+
+        const addHoldingsButton = document.createElement('button'); 
+        addHoldingsButton.textContent = 'Add To Holdings';
 
         // Lägg till en eventlistener på knappen som anropar funktionen för att ta bort coinet från portfolion
         removeButton.onclick = () => removeCoinFromPortfolio(coin.id); 
 
+        // const coinAmountInput = document.getElementById('coinAmountInput');
+        addHoldingsButton.onclick = () => addToHoldings(coin.id, coinAmountInput, coin.holdings);
+
         // Lägg till alla celler i raden och raden i tbody samt knappen i actionCell
-        actionCell.appendChild(removeButton);
+        actionCell.append(coinAmountInput, addHoldingsButton, removeButton);
         row.append(nameCell, tickerCell, priceCell, change24hCell, holdingsCell, valueCell, actionCell);
         coins_tbody.appendChild(row);
     });
@@ -155,7 +165,7 @@ async function addCoinToPortfolio(coinId, name, ticker, price, change24hPercent)
 
     // Om requesten lyckades, ladda om coins
     if (response.ok) {
-        loadCoins();
+        loadPortfolioCoins();
     } else {
         alert('Failed to add coin!');
     }
@@ -172,12 +182,48 @@ async function removeCoinFromPortfolio(coinId) {
 
     // Om requesten lyckades, ladda om coins
     if (response.ok) {
-        loadCoins();
+        loadPortfolioCoins();
     } else {
         alert('Failed to remove coin!');
     }
 }
 
+async function addToHoldings(coinId, coinAmountInput, currentHoldings) {
+    const additionalHoldings = parseFloat(coinAmountInput.value);
+    if (isNaN(additionalHoldings) || additionalHoldings <= 0) {
+        alert('Ange ett giltigt värde för holdings');
+        return;
+    }
+
+    const newHoldings = currentHoldings + additionalHoldings;
+
+    // Hämta coin från portfolio för att få hela objektet
+    const urlGet = `${api}/coins/portfolio`;
+    const responseGet = await fetch(urlGet);
+    const coins = await responseGet.json();
+    const coin = coins.find(c => c.id === coinId);
+
+    if (!coin) {
+        alert('Coin hittades inte');
+        return;
+    }
+
+    // Uppdatera holdings
+    coin.holdings = newHoldings;
+
+    const urlPut = `${api}/coins/portfolio/${coinId}`;
+    const responsePut = await fetch(urlPut, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(coin)
+    });
+
+    if (responsePut.ok) {
+        loadPortfolioCoins();
+    } else {
+        alert('Kunde inte uppdatera holdings');
+    }
+}
 
 // Funktion för att filtrera coins i CoinGecko-tabellen baserat på användarens sökterm
 function searchCoin() {
@@ -244,7 +290,7 @@ searchCoinInput.addEventListener('keyup', searchCoin);
 
 // Uppdaterar tabellerna
 btnRefresh.addEventListener('click', () => {
-    loadCoinGeckoCoins().then(loadCoins);
+    loadCoinGeckoCoins().then(loadPortfolioCoins);
 });
 
 // Körs när sidan laddas
