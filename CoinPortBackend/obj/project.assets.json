@@ -4492,11 +4492,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, fortsättning\\_Lektioner & Övningar\\CoinPortBackend\\CoinPortBackend.csproj",
+      "projectUniqueName": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, fortsättning\\Egna projekt\\CoinPort\\CoinPortBackend\\CoinPortBackend.csproj",
       "projectName": "CoinPortBackend",
-      "projectPath": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, fortsättning\\_Lektioner & Övningar\\CoinPortBackend\\CoinPortBackend.csproj",
+      "projectPath": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, fortsättning\\Egna projekt\\CoinPort\\CoinPortBackend\\CoinPortBackend.csproj",
       "packagesPath": "C:\\Users\\kenza\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, fortsättning\\_Lektioner & Övningar\\CoinPortBackend\\obj\\",
+      "outputPath": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, fortsättning\\Egna projekt\\CoinPort\\CoinPortBackend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -19,7 +19,9 @@ namespace CoinPortBackend.Models
         [MaxLength(50)]
         public string Ticker { get; set; }
 
-        [Required]
         public decimal Price { get; set; }
+        public decimal Change24hPercent { get; set; } = 0;
+        public decimal Holdings { get; set; } = 0;
+        public decimal Value { get; set; } = 0;
     }
 }

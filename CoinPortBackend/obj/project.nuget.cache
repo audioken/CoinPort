@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "f/d1U+tm/ng=",
+  "dgSpecHash": "NUpe7lc9zuc=",
   "success": true,
-  "projectFilePath": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, fortsättning\\_Lektioner & Övningar\\CoinPortBackend\\CoinPortBackend.csproj",
+  "projectFilePath": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, fortsättning\\Egna projekt\\CoinPort\\CoinPortBackend\\CoinPortBackend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\kenza\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\kenza\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

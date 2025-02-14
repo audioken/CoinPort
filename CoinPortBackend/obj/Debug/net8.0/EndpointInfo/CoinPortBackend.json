@@ -88,7 +88,6 @@
         "required": [
           "coinId",
           "name",
-          "price",
           "ticker"
         ],
         "type": "object",
@@ -113,6 +112,18 @@
             "type": "string"
           },
           "price": {
+            "type": "number",
+            "format": "double"
+          },
+          "change24hPercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "holdings": {
+            "type": "number",
+            "format": "double"
+          },
+          "value": {
             "type": "number",
             "format": "double"
           }

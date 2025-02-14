@@ -16,6 +16,18 @@ namespace CoinPortBackend.Data
             modelBuilder.Entity<Coin>()
                 .Property(c => c.Price)
                 .HasPrecision(18, 4);
+
+            modelBuilder.Entity<Coin>()
+                .Property(c => c.Change24hPercent)
+                .HasPrecision(18, 4);
+
+            modelBuilder.Entity<Coin>()
+                .Property(c => c.Holdings)
+                .HasPrecision(18, 4);
+
+            modelBuilder.Entity<Coin>()
+                .Property(c => c.Value)
+                .HasPrecision(18, 4);
         }
     }
 }

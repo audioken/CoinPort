@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <script src="main.js" defer></script>
     <title>CoinPort</title>
 </head>
 <body>
@@ -13,12 +12,20 @@
     </header>
 
     <main>
+        <h2>Portfolio</h2>
+
+        <button id="btnRefresh">Refresh</button>
+
+
         <table id="coins-table" style="border: 1px solid black;">
           <thead>
             <tr>
               <th>Name</th>
               <th>Ticker</th>
               <th>Price</th>
+              <th>24h Change</th>
+              <th>Holdings</th>
+              <th>Value</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -33,6 +40,7 @@
               <th>Name</th>
               <th>Ticker</th>
               <th>Price</th>
+              <th>24h Change</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -41,6 +49,6 @@
           </tbody>
         </table>
       </main>
-      
+    <script src="main.js" defer></script>
 </body>
 </html>
