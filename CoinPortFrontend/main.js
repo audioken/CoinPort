@@ -7,7 +7,7 @@ let coinGeckoData = {}; // Nollställ minnet
 // Hämta element från HTML
 let btnRefresh = document.getElementById('btnRefresh'); // Hämta knappen för att uppdatera tabellerna
 
-const searchCoinInput = document.getElementById('searchCoinInput');
+const inputSearchCoin = document.getElementById('inputSearchCoin');
 
 // Hämta tbody-elementet från coingecko-tabellen i HTML
 const coingecko_tbody = document.getElementById('coingecko-tbody');
@@ -155,7 +155,10 @@ async function loadPortfolioCoins() {
         btnRemoveCoinFromPortfolio.classList.add('btnRemove');
         btnRemoveCoinFromPortfolio.textContent = '❌';
 
-        // Visa eller döljer info om vad knapparna gör
+        // Visa eller döljer info om vad de olika elementen gör
+        inputAmount.addEventListener('mouseover', showInfo);
+        inputAmount.addEventListener('mouseout', hideInfo);
+
         btnIncreaseHolding.addEventListener('mouseover', showInfo); 
         btnIncreaseHolding.addEventListener('mouseout', hideInfo);
 
@@ -300,7 +303,7 @@ async function adjustHoldings(coinId, coinAmountInput, currentHoldings, isAdd) {
 
 // Funktion för att filtrera coins i CoinGecko-tabellen baserat på användarens sökterm
 function searchCoin() {
-    const filter = searchCoinInput.value.toLowerCase();
+    const filter = inputSearchCoin.value.toLowerCase();
     const rows = document.getElementById('coingecko-tbody').getElementsByTagName('tr');
 
     for (let i = 0; i < rows.length; i++) {
@@ -359,7 +362,7 @@ function formatPrice(price) {
 
 // Keyup-event triggas varje gång användaren släpper en tangent,
 // vilket gör att sökningen sker i realtid medan man skriver
-searchCoinInput.addEventListener('keyup', searchCoin);
+inputSearchCoin.addEventListener('keyup', searchCoin);
 
 // Uppdaterar tabellerna
 btnRefresh.addEventListener('click', () => {
@@ -373,18 +376,24 @@ function showInfo(event) {
     let infoText = '';  // Variabel för att hålla texten som ska visas
 
     // Kontrollera vilket element musen är över och tilldela rätt information
-    if (event.target.classList.contains('btnIncrease')) {
+    if (event.target.id === 'btnRefresh') {
+        infoText = 'Refresh the tables with the latest data (possible once every minute).';
+    } else if (event.target.id ==='inputSearchCoin') {
+        infoText = 'Search for a coin by name or ticker symbol.';
+    } else if (event.target.classList.contains('inputAmount')) {
+        infoText = 'Enter an amount to adjust your holdings. Press + to increase and - to decrease.';
+    } else if (event.target.classList.contains('btnIncrease')) {
         infoText = 'Add an amount of coins to your holdings..';
     } else if (event.target.classList.contains('btnDecrease')) {
         infoText = 'Remove an amount of coins from your holdings.';
-    } else if (event.target.classList.contains('btnRefresh')) {
-        infoText = 'Refresh the tables with the latest data.';
+    } else if (event.target.classList.contains('btnShowInfo')) {
+        infoText = 'Show more information about this coin.';
     } else if (event.target.classList.contains('btnRemove')) {
         infoText = 'Remove this coin from your portfolio.';
     } else if (event.target.classList.contains('btnAddCoinToPortfolio')) {
         infoText = 'Add this coin to your portfolio.';
     } else {
-        infoText = 'Hovra över ett element för mer info.';
+        infoText = 'Det finns ingen info om detta element.';
     }
 
     // Sätt texten i paragrafen och visa den
@@ -399,7 +408,7 @@ function hideInfo() {
 }
 
 // Lägg till event listeners på element som ska trigga info-funktionen
-document.querySelectorAll('.btnRefresh, .btnIncrease, .btnDecrease, .btnRemove, .btnAddCoinToPortfolio').forEach(element => {
+document.querySelectorAll('#btnRefresh, #inputSearchCoin').forEach(element => {
     element.addEventListener('mouseover', showInfo); // Visa information när musen hovrar
     element.addEventListener('mouseout', hideInfo);  // Dölj information när musen lämnar
 });
