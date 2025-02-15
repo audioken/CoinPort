@@ -1,5 +1,47 @@
 [
   {
+    "ContainingType": "CoinPortBackend.Controllers.CoinTransactionController",
+    "Method": "GetCoinTransactions",
+    "RelativePath": "coin-transactions",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoinPortBackend.Controllers.CoinTransactionController",
+    "Method": "AddCoinTransaction",
+    "RelativePath": "coin-transactions",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "coinTransaction",
+        "Type": "CoinPortBackend.Models.CoinTransaction",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoinPortBackend.Controllers.CoinTransactionController",
+    "Method": "DeleteCoinTransaction",
+    "RelativePath": "coin-transactions/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "CoinPortBackend.Controllers.CoinController",
     "Method": "GetCurrentMarketFromCoingecko",
     "RelativePath": "coins/coingecko/current-market",

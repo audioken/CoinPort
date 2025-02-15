@@ -120,6 +120,70 @@
           }
         }
       }
+    },
+    "/coin-transactions": {
+      "get": {
+        "tags": [
+          "CoinTransaction"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "CoinTransaction"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CoinTransaction"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CoinTransaction"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CoinTransaction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/coin-transactions/{id}": {
+      "delete": {
+        "tags": [
+          "CoinTransaction"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -166,6 +230,57 @@
           "value": {
             "type": "number",
             "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CoinTransaction": {
+        "required": [
+          "coinAmount",
+          "coinId",
+          "coinPrice",
+          "date",
+          "name",
+          "ticker",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "coinId": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "ticker": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "maxLength": 4,
+            "minLength": 1,
+            "type": "string"
+          },
+          "coinAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "coinPrice": {
+            "type": "number",
+            "format": "double"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false

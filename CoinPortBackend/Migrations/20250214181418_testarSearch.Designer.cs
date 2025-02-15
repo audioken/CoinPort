@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CoinPortBackend.Migrations
 {
-    [DbContext(typeof(CoinDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20250214181418_testarSearch")]
     partial class testarSearch
     {

@@ -9,13 +9,11 @@ namespace CoinPortBackend.Controllers
     [ApiController]
     public class CoinController : ControllerBase
     {
-        /// PROPERTIES ///
-        private readonly CoinDbContext _context; // Dependency injection för att komma åt databasen
+        private readonly AppDbContext _context; // Dependency injection för att komma åt databasen
         private readonly HttpClient _httpClient; // Dependency injection för att göra HTTP-anrop
         private readonly string _apiKey;
 
-        /// CONSTRUCTOR ///
-        public CoinController(CoinDbContext context, HttpClient httpClient, IConfiguration configuration)
+        public CoinController(AppDbContext context, HttpClient httpClient, IConfiguration configuration)
         {
             _context = context; // Spara instansen i ett fält för att komma åt databasen
             _httpClient = httpClient; // Spara instansen i ett fält för att göra HTTP-anrop
@@ -45,6 +43,8 @@ namespace CoinPortBackend.Controllers
             // Gör ett GET-anrop till CoinGecko API
             var response = await _httpClient.GetStringAsync("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false");
 
+            Console.WriteLine(response);
+
             // Parsa JSON-svaret och skapa en lista med objekt. JArray är en del av Newtonsoft.Json som används för att hantera JSON
             var coins = JArray.Parse(response).Select(c => new
             {
@@ -52,7 +52,9 @@ namespace CoinPortBackend.Controllers
                 Name = c["name"]?.ToString() ?? "Unknown",
                 Ticker = c["symbol"]?.ToString().ToUpper() ?? "N/A",
                 Price = c["current_price"]?.Value<decimal>() ?? 0m,
-                Change24hPercent = Math.Round(c["price_change_percentage_24h"]?.Value<decimal>() ?? 0m, 2),
+                Change24hPercent = c["price_change_percentage_24h"] != null && decimal.TryParse(c["price_change_percentage_24h"]?.ToString(), out var percentChange)
+                    ? Math.Round(percentChange, 2)
+                    : 0m,
                 MarketCap = c["market_cap"]?.Value<decimal>() ?? 0m
             });
 
