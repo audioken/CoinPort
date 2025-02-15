@@ -18,7 +18,9 @@ const coins_tbody = document.getElementById('coins-tbody');
 
 // Starta sidan och hämta data från CoinGecko och API
 function start() {
-    loadCoinGeckoCoins().then(loadPortfolioCoins);
+    loadCoinGeckoCoins()
+        .then(loadPortfolioCoins)
+        .then(searchCoin);
 }
 
 // Hämta senaste marknadsdata för coins från CoinGecko och fyll i CoinGecko-tabellen
@@ -58,14 +60,18 @@ async function loadCoinGeckoCoins() {
     
         // Skapa en cell för knappen som lägger till coinet i portfolion
         const actionCell = document.createElement('td');
-        const addButton = document.createElement('button'); // Skapa knappen
-        addButton.textContent = '➕'; // Text på knappen
+        const btnAddCoinToPortfolio = document.createElement('button'); // Skapa knappen
+        btnAddCoinToPortfolio.classList.add('btnAddCoinToPortfolio');
+        btnAddCoinToPortfolio.textContent = '➕'; // Text på knappen
     
+        btnAddCoinToPortfolio.addEventListener('mouseover', showInfo); // Visa info när musen hovrar
+        btnAddCoinToPortfolio.addEventListener('mouseout', hideInfo); // Dölj info när musen lämnar
+
         // Lägg till en eventlistener på knappen som anropar funktionen för att lägga till coinet i portfolion
-        addButton.onclick = () => addCoinToPortfolio(coin.coinId, coin.name, coin.ticker, coin.price, coin.change24hPercent);
+        btnAddCoinToPortfolio.onclick = () => addCoinToPortfolio(coin.coinId, coin.name, coin.ticker, coin.price, coin.change24hPercent);
         
         // Lägg till alla celler i raden och raden i tbody samt knappen i actionCell
-        actionCell.appendChild(addButton);
+        actionCell.appendChild(btnAddCoinToPortfolio);
         row.append(nameCell, tickerCell, priceCell, change24hCell, marketCapCell, actionCell);
         coingecko_tbody.appendChild(row);
     });
@@ -83,7 +89,9 @@ async function loadPortfolioCoins() {
 
     // Loopa igenom alla coins och skapa en rad i tabellen för varje coin
     coins.forEach(coin => {
-        const row = document.createElement('tr'); // Skapa en rad
+
+        // Skapa själva raden som coinet ska ligga i
+        const rowForCoin = document.createElement('tr');
 
         // Hämta senaste den sparade CoinGecko-datan för coinet
         const geckoCoin = coinGeckoData[coin.coinId];
@@ -117,36 +125,72 @@ async function loadPortfolioCoins() {
         const valueCell = document.createElement('td');
         valueCell.textContent = formatPrice(parseFloat(updatedPrice * coin.holdings)); 
 
-        // Skapa en cell för knappen som tar bort coinet från portfolion
+        // Skapa en cell för att hantera justering av holdings, 
+        // samt knappar för att öka, minska, visa info och ta bort coinet
         const actionCell = document.createElement('td');
 
-        const removeButton = document.createElement('button');
-        removeButton.textContent = '❌';
+        // Skapa input-fält för att justera holdings i 'actionCell'
+        const inputAmount = document.createElement('input');
+        inputAmount.classList.add('inputAmount');
+        inputAmount.type = 'text';
+        inputAmount.placeholder = 'Adjust holdings..';
+        
+        // Skapa en div-container för att hålla knapparna i 'actionCell'
+        const btnBar = document.createElement('div');
 
-        const coinAmountInput = document.createElement('input');
-        coinAmountInput.type = 'number';
-        coinAmountInput.min = '0';
-        coinAmountInput.step = 'any';
-        coinAmountInput.placeholder = 'Amount';
+        // Skapa knappar för att öka, minska, visa info och ta bort coinet från portfolion
+        const btnIncreaseHolding = document.createElement('button'); 
+        btnIncreaseHolding.classList.add('btnIncrease');
+        btnIncreaseHolding.textContent = '➕';
 
-        const addHoldingsButton = document.createElement('button'); 
-        addHoldingsButton.textContent = 'Add To Holdings';
+        const btnDecreaseHolding = document.createElement('button');
+        btnDecreaseHolding.classList.add('btnDecrease'); 
+        btnDecreaseHolding.textContent = '➖';
 
-        // Lägg till en eventlistener på knappen som anropar funktionen för att ta bort coinet från portfolion
-        removeButton.onclick = () => removeCoinFromPortfolio(coin.id); 
+        const btnShowCoinInfo = document.createElement('button');
+        btnShowCoinInfo.classList.add('btnShowInfo');
+        btnShowCoinInfo.textContent = 'ℹ️';
 
-        // const coinAmountInput = document.getElementById('coinAmountInput');
-        addHoldingsButton.onclick = () => addToHoldings(coin.id, coinAmountInput, coin.holdings);
+        const btnRemoveCoinFromPortfolio = document.createElement('button');
+        btnRemoveCoinFromPortfolio.classList.add('btnRemove');
+        btnRemoveCoinFromPortfolio.textContent = '❌';
 
-        // Lägg till alla celler i raden och raden i tbody samt knappen i actionCell
-        actionCell.append(coinAmountInput, addHoldingsButton, removeButton);
-        row.append(nameCell, tickerCell, priceCell, change24hCell, holdingsCell, valueCell, actionCell);
-        coins_tbody.appendChild(row);
+        // Visa eller döljer info om vad knapparna gör
+        btnIncreaseHolding.addEventListener('mouseover', showInfo); 
+        btnIncreaseHolding.addEventListener('mouseout', hideInfo);
+
+        btnDecreaseHolding.addEventListener('mouseover', showInfo); 
+        btnDecreaseHolding.addEventListener('mouseout', hideInfo);
+
+        btnShowCoinInfo.addEventListener('mouseover', showInfo);
+        btnShowCoinInfo.addEventListener('mouseout', hideInfo); 
+
+        btnRemoveCoinFromPortfolio.addEventListener('mouseover', showInfo); 
+        btnRemoveCoinFromPortfolio.addEventListener('mouseout', hideInfo); 
+        
+        // Anropa funktioner baserat på vilken knapp som klickas
+        btnIncreaseHolding.onclick = () => adjustHoldings(coin.id, inputAmount, coin.holdings, true);
+        btnDecreaseHolding.onclick = () => adjustHoldings(coin.id, inputAmount, coin.holdings, false);
+        // TODO: Skapa funktion för att visa info om coinet
+        btnRemoveCoinFromPortfolio.onclick = () => removeCoinFromPortfolio(coin.id); 
+
+        // Skapa och lägg till en rad för varje coin i tabellen, inklusive dess data och interaktiva knappar
+        coins_tbody.appendChild(rowForCoin);
+        rowForCoin.append(nameCell, tickerCell, priceCell, change24hCell, holdingsCell, valueCell, actionCell);
+        actionCell.append(inputAmount, btnBar);
+        btnBar.append(btnIncreaseHolding, btnDecreaseHolding, btnShowCoinInfo, btnRemoveCoinFromPortfolio);
     });
 }
 
 // Funktion för att lägga till coin i portfolion
 async function addCoinToPortfolio(coinId, name, ticker, price, change24hPercent) {
+
+    // Anropa den nya funktionen för att kolla om coinet redan finns
+    if (await isCoinInPortfolio(coinId)) {
+        alert('Coin is already added to portfolio. Please adjust holdings instead.');
+        return;
+    }
+
     const url = api + '/coins/portfolio'; // Hämta fullständig URL
 
     // Skicka en POST-request med coinId, name, ticker, price, change24hPercent och holdings
@@ -171,6 +215,24 @@ async function addCoinToPortfolio(coinId, name, ticker, price, change24hPercent)
     }
 }
 
+// Funktion för att kontrollera om ett coin redan finns i portfolion
+async function isCoinInPortfolio(coinId) {
+    const urlGet = `${api}/coins/portfolio`; // Hämta coins från portfolion
+    const responseGet = await fetch(urlGet);
+    
+    // Kontrollera om requesten lyckades
+    if (!responseGet.ok) {
+        alert('Kunde inte hämta portfolion');
+        return false; // Om det inte går att hämta, returnera false
+    }
+
+    const coins = await responseGet.json(); // Hämta JSON-objekt med coins
+
+    // Returnera true om coinet finns, annars false
+    return coins.some(c => c.coinId === coinId);
+}
+
+
 // Funktion för att ta bort coin från portfolion
 async function removeCoinFromPortfolio(coinId) {
     const url = `${api}/coins/portfolio/${coinId}`; // Hämta fullständig URL
@@ -188,14 +250,25 @@ async function removeCoinFromPortfolio(coinId) {
     }
 }
 
-async function addToHoldings(coinId, coinAmountInput, currentHoldings) {
-    const additionalHoldings = parseFloat(coinAmountInput.value);
-    if (isNaN(additionalHoldings) || additionalHoldings <= 0) {
+async function adjustHoldings(coinId, coinAmountInput, currentHoldings, isAdd) {
+
+    const amount = parseFloat(coinAmountInput.value);
+    if (isNaN(amount) || amount <= 0) {
         alert('Ange ett giltigt värde för holdings');
         return;
     }
 
-    const newHoldings = currentHoldings + additionalHoldings;
+    let newHoldings = 0;
+
+    if (isAdd) {
+        newHoldings = currentHoldings + amount;
+    } else {
+        if (currentHoldings - amount < 0) {
+            alert('Kan inte ta bort mer än vad du har');
+            return;
+        }
+        newHoldings = currentHoldings - amount;
+    }
 
     // Hämta coin från portfolio för att få hela objektet
     const urlGet = `${api}/coins/portfolio`;
@@ -292,6 +365,48 @@ searchCoinInput.addEventListener('keyup', searchCoin);
 btnRefresh.addEventListener('click', () => {
     loadCoinGeckoCoins().then(loadPortfolioCoins);
 });
+
+// Funktion som returnerar information beroende på vilket element du håller musen över
+function showInfo(event) {
+    const infoParagraph = document.getElementById('infoParagraph');
+    
+    let infoText = '';  // Variabel för att hålla texten som ska visas
+
+    // Kontrollera vilket element musen är över och tilldela rätt information
+    if (event.target.classList.contains('btnIncrease')) {
+        infoText = 'Add an amount of coins to your holdings..';
+    } else if (event.target.classList.contains('btnDecrease')) {
+        infoText = 'Remove an amount of coins from your holdings.';
+    } else if (event.target.classList.contains('btnRefresh')) {
+        infoText = 'Refresh the tables with the latest data.';
+    } else if (event.target.classList.contains('btnRemove')) {
+        infoText = 'Remove this coin from your portfolio.';
+    } else if (event.target.classList.contains('btnAddCoinToPortfolio')) {
+        infoText = 'Add this coin to your portfolio.';
+    } else {
+        infoText = 'Hovra över ett element för mer info.';
+    }
+
+    // Sätt texten i paragrafen och visa den
+    infoParagraph.textContent = infoText;
+    infoParagraph.style.display = 'block'; // Visa paragrafen
+}
+
+// Funktion för att dölja informationen när musen lämnar ett element
+function hideInfo() {
+    const infoParagraph = document.getElementById('infoParagraph');
+    infoParagraph.style.display = 'none'; // Dölj paragrafen
+}
+
+// Lägg till event listeners på element som ska trigga info-funktionen
+document.querySelectorAll('.btnRefresh, .btnIncrease, .btnDecrease, .btnRemove, .btnAddCoinToPortfolio').forEach(element => {
+    element.addEventListener('mouseover', showInfo); // Visa information när musen hovrar
+    element.addEventListener('mouseout', hideInfo);  // Dölj information när musen lämnar
+});
+
+// function clearInputs() {
+//     document.getElementById('searchCoinInput').value = '';
+// }
 
 // Körs när sidan laddas
 start();
