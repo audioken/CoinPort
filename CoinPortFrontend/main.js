@@ -97,22 +97,25 @@ async function getAllPortfolioCoins() {
     coins_tbody.replaceChildren(); // Rensa tabellen
 
     // Loopa igenom alla coins och skapa en rad i tabellen för varje coin
-    coins.forEach(coin => {
+    // Måste vara en for-loop för att kunna använda await i loopen
+    for (const coin of coins) {
 
         // Skapa själva raden som coinet ska ligga i
         const rowForCoin = document.createElement('tr');
 
         // Hämta den senaste CoinGecko-datan för coinet
         const geckoCoin = coinGeckoData[coin.coinId];
-        const updatedIdCell = geckoCoin ? geckoCoin.coinId : coin.coinId;
+        const updatedCoinId = geckoCoin ? geckoCoin.coinId : coin.coinId;
         const updatedName = geckoCoin ? geckoCoin.name : coin.name;
         const updatedTicker = geckoCoin ? geckoCoin.ticker : coin.ticker;
         const updatedPrice = geckoCoin ? geckoCoin.price : coin.price;
         const updatedChange24h = geckoCoin ? geckoCoin.change24hPercent : coin.change24hPercent;
 
+        const invested = await calcuateInvestment(coin.coinId); // anropar med t.ex. "ondo-finance"
+
         // Skapa celler baserat på den senaste datan för varje värde i coin-objektet
         const coinIdCell = document.createElement('td');
-        coinIdCell.textContent = updatedIdCell; 
+        coinIdCell.textContent = updatedCoinId; 
 
         const nameCell = document.createElement('td');
         nameCell.textContent = updatedName; 
@@ -131,8 +134,14 @@ async function getAllPortfolioCoins() {
         const holdingsCell = document.createElement('td');
         holdingsCell.textContent = coin.holdings; 
 
+        const investedCell = document.createElement('td'); 
+        investedCell.textContent = formatPrice(parseFloat(invested)); // Lägg till uträkning för investering
+
         const valueCell = document.createElement('td');
         valueCell.textContent = formatPrice(parseFloat(updatedPrice * coin.holdings)); 
+
+        const roiCell = document.createElement('td');
+        roiCell.textContent = ("0%"); // FIX
 
         // Skapa en cell för att hantera justering av holdings, 
         // samt knappar för att öka, minska, visa info och ta bort coinet
@@ -181,20 +190,20 @@ async function getAllPortfolioCoins() {
         btnRemoveCoinFromPortfolio.addEventListener('mouseout', hideInfo); 
         
         // Anropa funktioner baserat på vilken knapp som klickas
-        btnIncreaseHolding.onclick = () => adjustHoldings(coin.id, inputAmount, coin.holdings, true);
-        btnDecreaseHolding.onclick = () => adjustHoldings(coin.id, inputAmount, coin.holdings, false);
+        btnIncreaseHolding.onclick = () => adjustHoldings(coin.coinId, inputAmount, coin.holdings, true);
+        btnDecreaseHolding.onclick = () => adjustHoldings(coin.coinId, inputAmount, coin.holdings, false);
         // TODO: Skapa funktion för att visa info om coinet
-        btnShowCoinInfo.onclick = () => getCoinTransactions(coin.id);
-        btnRemoveCoinFromPortfolio.onclick = () => deleteCoinFromPortfolio(coin.id); 
+        btnShowCoinInfo.onclick = () => getCoinTransactions(coin.coinId);
+        btnRemoveCoinFromPortfolio.onclick = () => deleteCoinFromPortfolio(coin.coinId); 
 
         // Lägger till alla celler i sina tillhörande HTML-element
-        rowForCoin.append(nameCell, tickerCell, priceCell, change24hCell, holdingsCell, valueCell, actionCell);
+        rowForCoin.append(nameCell, tickerCell, priceCell, change24hCell, holdingsCell, investedCell, valueCell, roiCell, actionCell);
         actionCell.append(inputAmount, btnBar);
         btnBar.append(btnIncreaseHolding, btnDecreaseHolding, btnShowCoinInfo, btnRemoveCoinFromPortfolio);
 
         // Lägger till raden i tabellen
         coins_tbody.appendChild(rowForCoin);
-    });
+    };
 }
 
 // Hämta transaktioner för coins och fyll i transaktionstabellen
@@ -280,6 +289,7 @@ async function deleteCoinFromPortfolio(coinId) {
     }
 }
 
+// Funktion för att ta bort alla transaktioner för ett coin
 async function deleteAllCoinTransactions(coinId) {
     const url = `${api}/coin-transactions/coin/${coinId}`;
 
@@ -294,7 +304,7 @@ async function deleteAllCoinTransactions(coinId) {
     }
 }
 
-// Funktion för att justera holdings för ett coin i portfolion
+// Funktion för att justera holdings för ett coin i portfolion (coinId = INT)
 async function adjustHoldings(coinId, coinAmountInput, currentHoldings, isBuy) {
 
     // Kontrollera att användaren har angett ett giltigt värde för holdings
@@ -335,7 +345,6 @@ async function adjustHoldings(coinId, coinAmountInput, currentHoldings, isBuy) {
     });
 
     if (responsePut.ok) {
-
         // Spara transaktionen i databasen
         await addTransactionToCoinTransactions(coinId, coin.name, coin.ticker, isBuy ? 'Buy' : 'Sell', amount, coin.price, new Date().toISOString());
 
@@ -561,6 +570,32 @@ function showInfo(event) {
 function hideInfo() {
     const infoParagraph = document.getElementById('infoParagraph');
     infoParagraph.style.display = 'none'; // Dölj paragrafen
+}
+
+async function calcuateInvestment(coinId) {
+    const url = `${api}/coin-transactions/${coinId}`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        alert('Transaktioner hittades inte');
+        return null;
+    }
+
+    const transactions = await response.json();
+
+    console.log(transactions);
+
+    let totalInvested = 0;
+
+    transactions.forEach(transaction => {
+        if (transaction.type === 'Buy') {
+            totalInvested += transaction.coinAmount * transaction.coinPrice;
+        } else {
+            totalInvested -= transaction.coinAmount * transaction.coinPrice;
+        }
+    });
+
+    return totalInvested;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

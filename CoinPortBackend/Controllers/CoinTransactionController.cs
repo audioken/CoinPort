@@ -39,10 +39,12 @@ namespace CoinPortBackend.Controllers
             return Ok(coinTransaction);
         }
 
-        [HttpDelete("transaction/{id}")]
-        public IActionResult DeleteCoinTransaction(int id)
+
+        [HttpDelete("transaction/{coinId}")]
+        public IActionResult DeleteCoinTransaction(string coinId)
         {
-            var coinTransaction = _context.CoinTransactions.Find(id);
+            var coinTransaction = _context.CoinTransactions
+                .FirstOrDefault(t => t.CoinId == coinId);
 
             if (coinTransaction == null)
             {
@@ -54,6 +56,7 @@ namespace CoinPortBackend.Controllers
 
             return NoContent();
         }
+
 
         [HttpDelete("coin/{coinId}")]
         public IActionResult DeleteAllCoinTransactions(string coinId)

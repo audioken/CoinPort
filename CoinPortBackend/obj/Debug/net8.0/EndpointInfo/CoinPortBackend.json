@@ -57,8 +57,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
@@ -78,8 +77,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
@@ -118,8 +116,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
@@ -205,19 +202,18 @@
         }
       }
     },
-    "/coin-transactions/transaction/{id}": {
+    "/coin-transactions/transaction/{coinId}": {
       "delete": {
         "tags": [
           "CoinTransaction"
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "coinId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],

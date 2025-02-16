@@ -1,6 +1,7 @@
 ﻿using CoinPortBackend.Data;
 using CoinPortBackend.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 
 namespace CoinPortBackend.Controllers
@@ -30,11 +31,11 @@ namespace CoinPortBackend.Controllers
             return Ok(_context.Coins.ToList());
         }
 
-        // Hämta ett specifikt coin från portfolion
+        // Hämta ett specifikt coin från portfolion baserat på coinId (sträng)
         [HttpGet("portfolio/{coinId}")]
-        public IActionResult GetCoinFromPortfolio(int coinId)
+        public IActionResult GetCoinFromPortfolio(string coinId)
         {
-            var coin = _context.Coins.Find(coinId);
+            var coin = _context.Coins.FirstOrDefault(c => c.CoinId == coinId);
 
             if (coin == null)
             {
@@ -86,9 +87,9 @@ namespace CoinPortBackend.Controllers
 
         // Uppdatera holdings för ett coin i portfolion
         [HttpPut("portfolio/{coinId}")]
-        public async Task<IActionResult> UpdateCoin(int coinId, [FromBody] Coin updatedCoin)
+        public async Task<IActionResult> UpdateCoin(string coinId, [FromBody] Coin updatedCoin)
         {
-            var coin = await _context.Coins.FindAsync(coinId);
+            var coin = await _context.Coins.FirstOrDefaultAsync(c => c.CoinId == coinId);
 
             if (coin == null)
             {
@@ -102,11 +103,11 @@ namespace CoinPortBackend.Controllers
             return NoContent();
         }
 
-        // Ta bort en coin från portfolio
+        // Ta bort ett coin från portfolion baserat på coinId (sträng)
         [HttpDelete("portfolio/{coinId}")]
-        public IActionResult RemoveCoinFromPortfolio(int coinId)
+        public IActionResult RemoveCoinFromPortfolio(string coinId)
         {
-            var coin = _context.Coins.Find(coinId);
+            var coin = _context.Coins.FirstOrDefault(c => c.CoinId == coinId);
 
             if (coin == null)
             {
@@ -115,7 +116,9 @@ namespace CoinPortBackend.Controllers
 
             _context.Coins.Remove(coin);
             _context.SaveChanges();
+
             return Ok();
         }
+
     }
 }
