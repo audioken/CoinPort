@@ -39,8 +39,7 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-15T19:56:47.405Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -50,7 +49,7 @@
               "RelativeDocumentMoniker": "Controllers\\CoinController.cs",
               "ToolTip": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Controllers\\CoinController.cs",
               "RelativeToolTip": "Controllers\\CoinController.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAAHkAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAHkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-15T17:23:33.828Z",
               "IsPinned": true,
@@ -67,8 +66,7 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAYwAQAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-15T17:22:43.916Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -81,8 +79,7 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAswCIAAABQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-15T17:24:47.308Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Bookmark",
