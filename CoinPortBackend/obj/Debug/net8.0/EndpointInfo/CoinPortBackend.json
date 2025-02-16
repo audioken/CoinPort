@@ -46,26 +46,35 @@
         }
       }
     },
-    "/coins/coingecko/current-market": {
+    "/coins/portfolio/{coinId}": {
       "get": {
         "tags": [
           "Coin"
+        ],
+        "parameters": [
+          {
+            "name": "coinId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
         ],
         "responses": {
           "200": {
             "description": "OK"
           }
         }
-      }
-    },
-    "/coins/portfolio/{id}": {
+      },
       "put": {
         "tags": [
           "Coin"
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "coinId",
             "in": "path",
             "required": true,
             "schema": {
@@ -105,7 +114,7 @@
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "coinId",
             "in": "path",
             "required": true,
             "schema": {
@@ -113,6 +122,18 @@
               "format": "int32"
             }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/coins/coingecko/current-market": {
+      "get": {
+        "tags": [
+          "Coin"
         ],
         "responses": {
           "200": {
@@ -162,14 +183,34 @@
         }
       }
     },
-    "/coin-transactions/{id}": {
+    "/coin-transactions/{coinId}": {
+      "get": {
+        "tags": [
+          "CoinTransaction"
+        ],
+        "parameters": [
+          {
+            "name": "coinId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
       "delete": {
         "tags": [
           "CoinTransaction"
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "coinId",
             "in": "path",
             "required": true,
             "schema": {

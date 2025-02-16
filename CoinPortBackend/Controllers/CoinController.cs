@@ -25,14 +25,28 @@ namespace CoinPortBackend.Controllers
         /// API ENDPOINTS ///
         // Hämta och visa alla coins som är sparade i portfolion
         [HttpGet("portfolio")]
-        public IActionResult GetPortfolio()
+        public IActionResult GetAllPortfolioCoins()
         {
             return Ok(_context.Coins.ToList());
         }
 
+        // Hämta ett specifikt coin från portfolion
+        [HttpGet("portfolio/{coinId}")]
+        public IActionResult GetCoinFromPortfolio(int coinId)
+        {
+            var coin = _context.Coins.Find(coinId);
+
+            if (coin == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(coin);
+        }
+
         // Hämta de 20 största kryptovalutorna från CoinGecko
         [HttpGet("coingecko/current-market")]
-        public async Task<IActionResult> GetCurrentMarketFromCoingecko()
+        public async Task<IActionResult> GetAllCoinsFromCoingecko()
         {
             // Kontrollera om headern redan finns, annars lägg till den
             if (!_httpClient.DefaultRequestHeaders.Contains("x-cg-demo-api-key"))
@@ -71,10 +85,11 @@ namespace CoinPortBackend.Controllers
         }
 
         // Uppdatera holdings för ett coin i portfolion
-        [HttpPut("portfolio/{id}")]
-        public async Task<IActionResult> UpdateCoin(int id, [FromBody] Coin updatedCoin)
+        [HttpPut("portfolio/{coinId}")]
+        public async Task<IActionResult> UpdateCoin(int coinId, [FromBody] Coin updatedCoin)
         {
-            var coin = await _context.Coins.FindAsync(id);
+            var coin = await _context.Coins.FindAsync(coinId);
+
             if (coin == null)
             {
                 return NotFound();
@@ -88,10 +103,10 @@ namespace CoinPortBackend.Controllers
         }
 
         // Ta bort en coin från portfolio
-        [HttpDelete("portfolio/{id}")]
-        public IActionResult RemoveFromPortfolio(int id)
+        [HttpDelete("portfolio/{coinId}")]
+        public IActionResult RemoveFromPortfolio(int coinId)
         {
-            var coin = _context.Coins.Find(id);
+            var coin = _context.Coins.Find(coinId);
 
             if (coin == null)
             {

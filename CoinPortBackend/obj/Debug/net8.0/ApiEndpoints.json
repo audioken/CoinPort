@@ -1,7 +1,7 @@
 [
   {
     "ContainingType": "CoinPortBackend.Controllers.CoinTransactionController",
-    "Method": "GetCoinTransactions",
+    "Method": "GetAllCoinTransactions",
     "RelativePath": "coin-transactions",
     "HttpMethod": "GET",
     "IsController": true,
@@ -27,14 +27,30 @@
   },
   {
     "ContainingType": "CoinPortBackend.Controllers.CoinTransactionController",
+    "Method": "GetCoinTransactions",
+    "RelativePath": "coin-transactions/{coinId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "coinId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoinPortBackend.Controllers.CoinTransactionController",
     "Method": "DeleteCoinTransaction",
-    "RelativePath": "coin-transactions/{id}",
+    "RelativePath": "coin-transactions/{coinId}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
+        "Name": "coinId",
         "Type": "System.Int32",
         "IsRequired": true
       }
@@ -43,7 +59,7 @@
   },
   {
     "ContainingType": "CoinPortBackend.Controllers.CoinController",
-    "Method": "GetCurrentMarketFromCoingecko",
+    "Method": "GetAllCoinsFromCoingecko",
     "RelativePath": "coins/coingecko/current-market",
     "HttpMethod": "GET",
     "IsController": true,
@@ -53,7 +69,7 @@
   },
   {
     "ContainingType": "CoinPortBackend.Controllers.CoinController",
-    "Method": "GetPortfolio",
+    "Method": "GetAllPortfolioCoins",
     "RelativePath": "coins/portfolio",
     "HttpMethod": "GET",
     "IsController": true,
@@ -79,14 +95,30 @@
   },
   {
     "ContainingType": "CoinPortBackend.Controllers.CoinController",
+    "Method": "GetCoinFromPortfolio",
+    "RelativePath": "coins/portfolio/{coinId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "coinId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoinPortBackend.Controllers.CoinController",
     "Method": "UpdateCoin",
-    "RelativePath": "coins/portfolio/{id}",
+    "RelativePath": "coins/portfolio/{coinId}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
+        "Name": "coinId",
         "Type": "System.Int32",
         "IsRequired": true
       },
@@ -101,13 +133,13 @@
   {
     "ContainingType": "CoinPortBackend.Controllers.CoinController",
     "Method": "RemoveFromPortfolio",
-    "RelativePath": "coins/portfolio/{id}",
+    "RelativePath": "coins/portfolio/{coinId}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
+        "Name": "coinId",
         "Type": "System.Int32",
         "IsRequired": true
       }

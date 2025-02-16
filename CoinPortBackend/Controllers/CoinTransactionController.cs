@@ -16,9 +16,19 @@ namespace CoinPortBackend.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetCoinTransactions()
+        public IActionResult GetAllCoinTransactions()
         {
             return Ok(_context.CoinTransactions.ToList());
+        }
+
+        [HttpGet("{coinId}")]
+        public IActionResult GetCoinTransactions(string coinId)
+        {
+            var coinTransactions = _context.CoinTransactions
+                .Where(transaction => transaction.CoinId == coinId)
+                .ToList();
+
+            return Ok(coinTransactions);
         }
 
         [HttpPost]
@@ -29,10 +39,10 @@ namespace CoinPortBackend.Controllers
             return Ok(coinTransaction);
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeleteCoinTransaction(int id)
+        [HttpDelete("{coinId}")]
+        public IActionResult DeleteCoinTransaction(int coinId)
         {
-            var coinTransaction = _context.CoinTransactions.Find(id);
+            var coinTransaction = _context.CoinTransactions.Find(coinId);
             if (coinTransaction == null)
             {
                 return NotFound();

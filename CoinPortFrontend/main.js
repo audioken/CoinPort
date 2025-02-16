@@ -23,14 +23,14 @@ const coins_transaction_tbody = document.getElementById('coins-transaction-tbody
 
 // Starta sidan och hämta data från CoinGecko och API
 function start() {
-    loadCoinGeckoCoins()
-        .then(loadPortfolioCoins)
-        .then(loadCoinTransactions)
+    getAllCoinsFromCoingecko()
+        .then(getAllPortfolioCoins)
+        .then(getAllCoinTransactions)
         .then(searchCoin);
 }
 
 // Hämta senaste marknadsdata för coins från CoinGecko och fyll i CoinGecko-tabellen
-async function loadCoinGeckoCoins() {
+async function getAllCoinsFromCoingecko() {
     const url = api + '/coins/coingecko/current-market'; // Hämta fullständig URL
     const response = await fetch(url); // Hämta data från URL
     const coins = await response.json(); // Konvertera data till JSON
@@ -54,12 +54,10 @@ async function loadCoinGeckoCoins() {
         const tickerCell = document.createElement('td');
         tickerCell.textContent = coin.ticker;
 
-        // Formatera priset med hjälp av formatPrice-funktionen
         const priceCell = document.createElement('td');
         priceCell.textContent = formatPrice(parseFloat(coin.price));
         
         const change24hCell = document.createElement('td');
-        const change24hValue = coin.change24hPercent ?? 0; 
         change24hCell.textContent = parseFloat(coin.change24hPercent).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
         
         const marketCapCell = document.createElement('td');
@@ -67,26 +65,31 @@ async function loadCoinGeckoCoins() {
     
         // Skapa en cell för knappen som lägger till coinet i portfolion
         const actionCell = document.createElement('td');
-        const btnAddCoinToPortfolio = document.createElement('button'); // Skapa knappen
+
+        // Skapa knappen
+        const btnAddCoinToPortfolio = document.createElement('button');
         btnAddCoinToPortfolio.classList.add('btnAddCoinToPortfolio');
-        btnAddCoinToPortfolio.textContent = '➕'; // Text på knappen
+        btnAddCoinToPortfolio.textContent = '➕';
     
+        // Visa eller döljer info om vad knappen gör
         btnAddCoinToPortfolio.addEventListener('mouseover', showInfo); // Visa info när musen hovrar
         btnAddCoinToPortfolio.addEventListener('mouseout', hideInfo); // Dölj info när musen lämnar
 
-        // Lägg till en eventlistener på knappen som anropar funktionen för att lägga till coinet i portfolion
+        // Lägger till coinet i portfolion och sparar det i databasen
         btnAddCoinToPortfolio.onclick = () => addCoinToPortfolio(coin.coinId, coin.name, coin.ticker, coin.price, coin.change24hPercent);
         
-        // Lägg till alla celler i raden och raden i tbody samt knappen i actionCell
-        actionCell.appendChild(btnAddCoinToPortfolio);
+        // Lägger till alla celler i sina tillhörande HTML-element
         row.append(nameCell, tickerCell, priceCell, change24hCell, marketCapCell, actionCell);
+        actionCell.appendChild(btnAddCoinToPortfolio);
+
+        // Lägger till raden i tabellen
         coingecko_tbody.appendChild(row);
     });
     
 }
 
 // Hämta coins från API och fyll i portfolio-tabellen
-async function loadPortfolioCoins() {
+async function getAllPortfolioCoins() {
     const url = api + '/coins/portfolio';  // Hämta fullständig URL
     const response = await fetch(url); // Hämta data från URL
     const coins = await response.json(); // Konvertera data till JSON
@@ -99,7 +102,7 @@ async function loadPortfolioCoins() {
         // Skapa själva raden som coinet ska ligga i
         const rowForCoin = document.createElement('tr');
 
-        // Hämta senaste den sparade CoinGecko-datan för coinet
+        // Hämta den senaste CoinGecko-datan för coinet
         const geckoCoin = coinGeckoData[coin.coinId];
         const updatedIdCell = geckoCoin ? geckoCoin.coinId : coin.coinId;
         const updatedName = geckoCoin ? geckoCoin.name : coin.name;
@@ -107,7 +110,7 @@ async function loadPortfolioCoins() {
         const updatedPrice = geckoCoin ? geckoCoin.price : coin.price;
         const updatedChange24h = geckoCoin ? geckoCoin.change24hPercent : coin.change24hPercent;
 
-        // Skapa celler med den uppdaterade datan för varje värde i coin-objektet
+        // Skapa celler baserat på den senaste datan för varje värde i coin-objektet
         const coinIdCell = document.createElement('td');
         coinIdCell.textContent = updatedIdCell; 
 
@@ -135,7 +138,7 @@ async function loadPortfolioCoins() {
         // samt knappar för att öka, minska, visa info och ta bort coinet
         const actionCell = document.createElement('td');
 
-        // Skapa input-fält för att justera holdings i 'actionCell'
+        // Skapa input-fält för att kunna justera holdings med (+) och (-)-knapparna  i 'actionCell'
         const inputAmount = document.createElement('input');
         inputAmount.classList.add('inputAmount');
         inputAmount.type = 'text';
@@ -161,7 +164,7 @@ async function loadPortfolioCoins() {
         btnRemoveCoinFromPortfolio.classList.add('btnRemove');
         btnRemoveCoinFromPortfolio.textContent = '❌';
 
-        // Visa eller döljer info om vad de olika elementen gör
+        // Visa eller döljer info om vad elementen gör
         inputAmount.addEventListener('mouseover', showInfo);
         inputAmount.addEventListener('mouseout', hideInfo);
 
@@ -183,16 +186,18 @@ async function loadPortfolioCoins() {
         // TODO: Skapa funktion för att visa info om coinet
         btnRemoveCoinFromPortfolio.onclick = () => removeCoinFromPortfolio(coin.id); 
 
-        // Skapa och lägg till en rad för varje coin i tabellen, inklusive dess data och interaktiva knappar
-        coins_tbody.appendChild(rowForCoin);
+        // Lägger till alla celler i sina tillhörande HTML-element
         rowForCoin.append(nameCell, tickerCell, priceCell, change24hCell, holdingsCell, valueCell, actionCell);
         actionCell.append(inputAmount, btnBar);
         btnBar.append(btnIncreaseHolding, btnDecreaseHolding, btnShowCoinInfo, btnRemoveCoinFromPortfolio);
+
+        // Lägger till raden i tabellen
+        coins_tbody.appendChild(rowForCoin);
     });
 }
 
 // Hämta transaktioner för coins och fyll i transaktionstabellen
-async function loadCoinTransactions() {
+async function getAllCoinTransactions() {
     const url = api + '/coin-transactions';  // Hämta fullständig URL
     const response = await fetch(url); // Hämta data från URL
     const transactions = await response.json(); // Konvertera data till JSON
@@ -201,11 +206,11 @@ async function loadCoinTransactions() {
 
     // Loopa igenom alla coins och skapa en rad i tabellen för varje coin
     transactions.forEach(transaction => {
-        // alert(transaction.price);
-        // Skapa själva raden som coinet ska ligga i
+
+        // Skapa själva raden som transaktionen ska ligga i
         const rowForTransaction = document.createElement('tr');
 
-        // Skapa celler med den uppdaterade datan för varje värde i coin-objektet
+        // Skapa celler med den uppdaterade datan för varje värde i transaction-objektet
         const coinIdCell = document.createElement('td');
         coinIdCell.textContent = transaction.coinId; 
 
@@ -231,9 +236,11 @@ async function loadCoinTransactions() {
         const dateCell = document.createElement('td');
         dateCell.textContent = formatDate(transaction.date); 
 
-        coins_transaction_tbody.appendChild(rowForTransaction);
-
+        // Lägger till alla celler i sina tillhörande HTML-element
         rowForTransaction.append(nameCell, tickerCell, typeCell, amountCell, priceCell, valueCell, dateCell);
+
+        // Lägger till raden i tabellen
+        coins_transaction_tbody.appendChild(rowForTransaction);
     });
 }
 
@@ -264,7 +271,7 @@ async function addCoinToPortfolio(coinId, name, ticker, price, change24hPercent)
 
     // Om requesten lyckades, ladda om coins
     if (response.ok) {
-        loadPortfolioCoins();
+        getAllPortfolioCoins();
     } else {
         alert('Failed to add coin!');
     }
@@ -298,7 +305,7 @@ async function removeCoinFromPortfolio(coinId) {
 
     // Om requesten lyckades, ladda om coins
     if (response.ok) {
-        loadPortfolioCoins();
+        getAllPortfolioCoins();
     } else {
         alert('Failed to remove coin!');
     }
@@ -350,13 +357,14 @@ async function adjustHoldings(coinId, coinAmountInput, currentHoldings, isBuy) {
         await addTransactionToCoinTransactions(coinId, coin.name, coin.ticker, isBuy ? 'Buy' : 'Sell', amount, coin.price, new Date().toISOString());
 
         // Ladda om portfolion
-        loadPortfolioCoins();
-        loadCoinTransactions();
+        getAllPortfolioCoins();
+        getAllCoinTransactions();
     } else {
         alert('Kunde inte uppdatera holdings');
     }
 }
 
+// Funktion för att lägga till en transaktion i CoinTransactions-tabellen
 async function addTransactionToCoinTransactions(coinId, name, ticker, type, amount, price, date) {
     const url = api + '/coin-transactions'; // Hämta fullständig URL
 
@@ -381,7 +389,7 @@ async function addTransactionToCoinTransactions(coinId, name, ticker, type, amou
     });
 
     if (response.ok) {
-        loadCoinTransactions();
+        getAllCoinTransactions();
     } else {
         // Logga det fullständiga svaret för att få mer information om varför begäran misslyckades
         const errorDetails = await response.text();
@@ -390,39 +398,33 @@ async function addTransactionToCoinTransactions(coinId, name, ticker, type, amou
     }
 }
 
-// Funktion för att hämta ett coin från CoinGecko API baserat på coinId
-async function getCoinFromCoinGecko(coinId) {
-    const urlGet = `https://api.coingecko.com/api/v3/coins/${coinId}`;
-    const responseGet = await fetch(urlGet);
-    
-    if (!responseGet.ok) {
-        alert('Det gick inte att hämta coin från CoinGecko');
-        return null; // Returnerar null om anropet misslyckas
-    }
-
-    const coin = await responseGet.json();
-
-    if (!coin) {
-        alert('Coin hittades inte');
-        return null; // Returnerar null om inget coin hittades
-    }
-
-    return coin; // Returnerar coin om det hittades
-}
-
 // Funktion för att hämta ett coin från portfolion baserat på coinId
 async function getCoinFromPortfolio(coinId) {
-    const urlGet = `${api}/coins/portfolio`; // Hämta URL för att hämta coins från portfolion
-    const responseGet = await fetch(urlGet); // Hämta data från URL
-    const coins = await responseGet.json(); // Konvertera data till JSON
-    const coin = coins.find(c => c.id === coinId); // Hitta coinet med rätt coinId
+    const url = `${api}/coins/portfolio/${coinId}`; // Hämta URL för att hämta coins från portfolion
+    const response = await fetch(url); // Hämta data från URL
 
-    if (!coin) {
+    if (!response.ok) {
         alert('Coin hittades inte');
-        return null; // Returnerar null om inget coin hittades
+        return null;
     }
 
-    return coin; // Returnerar coin om det hittades
+    const coin = await response.json();
+
+    return coin;
+}
+
+async function getCoinTransactions(coinId) {
+    const url = `${api}/coin-transactions/${coinId}`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        alert('Transaktioner hittades inte');
+        return null;
+    }
+
+    const transactions = await response.json();
+
+    return transactions;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -543,7 +545,7 @@ inputSearchCoin.addEventListener('keyup', searchCoin);
 
 // Uppdaterar tabellerna
 btnRefresh.addEventListener('click', () => {
-    loadCoinGeckoCoins().then(loadPortfolioCoins);
+    getAllCoinsFromCoingecko().then(getAllPortfolioCoins);
 });
 
 // Lägg till event listeners på element som ska trigga info-funktionen
