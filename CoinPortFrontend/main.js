@@ -229,7 +229,7 @@ async function loadCoinTransactions() {
         valueCell.textContent = formatPrice(parseFloat(transaction.coinPrice * transaction.coinAmount)); 
 
         const dateCell = document.createElement('td');
-        dateCell.textContent = transaction.date; 
+        dateCell.textContent = formatDate(transaction.date); 
 
         coins_transaction_tbody.appendChild(rowForTransaction);
 
@@ -349,9 +349,6 @@ async function adjustHoldings(coinId, coinAmountInput, currentHoldings, isBuy) {
         // Spara transaktionen i databasen
         await addTransactionToCoinTransactions(coinId, coin.name, coin.ticker, isBuy ? 'Buy' : 'Sell', amount, coin.price, new Date().toISOString());
 
-        // // Uppdatera UI:t med den nya transaktionen
-        // addCoinTransaction(coinId, amount, isBuy);
-
         // Ladda om portfolion
         loadPortfolioCoins();
         loadCoinTransactions();
@@ -377,9 +374,6 @@ async function addTransactionToCoinTransactions(coinId, name, ticker, type, amou
         Date: formattedDate  // Använd det konverterade datumet
     };
 
-    // Logga JSON-data för felsökning
-    console.log("Sending transaction data:", JSON.stringify(transactionData));
-
     const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -395,53 +389,6 @@ async function addTransactionToCoinTransactions(coinId, name, ticker, type, amou
         alert('Failed to add transaction!');
     }
 }
-
-// // Funktion som lägger till en transaktion i transaktionstabellen
-// async function addCoinTransaction(coinId, coinAmount, isAdd) {
-
-//     // Hämta senaste den sparade CoinGecko-datan för coinet
-//     const coin = await getCoinFromPortfolio(coinId);
-
-//     if (!coin) {
-//         return;
-//     }
-
-//     // Skapa själva raden som transaktionen ska ligga i
-//     const rowForTransaction = document.createElement('tr');
-
-//     // Skapa celler och lagra värdena
-//     const coinIdCell = document.createElement('td');
-//     coinIdCell.textContent = coin.coinId; 
-
-//     const nameCell = document.createElement('td');
-//     nameCell.textContent = coin.name; 
-
-//     const tickerCell = document.createElement('td');
-//     tickerCell.textContent = coin.ticker;
-
-//     const typeCell = document.createElement('td');
-//     if (isAdd) { typeCell.textContent = 'Buy'; }
-//     else { typeCell.textContent = 'Sell'; }
-
-//     const coinAmountCell = document.createElement('td');
-//     coinAmountCell.textContent = parseFloat(coinAmount);
-
-//     const coinPriceCell = document.createElement('td');
-//     coinPriceCell.textContent = '$' + parseFloat(coin.price).toLocaleString('en-US', 
-//             { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-
-//     const valueCell = document.createElement('td');
-//     valueCell.textContent = formatPrice(parseFloat(coinAmount * coin.price));
-
-//     const dateCell = document.createElement('td');
-//     dateCell.textContent = new Date().toLocaleString();
-
-//     console.log(rowForTransaction)
-//     coins_transaction_tbody.appendChild(rowForTransaction);
-//     rowForTransaction.append(nameCell, tickerCell, typeCell, coinAmountCell, coinPriceCell, valueCell,  dateCell);
-
-
-// }
 
 // Funktion för att hämta ett coin från CoinGecko API baserat på coinId
 async function getCoinFromCoinGecko(coinId) {
@@ -517,6 +464,13 @@ function formatPrice(price) {
             maximumFractionDigits: 8
         }).format(price);
     }
+}
+
+// Funktion för att formatera datum
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    const date = new Date(dateString);
+    return date.toLocaleDateString('sv-SE', options).replace(' ', ' ');
 }
 
 // Funktion för att filtrera coins i CoinGecko-tabellen baserat på användarens sökterm
