@@ -39,17 +39,45 @@ namespace CoinPortBackend.Controllers
             return Ok(coinTransaction);
         }
 
-        [HttpDelete("{coinId}")]
-        public IActionResult DeleteCoinTransaction(int coinId)
+        [HttpDelete("transaction/{id}")]
+        public IActionResult DeleteCoinTransaction(int id)
         {
-            var coinTransaction = _context.CoinTransactions.Find(coinId);
+            var coinTransaction = _context.CoinTransactions.Find(id);
+
             if (coinTransaction == null)
             {
                 return NotFound();
             }
+
             _context.CoinTransactions.Remove(coinTransaction);
             _context.SaveChanges();
-            return Ok(coinTransaction);
+
+            return NoContent();
         }
+
+        [HttpDelete("coin/{coinId}")]
+        public IActionResult DeleteAllCoinTransactions(string coinId)
+        {
+            // Hämta alla transaktioner som ska tas bort
+            var transactionsToDelete = _context.CoinTransactions
+                .Where(t => t.CoinId == coinId)
+                .ToList();
+
+            // Om det inte finns några transaktioner att ta bort
+            if (!transactionsToDelete.Any())
+            {
+                return NotFound();
+            }
+
+            // Ta bort alla transaktioner
+            _context.CoinTransactions.RemoveRange(transactionsToDelete);
+
+            // Spara ändringarna
+            _context.SaveChanges();
+
+            // Returnera NoContent för att indikera att det gick bra
+            return NoContent();
+        }
+
     }
 }

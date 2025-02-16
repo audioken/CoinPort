@@ -185,7 +185,7 @@ async function getAllPortfolioCoins() {
         btnDecreaseHolding.onclick = () => adjustHoldings(coin.id, inputAmount, coin.holdings, false);
         // TODO: Skapa funktion för att visa info om coinet
         btnShowCoinInfo.onclick = () => getCoinTransactions(coin.id);
-        btnRemoveCoinFromPortfolio.onclick = () => removeCoinFromPortfolio(coin.id); 
+        btnRemoveCoinFromPortfolio.onclick = () => deleteCoinFromPortfolio(coin.id); 
 
         // Lägger till alla celler i sina tillhörande HTML-element
         rowForCoin.append(nameCell, tickerCell, priceCell, change24hCell, holdingsCell, valueCell, actionCell);
@@ -263,7 +263,7 @@ async function isCoinInPortfolio(coinId) {
 }
 
 // Funktion för att ta bort ett coin från portfolion
-async function removeCoinFromPortfolio(coinId) {
+async function deleteCoinFromPortfolio(coinId) {
     const url = `${api}/coins/portfolio/${coinId}`; // Hämta fullständig URL
 
     // Skicka en DELETE-request
@@ -273,9 +273,24 @@ async function removeCoinFromPortfolio(coinId) {
 
     // Om requesten lyckades, ladda om coins
     if (response.ok) {
+        deleteAllCoinTransactions(coinId);
         getAllPortfolioCoins();
     } else {
         alert('Failed to remove coin!');
+    }
+}
+
+async function deleteAllCoinTransactions(coinId) {
+    const url = `${api}/coin-transactions/coin/${coinId}`;
+
+    const response = await fetch(url, {
+        method: 'DELETE'
+    });
+
+    if (response.ok) {
+        getAllCoinTransactions(); // Inte nödvändig, men för att se vad som händer efter borttagning
+    } else {
+        alert('Failed to remove transactions!');
     }
 }
 

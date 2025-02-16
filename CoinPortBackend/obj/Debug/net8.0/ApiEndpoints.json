@@ -43,14 +43,30 @@
   },
   {
     "ContainingType": "CoinPortBackend.Controllers.CoinTransactionController",
-    "Method": "DeleteCoinTransaction",
-    "RelativePath": "coin-transactions/{coinId}",
+    "Method": "DeleteAllCoinTransactions",
+    "RelativePath": "coin-transactions/coin/{coinId}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "coinId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoinPortBackend.Controllers.CoinTransactionController",
+    "Method": "DeleteCoinTransaction",
+    "RelativePath": "coin-transactions/transaction/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
       }
@@ -132,7 +148,7 @@
   },
   {
     "ContainingType": "CoinPortBackend.Controllers.CoinController",
-    "Method": "RemoveFromPortfolio",
+    "Method": "RemoveCoinFromPortfolio",
     "RelativePath": "coins/portfolio/{coinId}",
     "HttpMethod": "DELETE",
     "IsController": true,

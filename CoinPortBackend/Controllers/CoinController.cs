@@ -104,7 +104,7 @@ namespace CoinPortBackend.Controllers
 
         // Ta bort en coin från portfolio
         [HttpDelete("portfolio/{coinId}")]
-        public IActionResult RemoveFromPortfolio(int coinId)
+        public IActionResult RemoveCoinFromPortfolio(int coinId)
         {
             var coin = _context.Coins.Find(coinId);
 
