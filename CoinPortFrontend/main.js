@@ -110,8 +110,8 @@ async function getAllPortfolioCoins() {
         const updatedTicker = geckoCoin ? geckoCoin.ticker : coin.ticker;
         const updatedPrice = geckoCoin ? geckoCoin.price : coin.price;
         const updatedChange24h = geckoCoin ? geckoCoin.change24hPercent : coin.change24hPercent;
-
-        const invested = await calcuateInvestment(coin.coinId); // anropar med t.ex. "ondo-finance"
+        const invested = await calcuateInvestment(coin.coinId);
+        const roi = ((coin.holdings * updatedPrice) - invested) / invested * 100;
 
         // Skapa celler baserat på den senaste datan för varje värde i coin-objektet
         const coinIdCell = document.createElement('td');
@@ -135,13 +135,14 @@ async function getAllPortfolioCoins() {
         holdingsCell.textContent = coin.holdings; 
 
         const investedCell = document.createElement('td'); 
-        investedCell.textContent = formatPrice(parseFloat(invested)); // Lägg till uträkning för investering
+        investedCell.textContent = formatPrice(parseFloat(invested));
 
         const valueCell = document.createElement('td');
         valueCell.textContent = formatPrice(parseFloat(updatedPrice * coin.holdings)); 
 
         const roiCell = document.createElement('td');
-        roiCell.textContent = ("0%"); // FIX
+        roiCell.textContent = parseFloat(roi).toLocaleString('en-US', 
+            { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
 
         // Skapa en cell för att hantera justering av holdings, 
         // samt knappar för att öka, minska, visa info och ta bort coinet
@@ -304,7 +305,7 @@ async function deleteAllCoinTransactions(coinId) {
     }
 }
 
-// Funktion för att justera holdings för ett coin i portfolion (coinId = INT)
+// Funktion för att justera holdings för ett coin i portfolion
 async function adjustHoldings(coinId, coinAmountInput, currentHoldings, isBuy) {
 
     // Kontrollera att användaren har angett ett giltigt värde för holdings
