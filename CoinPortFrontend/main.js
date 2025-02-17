@@ -70,6 +70,7 @@ async function getAllCoinsFromCoingecko() {
         const btnAddCoinToPortfolio = document.createElement('button');
         btnAddCoinToPortfolio.classList.add('btnAddCoinToPortfolio');
         btnAddCoinToPortfolio.textContent = '➕';
+        // btnAddCoinToPortfolio.style.alt = 'Add coin to portfolio';
     
         // Visa eller döljer info om vad knappen gör
         btnAddCoinToPortfolio.addEventListener('mouseover', showInfo); // Visa info när musen hovrar
