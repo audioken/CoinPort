@@ -17,47 +17,46 @@
     <main>
 
         <nav>
-          <div class="divSwitch">
-            <label>Portfolio</label>
+          <div class="divSwitch" id="divSwitchPortfolio">
+            <label id="labelPortfolio" class="navLabels">Portfolio</label>
 
             <label class="switch switchPortfolio">
-              <input type="checkbox" id="switchPortfolio">
+              <input type="checkbox" id="switchPortfolio" checked>
               <span class="slider round"></span>
             </label>
           </div>
 
-          <div class="divSwitch">
-            <label>Transactions</label>
+          <div class="divSwitch" id="divSwitchTransactions">
+            <label id="labelTransactions" class="navLabels">Transactions</label>
 
             <label class="switch switchTransactions">
-              <input type="checkbox" id="switchTransactions">
+              <input type="checkbox" id="switchTransactions" checked>
               <span class="slider round"></span>
             </label>
           </div>
 
-          <div class="divSwitch">
-            <label>Market</label>
+          <div class="divSwitch" id="divSwitchMarket">
+            <label id="labelMarket" class="navLabels">Market</label>
 
             <label class="switch switchMarket">
-              <input type="checkbox" id="switchMarket">
+              <input type="checkbox" id="switchMarket" checked>
               <span class="slider round"></span>
             </label>
           </div>
         </nav>
-
-
+        
         <div style="height: 50px; padding: 10px;">
           <p id="infoParagraph"></p>
         </div>
-        
+
         <div class="tableContainer">
           <div class="portfolio">
-            <div class="tableTitleContainer">
+            <div class="tableTitleContainer" id="portfolioTableTitle">
               <h2>Portfolio</h2>
             </div>
               <table id="coins-table">
               <thead>
-                <tr>
+                <tr id="portfolioHead">
                   <th>Coin</th>
                   <th>Ticker</th>
                   <th>Price</th>
@@ -76,12 +75,12 @@
           </div>
           
           <div class="transactions">
-            <div class="tableTitleContainer">
+            <div class="tableTitleContainer" id="transactionsTableTitle">
               <h2>Transactions</h2>
             </div>
             <table id="coins-transaction-table">
               <thead>
-                <tr>
+                <tr id="transactionsHead">
                   <th>Coin</th>
                   <th>Ticker</th>
                   <th>Type</th>
@@ -98,12 +97,12 @@
           </div>
   
           <div class="market">
-            <div class="tableTitleContainer">
-              <h2>Current Market</h2>
+            <div class="tableTitleContainer" id="marketTableTitle">
+              <h2>Market</h2>
             </div>  
             <table id="coingecko-table">
               <thead>
-                <tr>
+                <tr id="marketHead">
                   <th>Coin <input type="text" id="inputSearchCoin" placeholder="search.."></th>
                   <th>Ticker</th>
                   <th>Price</th>

@@ -3,14 +3,11 @@ main, header {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* height: 100vh; */
     width: 100%;
     background-color: #f0f0f0;
     font-family: "Exo 2", serif;
-    /* font-optical-sizing: auto; */
     font-weight: 200;
     font-style: normal;
-    
 }
 
 nav{
@@ -18,10 +15,20 @@ nav{
     justify-content: center;
     align-items: center;
     gap: 20px;
-    background-color: #ffcb3d;
+    background-color: transparent;
     border-radius: 10px;
     padding: 10px;
     margin: 10px;
+    width: 780px;
+    height: 60px;
+}
+
+.navLabels {
+    font-weight: 500;
+    display: inline-block;
+    width: 100px; /* Justera bredden efter behov */
+    text-align: center; /* Centrerar texten inom labeln */
+    user-select: none; /* Förhindrar att texten kan markeras */
 }
 
 .divSwitch {
@@ -32,6 +39,21 @@ nav{
     gap: 10px; /* Mellanrum mellan slider och knapp */
     padding: 10px;
     margin: 10px;
+}
+
+#divSwitchPortfolio{
+    background-color: #ffcb3d;
+    border-radius: 10px;
+}
+
+#divSwitchTransactions{
+    background-color: #a2ee5f;
+    border-radius: 10px;
+}
+
+#divSwitchMarket{
+    background-color: #bddbe6;
+    border-radius: 10px;
 }
 
 .switch {
@@ -77,10 +99,6 @@ input:checked + .slider {
     background-color: #5fd656;
 }
 
-/* input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
-} */
-
 input:checked + .slider:before {
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
@@ -125,6 +143,14 @@ table {
     margin-bottom: 100px;
 }
 
+#transactionsTableTitle{
+    background-color: #a2ee5f;
+}
+
+#marketTableTitle{
+    background-color: #bddbe6;
+}
+
 th{
     background-color: #e9d292;
     padding: 10px;
@@ -133,6 +159,18 @@ th{
 
 td, th {
     vertical-align: middle;
+}
+
+#portfolioHead th{
+    background-color: #e9d292;
+}
+
+#transactionsHead th{
+    background-color: #cce9b3;
+}
+
+#marketHead th{
+    background-color: #e1e5e7;
 }
 
 tbody tr:hover {

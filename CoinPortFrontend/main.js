@@ -12,6 +12,9 @@ let isTransactionsOn = true; // Startvärde
 let isMarketOn = true;
 
 // Hämta element från HTML
+let labelPortfolio = document.getElementById('labelPortfolio'); // Hämta label för att visa portfolion
+let labelTransactions = document.getElementById('labelTransactions'); // Hämta label för att visa transaktioner
+let labelMarket = document.getElementById('labelMarket'); // Hämta label för att visa marknaden
 let switchPortfolio = document.getElementById('switchPortfolio'); // Hämta switchen för att visa portfolion
 let switchTransactions = document.getElementById('switchTransactions'); // Hämta switchen för att visa transaktioner
 let switchMarket = document.getElementById('switchMarket'); // Hämta switchen för att visa marknaden
@@ -108,7 +111,6 @@ async function getAllPortfolioCoins() {
 
         // Skapa själva raden som coinet ska ligga i
         const rowForCoin = document.createElement('tr');
-        rowForCoin.id = `portfolio-row-${coin.coinId}`; // Lägg till unikt ID för raden
 
         // Hämta den senaste CoinGecko-datan för coinet
         const geckoCoin = coinGeckoData[coin.coinId];
@@ -138,34 +140,16 @@ async function getAllPortfolioCoins() {
         change24hCell.textContent = parseFloat(updatedChange24h).toLocaleString('en-US', 
             { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
 
-        // const holdingsCell = document.createElement('td');
-        // holdingsCell.classList.add('holdings-cell'); // Lägg till klass för att identifiera cellen
-        // holdingsCell.textContent = coin.holdings; 
-
-        // const investedCell = document.createElement('td'); 
-        // investedCell.textContent = formatPrice(parseFloat(invested));
-
-        // const valueCell = document.createElement('td');
-        // valueCell.textContent = formatPrice(parseFloat(updatedPrice * coin.holdings)); 
-
-        // const roiCell = document.createElement('td');
-        // roiCell.textContent = parseFloat(roi).toLocaleString('en-US', 
-        //     { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
-
         const holdingsCell = document.createElement('td');
-        holdingsCell.classList.add('holdings-cell'); // Lägg till klass för att identifiera cellen
         holdingsCell.textContent = coin.holdings; 
 
         const investedCell = document.createElement('td'); 
-        investedCell.classList.add('invested-cell'); // Lägg till klass för att identifiera cellen
         investedCell.textContent = formatPrice(parseFloat(invested));
 
         const valueCell = document.createElement('td');
-        valueCell.classList.add('value-cell'); // Lägg till klass för att identifiera cellen
         valueCell.textContent = formatPrice(parseFloat(updatedPrice * coin.holdings)); 
 
         const roiCell = document.createElement('td');
-        roiCell.classList.add('roi-cell'); // Lägg till klass för att identifiera cellen
         roiCell.textContent = parseFloat(roi).toLocaleString('en-US', 
             { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
 
@@ -191,9 +175,9 @@ async function getAllPortfolioCoins() {
         btnDecreaseHolding.classList.add('btnDecrease'); 
         btnDecreaseHolding.textContent = '➖';
 
-        const btnShowCoinInfo = document.createElement('button');
-        btnShowCoinInfo.classList.add('btnShowInfo');
-        btnShowCoinInfo.textContent = 'ℹ️';
+        const btnShowCoinTransactions = document.createElement('button');
+        btnShowCoinTransactions.classList.add('btnShowInfo');
+        btnShowCoinTransactions.textContent = 'ℹ️';
 
         const btnRemoveCoinFromPortfolio = document.createElement('button');
         btnRemoveCoinFromPortfolio.classList.add('btnRemove');
@@ -209,8 +193,8 @@ async function getAllPortfolioCoins() {
         btnDecreaseHolding.addEventListener('mouseover', showInfo); 
         btnDecreaseHolding.addEventListener('mouseout', hideInfo);
 
-        btnShowCoinInfo.addEventListener('mouseover', showInfo);
-        btnShowCoinInfo.addEventListener('mouseout', hideInfo); 
+        btnShowCoinTransactions.addEventListener('mouseover', showInfo);
+        btnShowCoinTransactions.addEventListener('mouseout', hideInfo); 
 
         btnRemoveCoinFromPortfolio.addEventListener('mouseover', showInfo); 
         btnRemoveCoinFromPortfolio.addEventListener('mouseout', hideInfo); 
@@ -224,19 +208,19 @@ async function getAllPortfolioCoins() {
             event.preventDefault();
             adjustHoldings(coin.coinId, inputAmount, coin.holdings, false);
         }
-        btnShowCoinInfo.onclick = (event) => {
+        btnShowCoinTransactions.onclick = (event) => {
             event.preventDefault();
             getCoinTransactions(coin.coinId);
         };
         btnRemoveCoinFromPortfolio.onclick = (event) => {
             event.preventDefault();
-            deleteCoinFromPortfolio(coin.coinId); 
+            deleteCoinFromPortfolio(coin.coinId, coin.holdings); 
         };
 
         // Lägger till alla celler i sina tillhörande HTML-element
         rowForCoin.append(nameCell, tickerCell, priceCell, change24hCell, holdingsCell, investedCell, valueCell, roiCell, actionCell);
         actionCell.append(inputAmount, btnBar);
-        btnBar.append(btnIncreaseHolding, btnDecreaseHolding, btnShowCoinInfo, btnRemoveCoinFromPortfolio);
+        btnBar.append(btnIncreaseHolding, btnDecreaseHolding, btnShowCoinTransactions, btnRemoveCoinFromPortfolio);
 
         // Lägger till raden i tabellen
         coins_tbody.appendChild(rowForCoin);
@@ -309,7 +293,7 @@ async function isCoinInPortfolio(coinId) {
 }
 
 // Funktion för att ta bort ett coin från portfolion
-async function deleteCoinFromPortfolio(coinId) {
+async function deleteCoinFromPortfolio(coinId, coinHoldings) {
     const url = `${api}/coins/portfolio/${coinId}`; // Hämta fullständig URL
 
     // Skicka en DELETE-request
@@ -319,7 +303,7 @@ async function deleteCoinFromPortfolio(coinId) {
 
     // Om requesten lyckades, ladda om coins
     if (response.ok) {
-        deleteAllCoinTransactions(coinId);
+        deleteAllCoinTransactions(coinId, coinHoldings);
         getAllPortfolioCoins();
     } else {
         alert('Failed to remove coin!');
@@ -327,7 +311,7 @@ async function deleteCoinFromPortfolio(coinId) {
 }
 
 // Funktion för att ta bort alla transaktioner för ett coin
-async function deleteAllCoinTransactions(coinId) {
+async function deleteAllCoinTransactions(coinId, coinHoldings) {
     const url = `${api}/coin-transactions/coin/${coinId}`;
 
     const response = await fetch(url, {
@@ -337,6 +321,9 @@ async function deleteAllCoinTransactions(coinId) {
     if (response.ok) {
         getAllCoinTransactions(); // Inte nödvändig, men för att se vad som händer efter borttagning
     } else {
+        if (coinHoldings === 0) {
+            return;
+        }
         alert('Failed to remove transactions!');
     }
 }
@@ -653,8 +640,9 @@ document.querySelectorAll('#inputSearchCoin').forEach(element => {
     element.addEventListener('mouseout', hideInfo);  // Dölj information när musen lämnar
 });
 
-
 function ShowHidePortfolio(isPortfolioOn) {
+    labelPortfolio.style.fontWeight = isPortfolioOn ? '500' : '200';
+    labelPortfolio.style.color = isPortfolioOn ? 'black' : 'gray';
     const portfolio = document.querySelector('.portfolio');
     portfolio.style.display = isPortfolioOn ? 'block' : 'none';
 }
@@ -665,6 +653,8 @@ switchPortfolio.addEventListener('click', () => {
 });
 
 function ShowHideTransactions(isTransactionsOn) {
+    labelTransactions.style.fontWeight = isTransactionsOn ? '500' : '200';
+    labelTransactions.style.color = isTransactionsOn ? 'black' : 'gray';
     const transactions = document.querySelector('.transactions');
     transactions.style.display = isTransactionsOn ? 'block' : 'none';
 }
@@ -675,6 +665,8 @@ switchTransactions.addEventListener('click', () => {
 });
 
 function ShowHideMarket(isMarketOn) {
+    labelMarket.style.fontWeight = isMarketOn ? '500' : '200';
+    labelMarket.style.color = isMarketOn ? 'black' : 'gray';
     const market = document.querySelector('.market');
     market.style.display = isMarketOn ? 'block' : 'none';
 }
