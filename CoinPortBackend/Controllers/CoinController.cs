@@ -45,7 +45,7 @@ namespace CoinPortBackend.Controllers
             return Ok(coin);
         }
 
-        // Hämta de 20 största kryptovalutorna från CoinGecko
+        // Hämta de 250 största kryptovalutorna från CoinGecko
         [HttpGet("coingecko/current-market")]
         public async Task<IActionResult> GetAllCoinsFromCoingecko()
         {
