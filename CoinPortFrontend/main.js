@@ -609,7 +609,9 @@ inputSearchCoin.addEventListener('keyup', searchCoin);
 
 // Uppdaterar tabellerna
 btnRefresh.addEventListener('click', () => {
-    getAllCoinsFromCoingecko().then(getAllPortfolioCoins);
+    getAllCoinsFromCoingecko()
+    .then(getAllPortfolioCoins)
+    .then(getAllCoinTransactions);
 });
 
 // Lägg till event listeners på element som ska trigga info-funktionen

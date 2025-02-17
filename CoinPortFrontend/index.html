@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
     <title>CoinPort</title>
 </head>
 <body>
@@ -12,7 +15,6 @@
     </header>
 
     <main>
-        <h2>Portfolio</h2>
 
 
         <button id="btnRefresh">Refresh</button>
@@ -20,60 +22,64 @@
         <div style="height: 50px; padding: 10px;">
           <p id="infoParagraph"></p>
         </div>
+        
+        <div class="tableContainer">
+          <h2>Portfolio</h2>
+          <table id="coins-table" style="border: 1px solid black;">
+            <thead>
+              <tr>
+                <th>Coin</th>
+                <th>Ticker</th>
+                <th>Price</th>
+                <th>24h Change</th>
+                <th>Holdings</th>
+                <th>Invested</th>
+                <th>Current Value</th>
+                <th>ROI</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="coins-tbody">
+              <!-- Coins kommer att läggas här via JS -->
+            </tbody>
+          </table>
+  
+          <h2>Transactions</h2>
+          <table id="coins-transaction-table" style="border: 1px solid black;">
+            <thead>
+              <tr>
+                <th>Coin</th>
+                <th>Ticker</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Price</th>
+                <th>Value</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="coins-transaction-tbody">
+              <!-- Coins kommer att läggas här via JS -->
+            </tbody>
+          </table>
+  
+          <h2>Current Market</h2>
+          <table id="coingecko-table" style="border: 1px solid black;">
+            <thead>
+              <tr>
+                <th>Coin <input type="text" id="inputSearchCoin" placeholder="search.."></th>
+                <th>Ticker</th>
+                <th>Price</th>
+                <th>24h Change</th>
+                <th>Market Cap</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="coingecko-tbody">
+              <!-- Coins kommer att läggas här via JS -->
+            </tbody>
+          </table>
 
-        <table id="coins-table" style="border: 1px solid black;">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Ticker</th>
-              <th>Price</th>
-              <th>24h Change</th>
-              <th>Holdings</th>
-              <th>Invested</th>
-              <th>Current Value</th>
-              <th>ROI</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="coins-tbody">
-            <!-- Coins kommer att läggas här via JS -->
-          </tbody>
-        </table>
-
-        <table id="coins-transaction-table" style="border: 1px solid black;">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Ticker</th>
-              <th>Type</th>
-              <th>Amount</th>
-              <th>Price</th>
-              <th>Value</th>
-              <th>Timestamp</th>
-            </tr>
-          </thead>
-          <tbody id="coins-transaction-tbody">
-            <!-- Coins kommer att läggas här via JS -->
-          </tbody>
-        </table>
-
-        <input type="text" id="inputSearchCoin" placeholder="Search for coins..">
-
-        <table id="coingecko-table" style="border: 1px solid black;">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Ticker</th>
-              <th>Price</th>
-              <th>24h Change</th>
-              <th>Market Cap</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="coingecko-tbody">
-            <!-- Coins kommer att läggas här via JS -->
-          </tbody>
-        </table>
+        </div>
       </main>
     <script src="main.js" defer></script>
 </body>

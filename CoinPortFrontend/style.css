@@ -1,0 +1,81 @@
+main, header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* height: 100vh; */
+    width: 100%;
+    background-color: #f0f0f0;
+    font-family: "Exo 2", serif;
+    /* font-optical-sizing: auto; */
+    font-weight: 100;
+    font-style: normal;
+    
+}
+
+header{
+    font-size: 30px;
+}
+
+h2{
+    text-align: center;
+}
+
+table {
+    background-color:rgb(236, 227, 215);
+    padding: 10px;
+    width: 800px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+th{
+    background-color: #e9d292;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+td, th {
+    vertical-align: middle;
+}
+
+tbody tr:hover {
+    background-color: #f3ecb7;
+}
+  
+
+table {
+    border-collapse: separate; /* Viktigt! */
+    border-radius: 12px; /* Rundade hörn på hela tabellen */
+    overflow: hidden; /* Om det behövs */
+}
+  
+td, th {
+    padding: 8px;
+    border-radius: 8px; /* Rundade hörn per cell */
+}
+
+input{
+    width: 120px;
+    padding: 6px 6px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+#inputSearchCoin{
+    width: 80px;
+}
+
+
+.tableContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    gap: 10px; /* Mellanrum mellan tabeller */
+}
+  
+  
