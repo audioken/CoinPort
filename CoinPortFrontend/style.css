@@ -23,6 +23,12 @@ nav{
     height: 60px;
 }
 
+button{
+    border: none;
+    border-radius: 10px;
+    margin: 1px;
+}
+
 .navLabels {
     font-weight: 500;
     display: inline-block;
@@ -68,9 +74,15 @@ nav{
     opacity: 0;
     width: 0;
     height: 0;
-  }
+}
 
-/* The slider */
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
 .slider {
     position: absolute;
     cursor: pointer;
@@ -99,13 +111,6 @@ input:checked + .slider {
     background-color: #5fd656;
 }
 
-input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
-}
-
-/* Rounded sliders */
 .slider.round {
     border-radius: 34px;
 }
@@ -161,6 +166,11 @@ td, th {
     vertical-align: middle;
 }
 
+table td {
+    border-radius: 10px;
+}
+
+
 #portfolioHead th{
     background-color: #e9d292;
 }
@@ -170,13 +180,14 @@ td, th {
 }
 
 #marketHead th{
-    background-color: #e1e5e7;
+    background-color: #d3dfe6;
 }
 
-tbody tr:hover {
+tbody tr:hover td {
     background-color: #f3ecb7;
 }
-  
+
+
 
 table {
     border-collapse: separate; /* Viktigt! */

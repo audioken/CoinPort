@@ -161,7 +161,7 @@ async function getAllPortfolioCoins() {
         const inputAmount = document.createElement('input');
         inputAmount.classList.add('inputAmount');
         inputAmount.type = 'text';
-        inputAmount.placeholder = 'Adjust holdings..';
+        inputAmount.placeholder = 'Add transaction..';
         
         // Skapa en div-container för att hålla knapparna i 'actionCell'
         const btnBar = document.createElement('div');
@@ -177,7 +177,7 @@ async function getAllPortfolioCoins() {
 
         const btnShowCoinTransactions = document.createElement('button');
         btnShowCoinTransactions.classList.add('btnShowInfo');
-        btnShowCoinTransactions.textContent = 'ℹ️';
+        btnShowCoinTransactions.textContent = '🧾';
 
         const btnRemoveCoinFromPortfolio = document.createElement('button');
         btnRemoveCoinFromPortfolio.classList.add('btnRemove');
