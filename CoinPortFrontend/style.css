@@ -139,12 +139,12 @@ h2{
 table {
     background-color:rgb(236, 227, 215);
     padding: 10px;
-    width: 800px;
+    width: 1000px;
     border-radius: 10px;
     text-align: center;
 }
 
-.tableContainer{
+.allTablesContainer{
     margin-bottom: 100px;
 }
 
@@ -166,10 +166,14 @@ td, th {
     vertical-align: middle;
 }
 
+#portfolioTable td:nth-child(8) {
+    white-space: nowrap; /* Förhindrar radbrytning i 8:e kolumnen */
+}
+
+
 table td {
     border-radius: 10px;
 }
-
 
 #portfolioHead th{
     background-color: #e9d292;
@@ -215,12 +219,14 @@ input{
 }
 
 
-.tableContainer {
+.allTablesContainer {
     display: flex;
     flex-direction: column;
     justify-content: center;
 
     gap: 10px; /* Mellanrum mellan tabeller */
 }
+
+
   
   

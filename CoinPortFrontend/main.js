@@ -21,9 +21,9 @@ let switchMarket = document.getElementById('switchMarket'); // Hämta switchen f
 const inputSearchCoin = document.getElementById('inputSearchCoin');
 
 // Hämta tbody-elementen från alla tabeller i HTML
-const coingecko_tbody = document.getElementById('coingecko-tbody');
-const coins_tbody = document.getElementById('coins-tbody');
-const coins_transaction_tbody = document.getElementById('coins-transaction-tbody');
+const marketTableBody = document.getElementById('marketTableBody');
+const portfolioTableBody = document.getElementById('portfolioTableBody');
+const transactionsTableBody = document.getElementById('transactionsTableBody');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// MAIN FUNCTIONS ///
@@ -31,19 +31,19 @@ const coins_transaction_tbody = document.getElementById('coins-transaction-tbody
 
 // Starta sidan och hämta data från CoinGecko och API
 function start() {
-    getAllCoinsFromCoingecko()
-        .then(getAllPortfolioCoins)
-        .then(getAllCoinTransactions)
+    getMarket()
+        .then(getPortfolio)
+        .then(getTransactions)
         .then(searchCoin);
 }
 
 // Hämta senaste marknadsdata för coins från CoinGecko och fyll i CoinGecko-tabellen
-async function getAllCoinsFromCoingecko() {
+async function getMarket() {
     const url = api + '/coins/coingecko/current-market'; // Hämta fullständig URL
     const response = await fetch(url); // Hämta data från URL
     const coins = await response.json(); // Konvertera data till JSON
 
-    coingecko_tbody.replaceChildren(); // Rensa tabellen
+    marketTableBody.replaceChildren(); // Rensa tabellen
 
     coinGeckoData = {}; // Nollställ minnet av CoinGecko-data
 
@@ -67,7 +67,9 @@ async function getAllCoinsFromCoingecko() {
         
         const change24hCell = document.createElement('td');
         change24hCell.textContent = parseFloat(coin.change24hPercent).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
-        
+        change24hCell.style.color = getTrendColor(coin.change24hPercent);
+        priceCell.style.color = change24hCell.style.color;
+
         const marketCapCell = document.createElement('td');
         marketCapCell.textContent = '$' + parseFloat(coin.marketCap).toLocaleString('en-US');        
     
@@ -92,18 +94,18 @@ async function getAllCoinsFromCoingecko() {
         actionCell.appendChild(btnAddCoinToPortfolio);
 
         // Lägger till raden i tabellen
-        coingecko_tbody.appendChild(row);
+        marketTableBody.appendChild(row);
     });
     
 }
 
 // Hämta coins från API och fyll i portfolio-tabellen
-async function getAllPortfolioCoins() {
+async function getPortfolio() {
     const url = api + '/coins/portfolio';  // Hämta fullständig URL
     const response = await fetch(url); // Hämta data från URL
     const coins = await response.json(); // Konvertera data till JSON
 
-    coins_tbody.replaceChildren(); // Rensa tabellen
+    portfolioTableBody.replaceChildren(); // Rensa tabellen
 
     // Loopa igenom alla coins och skapa en rad i tabellen för varje coin
     // Måste vara en for-loop för att kunna använda await i loopen
@@ -120,7 +122,8 @@ async function getAllPortfolioCoins() {
         const updatedPrice = geckoCoin ? geckoCoin.price : coin.price;
         const updatedChange24h = geckoCoin ? geckoCoin.change24hPercent : coin.change24hPercent;
         const invested = await calcuateInvestment(coin.coinId);
-        const roi = ((coin.holdings * updatedPrice) - invested) / invested * 100;
+        const roiDollar = (coin.holdings * updatedPrice) - invested;
+        const roiPercent = ((coin.holdings * updatedPrice) - invested) / invested * 100;
 
         // Skapa celler baserat på den senaste datan för varje värde i coin-objektet
         const coinIdCell = document.createElement('td');
@@ -139,6 +142,8 @@ async function getAllPortfolioCoins() {
         const change24hCell = document.createElement('td');
         change24hCell.textContent = parseFloat(updatedChange24h).toLocaleString('en-US', 
             { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
+        change24hCell.style.color = getTrendColor(updatedChange24h);
+        priceCell.style.color = change24hCell.style.color;
 
         const holdingsCell = document.createElement('td');
         holdingsCell.textContent = coin.holdings; 
@@ -146,12 +151,18 @@ async function getAllPortfolioCoins() {
         const investedCell = document.createElement('td'); 
         investedCell.textContent = formatPrice(parseFloat(invested));
 
-        const valueCell = document.createElement('td');
-        valueCell.textContent = formatPrice(parseFloat(updatedPrice * coin.holdings)); 
+        const currentValueCell = document.createElement('td');
+        currentValueCell.textContent = formatPrice(parseFloat(updatedPrice * coin.holdings)); 
 
-        const roiCell = document.createElement('td');
-        roiCell.textContent = parseFloat(roi).toLocaleString('en-US', 
+        const roiDollarCell = document.createElement('td');
+        roiDollarCell.textContent = formatPrice(parseFloat(roiDollar));
+
+        const roiPercentCell = document.createElement('td');
+        roiPercentCell.textContent = parseFloat(roiPercent).toLocaleString('en-US', 
             { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
+        roiPercentCell.style.color = getTrendColor(roiPercent);
+        currentValueCell.style.color = roiPercentCell.style.color;
+        roiDollarCell.style.color = roiPercentCell.style.color;
 
         // Skapa en cell för att hantera justering av holdings, 
         // samt knappar för att öka, minska, visa info och ta bort coinet
@@ -218,17 +229,17 @@ async function getAllPortfolioCoins() {
         };
 
         // Lägger till alla celler i sina tillhörande HTML-element
-        rowForCoin.append(nameCell, tickerCell, priceCell, change24hCell, holdingsCell, investedCell, valueCell, roiCell, actionCell);
+        rowForCoin.append(nameCell, tickerCell, priceCell, change24hCell, holdingsCell, investedCell, currentValueCell, roiDollarCell, roiPercentCell, actionCell);
         actionCell.append(inputAmount, btnBar);
         btnBar.append(btnIncreaseHolding, btnDecreaseHolding, btnShowCoinTransactions, btnRemoveCoinFromPortfolio);
 
         // Lägger till raden i tabellen
-        coins_tbody.appendChild(rowForCoin);
+        portfolioTableBody.appendChild(rowForCoin);
     };
 }
 
 // Hämta transaktioner för coins och fyll i transaktionstabellen
-async function getAllCoinTransactions() {
+async function getTransactions() {
     const url = api + '/coin-transactions';  // Hämta fullständig URL
     const response = await fetch(url); // Hämta data från URL
 
@@ -269,7 +280,7 @@ async function addCoinToPortfolio(coinId, name, ticker, price, change24hPercent)
 
     // Om requesten lyckades, ladda om coins
     if (response.ok) {
-        getAllPortfolioCoins();
+        getPortfolio();
     } else {
         alert('Failed to add coin!');
     }
@@ -304,7 +315,7 @@ async function deleteCoinFromPortfolio(coinId, coinHoldings) {
     // Om requesten lyckades, ladda om coins
     if (response.ok) {
         deleteAllCoinTransactions(coinId, coinHoldings);
-        getAllPortfolioCoins();
+        getPortfolio();
     } else {
         alert('Failed to remove coin!');
     }
@@ -319,7 +330,7 @@ async function deleteAllCoinTransactions(coinId, coinHoldings) {
     });
 
     if (response.ok) {
-        getAllCoinTransactions(); // Inte nödvändig, men för att se vad som händer efter borttagning
+        getTransactions(); // Inte nödvändig, men för att se vad som händer efter borttagning
     } else {
         if (coinHoldings === 0) {
             return;
@@ -373,9 +384,9 @@ async function adjustHoldings(coinId, coinAmountInput, currentHoldings, isBuy) {
         await addTransactionToCoinTransactions(coinId, coin.name, coin.ticker, isBuy ? 'Buy' : 'Sell', amount, coin.price, new Date().toISOString());
 
         // Ladda om portfolion
-        await getAllPortfolioCoins();
+        await getPortfolio();
 
-        await getAllCoinTransactions();
+        await getTransactions();
 
         // Återställ scrollpositionen
         window.scrollTo(0, scrollPosition);
@@ -409,7 +420,7 @@ async function addTransactionToCoinTransactions(coinId, name, ticker, type, amou
     });
 
     if (response.ok) {
-        getAllCoinTransactions();
+        getTransactions();
     } else {
         // Logga det fullständiga svaret för att få mer information om varför begäran misslyckades
         const errorDetails = await response.text();
@@ -450,7 +461,7 @@ async function getCoinTransactions(coinId) {
 
 // Funktion för att rendera (skapa och visa) transaktioner i transaktionstabellen
 function renderTransactions(transactions) {
-    coins_transaction_tbody.replaceChildren(); // Rensa tabellen
+    transactionsTableBody.replaceChildren(); // Rensa tabellen
 
     // Loopa igenom alla coins och skapa en rad i tabellen för varje coin
     transactions.forEach(transaction => {
@@ -488,7 +499,7 @@ function renderTransactions(transactions) {
         rowForTransaction.append(nameCell, tickerCell, typeCell, amountCell, priceCell, valueCell, dateCell);
 
         // Lägger till raden i tabellen
-        coins_transaction_tbody.appendChild(rowForTransaction);
+        transactionsTableBody.appendChild(rowForTransaction);
     });
 }
 
@@ -496,26 +507,28 @@ function renderTransactions(transactions) {
 /// EXTRA FUNCTIONS ///
 ///////////////////////
 
-// Funktion för att formatera priser
+// Funktion för att formatera priser (hanterar även negativa tal korrekt)
 function formatPrice(price) {
-    // Om priset är ett heltal, formatera utan decimaler
-    if (price % 1 === 0) {
+    const absPrice = Math.abs(price); // Tar absolutbeloppet för att jämföra storleken
+
+    // Om priset är ett heltal (oavsett om det är positivt eller negativt), formatera utan decimaler
+    if (absPrice % 1 === 0) {
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
             minimumFractionDigits: 0,
             maximumFractionDigits: 0
         }).format(price);
-    } else if (price >= 1) {
-        // Om priset är större än 1, visa 2 decimaler
+    } else if (absPrice >= 1) {
+        // Om priset är större än eller lika med 1, visa 2 decimaler
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         }).format(price);
-    } else if (price >= 0.01) {
-        // Om priset är under 1 men större än 0.01, visa 4 decimaler
+    } else if (absPrice >= 0.01) {
+        // Om priset är under 1 men större än eller lika med 0.01, visa 4 decimaler
         return new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
@@ -543,7 +556,7 @@ function formatDate(dateString) {
 // Funktion för att filtrera coins i CoinGecko-tabellen baserat på användarens sökterm
 function searchCoin() {
     const filter = inputSearchCoin.value.toLowerCase();
-    const rows = document.getElementById('coingecko-tbody').getElementsByTagName('tr');
+    const rows = document.getElementById('marketTableBody').getElementsByTagName('tr');
 
     for (let i = 0; i < rows.length; i++) {
         const nameCell = rows[i].getElementsByTagName('td')[0];
@@ -626,6 +639,17 @@ async function calcuateInvestment(coinId) {
     return totalInvested;
 }
 
+function getTrendColor(value){
+
+    if (value > 0) {
+        return 'green';
+    } else if (value < 0) {
+        return 'red';
+    } else {
+        return 'black';
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// EVENT LISTENERS ///
 ///////////////////////
@@ -675,7 +699,6 @@ switchMarket.addEventListener('click', () => {
     isMarketOn = !isMarketOn;
     ShowHideMarket(isMarketOn);
 });
-
 
 // Körs när sidan laddas
 start();
