@@ -258,7 +258,7 @@ async function getPortfolio() {
 
 // Hämta transaktioner för coins och fyll i transaktionstabellen
 async function getTransactions() {
-    const url = api + '/coin-transactions';  // Hämta fullständig URL
+    const url = api + '/transactions';  // Hämta fullständig URL
     const response = await fetch(url); // Hämta data från URL
 
     if (!response.ok) {
@@ -351,7 +351,7 @@ async function deleteCoinFromPortfolio(coinId, coinHoldings) {
 
 // Funktion för att ta bort alla transaktioner för ett coin
 async function deleteAllCoinTransactions(coinId, coinHoldings) {
-    const url = `${api}/coin-transactions/coin/${coinId}`;
+    const url = `${api}/transactions/coin/${coinId}`;
 
     const response = await fetch(url, {
         method: 'DELETE'
@@ -425,7 +425,7 @@ async function adjustHoldings(coinId, coinAmountInput, currentHoldings, isBuy) {
 
 // Funktion för att lägga till en transaktion i CoinTransactions-tabellen
 async function addTransactionToCoinTransactions(coinId, name, ticker, type, amount, price, date) {
-    const url = api + '/coin-transactions'; // Hämta fullständig URL
+    const url = api + '/transactions'; // Hämta fullständig URL
 
     // Konvertera date till rätt format (yyyy-MM-ddTHH:mm:ss.fffZ)
     const formattedDate = new Date(date).toISOString();
@@ -474,7 +474,7 @@ async function getCoinFromPortfolio(coinId) {
 
 // Funktion för att hämta transaktioner för ett coin baserat på coinId
 async function getCoinTransactions(coinId) {
-    const url = `${api}/coin-transactions/${coinId}`;
+    const url = `${api}/transactions/coin/${coinId}`;
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -642,7 +642,7 @@ function hideInfo() {
 }
 
 async function calcuateInvestment(coinId) {
-    const url = `${api}/coin-transactions/${coinId}`;
+    const url = `${api}/transactions/coin/${coinId}`;
     const response = await fetch(url);
 
     if (!response.ok) {

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CoinPortBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+45eacdb9294e7dc5d4dd7dad32ea2c49c7fb0d9d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e8a45effc2ec18ae30c4a4670663728b476da232")]
 [assembly: System.Reflection.AssemblyProductAttribute("CoinPortBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CoinPortBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

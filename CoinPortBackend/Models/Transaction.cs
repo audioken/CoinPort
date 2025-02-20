@@ -2,7 +2,7 @@
 
 namespace CoinPortBackend.Models
 {
-    public class CoinTransaction
+    public class Transaction
     {
         [Key]
         public int Id { get; set; }
@@ -33,5 +33,4 @@ namespace CoinPortBackend.Models
         public DateTime Date { get; set; }
     }
 }
-
 
