@@ -10,6 +10,10 @@ let coinGeckoData = {}; // Nollställ minnet
 let isPortfolioOn = true; // Startvärde
 let isTransactionsOn = true; // Startvärde
 let isMarketOn = true;
+let tempTotPortValue = 0;
+let tempTotPortDollar = 0;
+let tempTotPortPercent = 0;
+let tempTotPortInvested = 0;
 
 // Hämta element från HTML
 let labelPortfolio = document.getElementById('labelPortfolio'); // Hämta label för att visa portfolion
@@ -18,6 +22,10 @@ let labelMarket = document.getElementById('labelMarket'); // Hämta label för a
 let switchPortfolio = document.getElementById('switchPortfolio'); // Hämta switchen för att visa portfolion
 let switchTransactions = document.getElementById('switchTransactions'); // Hämta switchen för att visa transaktioner
 let switchMarket = document.getElementById('switchMarket'); // Hämta switchen för att visa marknaden
+let totPortValue = document.getElementById('totPortValue'); // Hämta element för att visa totala portföljvärdet
+let totPortDollar = document.getElementById('totPortDollar'); // Hämta element för att visa totala portföljförändringen
+let totPortPercent = document.getElementById('totPortPercent'); // Hämta element för att visa totala portföljförändringen i procent
+
 const inputSearchCoin = document.getElementById('inputSearchCoin');
 
 // Hämta tbody-elementen från alla tabeller i HTML
@@ -29,7 +37,7 @@ const transactionsTableBody = document.getElementById('transactionsTableBody');
 /// MAIN FUNCTIONS ///
 //////////////////////
 
-// Starta sidan och hämta data från CoinGecko och API
+// Starta sidan och hämta data från CoinGecko och API:et
 function start() {
     getMarket()
         .then(getPortfolio)
@@ -106,6 +114,10 @@ async function getPortfolio() {
     const coins = await response.json(); // Konvertera data till JSON
 
     portfolioTableBody.replaceChildren(); // Rensa tabellen
+
+    tempTotPortValue = 0;
+    tempTotPortInvested = 0;
+    tempTotPortPercent = 0;
 
     // Loopa igenom alla coins och skapa en rad i tabellen för varje coin
     // Måste vara en for-loop för att kunna använda await i loopen
@@ -235,7 +247,13 @@ async function getPortfolio() {
 
         // Lägger till raden i tabellen
         portfolioTableBody.appendChild(rowForCoin);
+        
+        tempTotPortValue += (updatedPrice * coin.holdings);
+        tempTotPortInvested += invested;
+        tempTotPortPercent += roiPercent;
     };
+
+    getPortfolioTotalValues(tempTotPortValue, tempTotPortInvested);
 }
 
 // Hämta transaktioner för coins och fyll i transaktionstabellen
@@ -251,6 +269,16 @@ async function getTransactions() {
     const transactions = await response.json(); // Konvertera data till JSON
 
     renderTransactions(transactions);
+}
+
+async function getPortfolioTotalValues(tempTotPortValue, tempTotPortInvested) {
+
+    totPortValue.textContent = formatPrice(parseFloat(tempTotPortValue));
+    totPortDollar.textContent = formatPrice(parseFloat(tempTotPortValue - tempTotPortInvested));
+    totPortDollar.style.color = getTrendColor(tempTotPortValue - tempTotPortInvested);
+    totPortPercent.textContent = parseFloat((tempTotPortValue - tempTotPortInvested) / tempTotPortInvested * 100).toLocaleString('en-US',
+        { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
+    totPortPercent.style.color = totPortDollar.style.color; 
 }
 
 // Funktion för att lägga till coin i portfolion
@@ -286,7 +314,7 @@ async function addCoinToPortfolio(coinId, name, ticker, price, change24hPercent)
     }
 }
 
-// Funktion för att kontrollera om ett coin redan finns i portfolion
+// Funktion för att kontrollera om ett coin redan finns i portfolion 
 async function isCoinInPortfolio(coinId) {
     const urlGet = `${api}/coins/portfolio`; // Hämta coins från portfolion
     const responseGet = await fetch(urlGet);
