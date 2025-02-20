@@ -245,6 +245,140 @@
           }
         }
       }
+    },
+    "/market": {
+      "get": {
+        "tags": [
+          "Market"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/portfolio": {
+      "get": {
+        "tags": [
+          "Portfolio"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Portfolio"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Coin"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Coin"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Coin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/portfolio/{coinId}": {
+      "get": {
+        "tags": [
+          "Portfolio"
+        ],
+        "parameters": [
+          {
+            "name": "coinId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Portfolio"
+        ],
+        "parameters": [
+          {
+            "name": "coinId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Coin"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Coin"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Coin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Portfolio"
+        ],
+        "parameters": [
+          {
+            "name": "coinId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {

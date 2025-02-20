@@ -47,7 +47,7 @@ function start() {
 
 // Hämta senaste marknadsdata för coins från CoinGecko och fyll i CoinGecko-tabellen
 async function getMarket() {
-    const url = api + '/coins/coingecko/current-market'; // Hämta fullständig URL
+    const url = api + '/market'; // Hämta fullständig URL
     const response = await fetch(url); // Hämta data från URL
     const coins = await response.json(); // Konvertera data till JSON
 
@@ -109,7 +109,7 @@ async function getMarket() {
 
 // Hämta coins från API och fyll i portfolio-tabellen
 async function getPortfolio() {
-    const url = api + '/coins/portfolio';  // Hämta fullständig URL
+    const url = api + '/portfolio';  // Hämta fullständig URL
     const response = await fetch(url); // Hämta data från URL
     const coins = await response.json(); // Konvertera data till JSON
 
@@ -290,7 +290,7 @@ async function addCoinToPortfolio(coinId, name, ticker, price, change24hPercent)
         return;
     }
 
-    const url = api + '/coins/portfolio'; // Hämta fullständig URL
+    const url = api + '/portfolio'; // Hämta fullständig URL
 
     // Skicka en POST-request med coinId, name, ticker, price, change24hPercent och holdings
     const response = await fetch(url, {
@@ -316,7 +316,7 @@ async function addCoinToPortfolio(coinId, name, ticker, price, change24hPercent)
 
 // Funktion för att kontrollera om ett coin redan finns i portfolion 
 async function isCoinInPortfolio(coinId) {
-    const urlGet = `${api}/coins/portfolio`; // Hämta coins från portfolion
+    const urlGet = `${api}/portfolio`; // Hämta coins från portfolion
     const responseGet = await fetch(urlGet);
     
     // Kontrollera om requesten lyckades
@@ -333,7 +333,7 @@ async function isCoinInPortfolio(coinId) {
 
 // Funktion för att ta bort ett coin från portfolion
 async function deleteCoinFromPortfolio(coinId, coinHoldings) {
-    const url = `${api}/coins/portfolio/${coinId}`; // Hämta fullständig URL
+    const url = `${api}/portfolio/${coinId}`; // Hämta fullständig URL
 
     // Skicka en DELETE-request
     const response = await fetch(url, {
@@ -400,7 +400,7 @@ async function adjustHoldings(coinId, coinAmountInput, currentHoldings, isBuy) {
     // Uppdatera holdings
     coin.holdings = newHoldings;
 
-    const urlPut = `${api}/coins/portfolio/${coinId}`;
+    const urlPut = `${api}/portfolio/${coinId}`;
     const responsePut = await fetch(urlPut, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -459,7 +459,7 @@ async function addTransactionToCoinTransactions(coinId, name, ticker, type, amou
 
 // Funktion för att hämta ett coin från portfolion baserat på coinId
 async function getCoinFromPortfolio(coinId) {
-    const url = `${api}/coins/portfolio/${coinId}`; // Hämta URL för att hämta coins från portfolion
+    const url = `${api}/portfolio/${coinId}`; // Hämta URL för att hämta coins från portfolion
     const response = await fetch(url); // Hämta data från URL
 
     if (!response.ok) {

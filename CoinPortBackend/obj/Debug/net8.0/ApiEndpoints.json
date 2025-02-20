@@ -161,5 +161,94 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoinPortBackend.Controllers.MarketController",
+    "Method": "GetAllCoinsFromCoingecko",
+    "RelativePath": "market",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoinPortBackend.Controllers.PortfolioController",
+    "Method": "GetAllPortfolioCoins",
+    "RelativePath": "portfolio",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoinPortBackend.Controllers.PortfolioController",
+    "Method": "AddToPortfolio",
+    "RelativePath": "portfolio",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "coin",
+        "Type": "CoinPortBackend.Models.Coin",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoinPortBackend.Controllers.PortfolioController",
+    "Method": "GetCoinFromPortfolio",
+    "RelativePath": "portfolio/{coinId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "coinId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoinPortBackend.Controllers.PortfolioController",
+    "Method": "UpdateCoin",
+    "RelativePath": "portfolio/{coinId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "coinId",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "updatedCoin",
+        "Type": "CoinPortBackend.Models.Coin",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoinPortBackend.Controllers.PortfolioController",
+    "Method": "RemoveCoinFromPortfolio",
+    "RelativePath": "portfolio/{coinId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "coinId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]
