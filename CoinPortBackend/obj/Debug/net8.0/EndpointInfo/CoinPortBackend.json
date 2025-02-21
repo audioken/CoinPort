@@ -17,7 +17,7 @@
         }
       }
     },
-    "/portfolio": {
+    "/coins": {
       "get": {
         "tags": [
           "Portfolio"
@@ -58,7 +58,7 @@
         }
       }
     },
-    "/portfolio/{coinId}": {
+    "/coins/{coinId}": {
       "get": {
         "tags": [
           "Portfolio"
@@ -154,79 +154,25 @@
         "tags": [
           "Transaction"
         ],
-        "parameters": [
-          {
-            "name": "Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "CoinId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Name",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Ticker",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 50,
-              "type": "string"
-            }
-          },
-          {
-            "name": "Type",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "maxLength": 4,
-              "type": "string"
-            }
-          },
-          {
-            "name": "CoinAmount",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "number",
-              "format": "double"
-            }
-          },
-          {
-            "name": "CoinPrice",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "number",
-              "format": "double"
-            }
-          },
-          {
-            "name": "Date",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Transaction"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Transaction"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Transaction"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -234,28 +180,8 @@
         }
       }
     },
-    "/transactions/coin/{coinId}": {
+    "/transactions/{coinId}": {
       "get": {
-        "tags": [
-          "Transaction"
-        ],
-        "parameters": [
-          {
-            "name": "coinId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
         "tags": [
           "Transaction"
         ],
@@ -289,6 +215,28 @@
             "schema": {
               "type": "integer",
               "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/transactions/coin/{coinId}": {
+      "delete": {
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "coinId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -344,6 +292,57 @@
           "value": {
             "type": "number",
             "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Transaction": {
+        "required": [
+          "coinAmount",
+          "coinId",
+          "coinPrice",
+          "date",
+          "name",
+          "ticker",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "coinId": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "ticker": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "maxLength": 4,
+            "minLength": 1,
+            "type": "string"
+          },
+          "coinAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "coinPrice": {
+            "type": "number",
+            "format": "double"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false

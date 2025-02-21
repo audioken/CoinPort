@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoinPortBackend.Controllers
 {
-    [Route("/portfolio")]
+    [Route("/coins")]
     [ApiController]
     public class PortfolioController : ControllerBase
     {

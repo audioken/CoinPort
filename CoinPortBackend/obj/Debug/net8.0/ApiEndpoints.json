@@ -1,18 +1,8 @@
 [
   {
-    "ContainingType": "CoinPortBackend.Controllers.MarketController",
-    "Method": "GetAllCoinsFromCoingecko",
-    "RelativePath": "market",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "CoinPortBackend.Controllers.PortfolioController",
     "Method": "GetAllPortfolioCoins",
-    "RelativePath": "portfolio",
+    "RelativePath": "coins",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -22,7 +12,7 @@
   {
     "ContainingType": "CoinPortBackend.Controllers.PortfolioController",
     "Method": "AddToPortfolio",
-    "RelativePath": "portfolio",
+    "RelativePath": "coins",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -38,7 +28,7 @@
   {
     "ContainingType": "CoinPortBackend.Controllers.PortfolioController",
     "Method": "GetCoinFromPortfolio",
-    "RelativePath": "portfolio/{coinId}",
+    "RelativePath": "coins/{coinId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -54,7 +44,7 @@
   {
     "ContainingType": "CoinPortBackend.Controllers.PortfolioController",
     "Method": "UpdateCoin",
-    "RelativePath": "portfolio/{coinId}",
+    "RelativePath": "coins/{coinId}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -75,7 +65,7 @@
   {
     "ContainingType": "CoinPortBackend.Controllers.PortfolioController",
     "Method": "RemoveCoinFromPortfolio",
-    "RelativePath": "portfolio/{coinId}",
+    "RelativePath": "coins/{coinId}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -86,6 +76,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoinPortBackend.Controllers.MarketController",
+    "Method": "GetAllCoinsFromCoingecko",
+    "RelativePath": "market",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -107,44 +107,25 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "Id",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
+        "Name": "transaction",
+        "Type": "CoinPortBackend.Models.Transaction",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoinPortBackend.Controllers.TransactionController",
+    "Method": "GetAllCoinTransactions",
+    "RelativePath": "transactions/{coinId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
       {
-        "Name": "CoinId",
+        "Name": "coinId",
         "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Name",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Ticker",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "Type",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "CoinAmount",
-        "Type": "System.Decimal",
-        "IsRequired": false
-      },
-      {
-        "Name": "CoinPrice",
-        "Type": "System.Decimal",
-        "IsRequired": false
-      },
-      {
-        "Name": "Date",
-        "Type": "System.DateTime",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -160,22 +141,6 @@
       {
         "Name": "id",
         "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "CoinPortBackend.Controllers.TransactionController",
-    "Method": "GetAllCoinTransactions",
-    "RelativePath": "transactions/coin/{coinId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "coinId",
-        "Type": "System.String",
         "IsRequired": true
       }
     ],

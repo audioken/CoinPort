@@ -4,7 +4,7 @@ main, header {
     justify-content: center;
     align-items: center;
     width: 100%;
-    /* background-color: #f0f0f0; */
+    background-color: black;
     font-family: "Exo 2", serif;
     font-weight: 200;
     font-style: normal;

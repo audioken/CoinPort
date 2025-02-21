@@ -22,7 +22,7 @@ namespace CoinPortBackend.Controllers
         }
 
         // Hämta alla transaktioner för ett specifikt coin
-        [HttpGet("coin/{coinId}")]
+        [HttpGet("{coinId}")]
         public IActionResult GetAllCoinTransactions(string coinId)
         {
             var transactions = _database.Transactions

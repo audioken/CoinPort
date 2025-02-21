@@ -40,8 +40,11 @@ namespace CoinPortBackend.Controllers
                 Name = c["name"]?.ToString() ?? "Unknown",
                 Ticker = c["symbol"]?.ToString().ToUpper() ?? "N/A",
                 Price = c["current_price"]?.Value<decimal>() ?? 0m,
-                Change24hPercent = c["price_change_percentage_24h"] != null && decimal.TryParse(c["price_change_percentage_24h"]?.ToString(), out var percentChange)
+                PriceChange24hPercent = c["price_change_percentage_24h"] != null && decimal.TryParse(c["price_change_percentage_24h"]?.ToString(), out var percentChange)
                     ? Math.Round(percentChange, 2)
+                    : 0m,
+                PriceChange24h = c["price_change_24h"] != null && decimal.TryParse(c["price_change_24h"]?.ToString(), out var priceChange)
+                    ? priceChange
                     : 0m,
                 MarketCap = c["market_cap"]?.Value<decimal>() ?? 0m
             });

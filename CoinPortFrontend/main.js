@@ -57,7 +57,7 @@ async function getMarket() {
 
     coins.forEach(coin => {
         coinGeckoData[coin.coinId] = coin; // Spara coinet med coinId som nyckel
-    
+        
         const row = document.createElement('tr'); // Skapa en rad
     
         // Skapa celler för varje värde i coin-objektet
@@ -72,11 +72,11 @@ async function getMarket() {
 
         const priceCell = document.createElement('td');
         priceCell.textContent = formatPrice(parseFloat(coin.price));
-        
-        const change24hCell = document.createElement('td');
-        change24hCell.textContent = parseFloat(coin.change24hPercent).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
-        change24hCell.style.color = getTrendColor(coin.change24hPercent);
-        priceCell.style.color = change24hCell.style.color;
+
+        const priceChange24hPercentCell = document.createElement('td');
+        priceChange24hPercentCell.textContent = parseFloat(coin.priceChange24hPercent).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
+        priceChange24hPercentCell.style.color = getTrendColor(coin.priceChange24hPercent);
+        priceCell.style.color = priceChange24hPercentCell.style.color;
 
         const marketCapCell = document.createElement('td');
         marketCapCell.textContent = '$' + parseFloat(coin.marketCap).toLocaleString('en-US');        
@@ -95,10 +95,10 @@ async function getMarket() {
         btnAddCoinToPortfolio.addEventListener('mouseout', hideInfo); // Dölj info när musen lämnar
 
         // Lägger till coinet i portfolion och sparar det i databasen
-        btnAddCoinToPortfolio.onclick = () => addCoinToPortfolio(coin.coinId, coin.name, coin.ticker, coin.price, coin.change24hPercent);
+        btnAddCoinToPortfolio.onclick = () => addCoinToPortfolio(coin.coinId, coin.name, coin.ticker, coin.price, coin.priceChange24hPercent);
         
         // Lägger till alla celler i sina tillhörande HTML-element
-        row.append(nameCell, tickerCell, priceCell, change24hCell, marketCapCell, actionCell);
+        row.append(nameCell, tickerCell, priceCell, priceChange24hPercentCell, marketCapCell, actionCell);
         actionCell.appendChild(btnAddCoinToPortfolio);
 
         // Lägger till raden i tabellen
@@ -109,33 +109,48 @@ async function getMarket() {
 
 // Hämta coins från API och fyll i portfolio-tabellen
 async function getPortfolio() {
-    const url = api + '/portfolio';  // Hämta fullständig URL
-    const response = await fetch(url); // Hämta data från URL
-    const coins = await response.json(); // Konvertera data till JSON
 
-    portfolioTableBody.replaceChildren(); // Rensa tabellen
+    // Hämta alla coins från portfolion
+    const coins = await fetchPortfolioCoins();
 
+    // Rensa tabellen för att undvika dubletter
+    portfolioTableBody.replaceChildren();
+
+    // Nollställ totala värden för att undvika att de adderas på varandra
     tempTotPortValue = 0;
     tempTotPortInvested = 0;
     tempTotPortPercent = 0;
 
-    // Loopa igenom alla coins och skapa en rad i tabellen för varje coin
-    // Måste vara en for-loop för att kunna använda await i loopen
+    // Lägg till alla coins och dess värden i portfolion
     for (const coin of coins) {
 
-        // Skapa själva raden som coinet ska ligga i
+        // Skapa raden för coinet
         const rowForCoin = document.createElement('tr');
 
         // Hämta den senaste CoinGecko-datan för coinet
         const geckoCoin = coinGeckoData[coin.coinId];
+
+        // Uppdatera värden för coinet om det finns ny data
         const updatedCoinId = geckoCoin ? geckoCoin.coinId : coin.coinId;
         const updatedName = geckoCoin ? geckoCoin.name : coin.name;
         const updatedTicker = geckoCoin ? geckoCoin.ticker : coin.ticker;
         const updatedPrice = geckoCoin ? geckoCoin.price : coin.price;
-        const updatedChange24h = geckoCoin ? geckoCoin.change24hPercent : coin.change24hPercent;
+        const updatedPriceChange24hPercent = geckoCoin ? geckoCoin.priceChange24hPercent : coin.priceChange24hPercent;
+        const updatedPriceChange24h = geckoCoin ? geckoCoin.priceChange24h : coin.priceChange24h;
+
+        // Räkna ut värden beräknade på senaste datan
         const invested = await calcuateInvestment(coin.coinId);
-        const roiDollar = (coin.holdings * updatedPrice) - invested;
-        const roiPercent = ((coin.holdings * updatedPrice) - invested) / invested * 100;
+        
+        const roiDollar = formatPrice(parseFloat((coin.holdings * updatedPrice) - invested));
+        const roiPercent = parseFloat(((coin.holdings * updatedPrice) - invested) / invested * 100)
+            .toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
+
+        const price24hPercent = parseFloat(updatedPriceChange24hPercent).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
+        const price24hDollar = formatPrice(parseFloat((updatedPriceChange24h)));
+
+        // Kolla om trenden är grön eller röd
+        const isROIGreen = ((coin.holdings * updatedPrice) - invested) > 0;
+        const isPrice24hChangeGreen = updatedPriceChange24hPercent > 0;
 
         // Skapa celler baserat på den senaste datan för varje värde i coin-objektet
         const coinIdCell = document.createElement('td');
@@ -147,14 +162,20 @@ async function getPortfolio() {
         const tickerCell = document.createElement('td');
         tickerCell.textContent = updatedTicker; 
 
+        // const priceCell = document.createElement('td');
+        // priceCell.textContent = '$' + parseFloat(updatedPrice).toLocaleString('en-US', 
+        //     { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+
         const priceCell = document.createElement('td');
-        priceCell.textContent = '$' + parseFloat(updatedPrice).toLocaleString('en-US', 
-            { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+        priceCell.textContent = formatPrice(parseFloat(updatedPrice));
+            
         
         const change24hCell = document.createElement('td');
-        change24hCell.textContent = parseFloat(updatedChange24h).toLocaleString('en-US', 
-            { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
-        change24hCell.style.color = getTrendColor(updatedChange24h);
+        const change24h = `${price24hDollar} \n ${price24hPercent}`;
+        change24hCell.textContent = change24h;
+        change24hCell.style.whiteSpace = 'pre-line'; 
+
+        change24hCell.style.color = isPrice24hChangeGreen ? 'green' : 'red';
         priceCell.style.color = change24hCell.style.color;
 
         const holdingsCell = document.createElement('td');
@@ -166,15 +187,13 @@ async function getPortfolio() {
         const currentValueCell = document.createElement('td');
         currentValueCell.textContent = formatPrice(parseFloat(updatedPrice * coin.holdings)); 
 
-        const roiDollarCell = document.createElement('td');
-        roiDollarCell.textContent = formatPrice(parseFloat(roiDollar));
+        const roiCell = document.createElement('td');
+        const roi = `${roiDollar} \n ${roiPercent}`;
+        roiCell.textContent = roi;
+        roiCell.style.whiteSpace = 'pre-line';
 
-        const roiPercentCell = document.createElement('td');
-        roiPercentCell.textContent = parseFloat(roiPercent).toLocaleString('en-US', 
-            { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
-        roiPercentCell.style.color = getTrendColor(roiPercent);
-        currentValueCell.style.color = roiPercentCell.style.color;
-        roiDollarCell.style.color = roiPercentCell.style.color;
+        roiCell.style.color = isROIGreen ? 'green' : 'red';
+        currentValueCell.style.color = isROIGreen ? 'green' : 'red';
 
         // Skapa en cell för att hantera justering av holdings, 
         // samt knappar för att öka, minska, visa info och ta bort coinet
@@ -241,7 +260,7 @@ async function getPortfolio() {
         };
 
         // Lägger till alla celler i sina tillhörande HTML-element
-        rowForCoin.append(nameCell, tickerCell, priceCell, change24hCell, holdingsCell, investedCell, currentValueCell, roiDollarCell, roiPercentCell, actionCell);
+        rowForCoin.append(nameCell, tickerCell, priceCell, change24hCell, holdingsCell, investedCell, currentValueCell, roiCell, actionCell);
         actionCell.append(inputAmount, btnBar);
         btnBar.append(btnIncreaseHolding, btnDecreaseHolding, btnShowCoinTransactions, btnRemoveCoinFromPortfolio);
 
@@ -254,6 +273,14 @@ async function getPortfolio() {
     };
 
     getPortfolioTotalValues(tempTotPortValue, tempTotPortInvested);
+}
+
+async function fetchPortfolioCoins(){
+
+    // Hämta data från URL och konvertera till JSON
+    const url = api + '/coins';
+    const response = await fetch(url); 
+    return await response.json();
 }
 
 // Hämta transaktioner för coins och fyll i transaktionstabellen
@@ -282,7 +309,7 @@ async function getPortfolioTotalValues(tempTotPortValue, tempTotPortInvested) {
 }
 
 // Funktion för att lägga till coin i portfolion
-async function addCoinToPortfolio(coinId, name, ticker, price, change24hPercent) {
+async function addCoinToPortfolio(coinId, name, ticker, price, priceChange24h, priceChange24hPercent) {
 
     // Anropa den nya funktionen för att kolla om coinet redan finns
     if (await isCoinInPortfolio(coinId)) {
@@ -290,9 +317,9 @@ async function addCoinToPortfolio(coinId, name, ticker, price, change24hPercent)
         return;
     }
 
-    const url = api + '/portfolio'; // Hämta fullständig URL
+    const url = api + '/coins'; // Hämta fullständig URL
 
-    // Skicka en POST-request med coinId, name, ticker, price, change24hPercent och holdings
+    // Skicka en POST-request med coinId, name, ticker, price, priceChange24hPercent och holdings
     const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }, // Sätt header för att skicka JSON
@@ -301,7 +328,8 @@ async function addCoinToPortfolio(coinId, name, ticker, price, change24hPercent)
             name: name,
             ticker: ticker,
             price: price,
-            change24hPercent: change24hPercent,
+            priceChange24hPercent: priceChange24hPercent,
+            priceChange24h : priceChange24h,
             holdings: 0
         })
     });
@@ -316,7 +344,7 @@ async function addCoinToPortfolio(coinId, name, ticker, price, change24hPercent)
 
 // Funktion för att kontrollera om ett coin redan finns i portfolion 
 async function isCoinInPortfolio(coinId) {
-    const urlGet = `${api}/portfolio`; // Hämta coins från portfolion
+    const urlGet = `${api}/coins`; // Hämta coins från portfolion
     const responseGet = await fetch(urlGet);
     
     // Kontrollera om requesten lyckades
@@ -333,7 +361,7 @@ async function isCoinInPortfolio(coinId) {
 
 // Funktion för att ta bort ett coin från portfolion
 async function deleteCoinFromPortfolio(coinId, coinHoldings) {
-    const url = `${api}/portfolio/${coinId}`; // Hämta fullständig URL
+    const url = `${api}/coins/${coinId}`; // Hämta fullständig URL
 
     // Skicka en DELETE-request
     const response = await fetch(url, {
@@ -400,7 +428,7 @@ async function adjustHoldings(coinId, coinAmountInput, currentHoldings, isBuy) {
     // Uppdatera holdings
     coin.holdings = newHoldings;
 
-    const urlPut = `${api}/portfolio/${coinId}`;
+    const urlPut = `${api}/coins/${coinId}`;
     const responsePut = await fetch(urlPut, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -459,7 +487,7 @@ async function addTransactionToCoinTransactions(coinId, name, ticker, type, amou
 
 // Funktion för att hämta ett coin från portfolion baserat på coinId
 async function getCoinFromPortfolio(coinId) {
-    const url = `${api}/portfolio/${coinId}`; // Hämta URL för att hämta coins från portfolion
+    const url = `${api}/coins/${coinId}`; // Hämta URL för att hämta coins från portfolion
     const response = await fetch(url); // Hämta data från URL
 
     if (!response.ok) {
@@ -474,7 +502,7 @@ async function getCoinFromPortfolio(coinId) {
 
 // Funktion för att hämta transaktioner för ett coin baserat på coinId
 async function getCoinTransactions(coinId) {
-    const url = `${api}/transactions/coin/${coinId}`;
+    const url = `${api}/transactions/${coinId}`;
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -536,43 +564,121 @@ function renderTransactions(transactions) {
 ///////////////////////
 
 // Funktion för att formatera priser (hanterar även negativa tal korrekt)
-function formatPrice(price) {
-    const absPrice = Math.abs(price); // Tar absolutbeloppet för att jämföra storleken
+// function formatPrice(price) {
+//     const absPrice = Math.abs(price); // Tar absolutbeloppet för att jämföra storleken
 
-    // Om priset är ett heltal (oavsett om det är positivt eller negativt), formatera utan decimaler
-    if (absPrice % 1 === 0) {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0
-        }).format(price);
-    } else if (absPrice >= 1) {
-        // Om priset är större än eller lika med 1, visa 2 decimaler
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }).format(price);
-    } else if (absPrice >= 0.01) {
-        // Om priset är under 1 men större än eller lika med 0.01, visa 4 decimaler
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 4,
-            maximumFractionDigits: 4
-        }).format(price);
-    } else {
-        // Om priset är under 0.01, visa 8 decimaler för mycket små värden
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 8,
-            maximumFractionDigits: 8
-        }).format(price);
-    }
+//     // Om priset är ett heltal (oavsett om det är positivt eller negativt), formatera utan decimaler
+//     if (absPrice % 1 === 0) {
+//         return new Intl.NumberFormat('en-US', {
+//             style: 'currency',
+//             currency: 'USD',
+//             minimumFractionDigits: 0,
+//             maximumFractionDigits: 0
+//         }).format(price);
+//     } else if (absPrice >= 1) {
+//         // Om priset är större än eller lika med 1, visa 2 decimaler
+//         return new Intl.NumberFormat('en-US', {
+//             style: 'currency',
+//             currency: 'USD',
+//             minimumFractionDigits: 2,
+//             maximumFractionDigits: 2
+//         }).format(price);
+//     } else if (absPrice >= 0.01) {
+//         // Om priset är under 1 men större än eller lika med 0.01, visa 4 decimaler
+//         return new Intl.NumberFormat('en-US', {
+//             style: 'currency',
+//             currency: 'USD',
+//             minimumFractionDigits: 4,
+//             maximumFractionDigits: 4
+//         }).format(price);
+//     } else {
+//         // Om priset är under 0.01, visa 8 decimaler för mycket små värden
+//         return new Intl.NumberFormat('en-US', {
+//             style: 'currency',
+//             currency: 'USD',
+//             minimumFractionDigits: 8,
+//             maximumFractionDigits: 8
+//         }).format(price);
+//     }
+// }
+
+// function formatPrice(value) {
+//     // Om värdet är extremt litet, visa med upp till 6 decimaler för att inte förlora små värden
+//     if (Math.abs(value) < 0.01) {
+//         return `$${value.toFixed(6)}`; // Lägg till dollartecken och visa med upp till 6 decimaler för små belopp
+//     } 
+//     // Annars formaterar vi med upp till 2 decimaler och lägger till dollartecken
+//     return `$${parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+// }
+
+// function formatPrice(value) {
+//     // Om värdet är extremt litet, visa med upp till 6 decimaler för att inte förlora små värden
+//     if (Math.abs(value) < 0.01) {
+//         return `$${value.toFixed(6)}`; // Lägg till dollartecken och visa med upp till 6 decimaler för små belopp
+//     } 
+//     // Annars formaterar vi med upp till 2 decimaler och lägger till dollartecken
+//     return `$${value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+// }
+
+function formatPrice(value) {
+    // Om värdet är extremt litet, visa med upp till 6 decimaler för att inte förlora små värden
+    if (Math.abs(value) < 0.01) {
+        // Ta bort extra nollor genom att använda toFixed(6) och ta bort slutförande nollor
+        return `${value < 0 ? '-' : ''}$${Math.abs(value).toFixed(6).replace(/\.?0+$/, '')}`;
+    } 
+    
+    // Annars formaterar vi med upp till 2 decimaler och lägger till dollartecken
+    return `${value < 0 ? '-' : ''}$${Math.abs(value).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
 }
+
+
+
+// // Funktion för att formatera priser (hanterar även negativa tal korrekt)
+// function formatPrice(price) {
+//     const absPrice = Math.abs(price); // Tar absolutbeloppet för att jämföra storleken
+//     let decimalDigits = 0;
+
+//     if (absPrice % 1 !== 0) {
+//         // Bestämmer hur många decimaler som behövs
+//         if (absPrice >= 1) {
+//             decimalDigits = 2;
+//         } else if (absPrice >= 0.01) {
+//             decimalDigits = 4;
+//         } else {
+//             decimalDigits = 8;
+//         }
+//     }
+
+//     return new Intl.NumberFormat('en-US', {
+//         style: 'currency',
+//         currency: 'USD',
+//         minimumFractionDigits: decimalDigits,
+//         maximumFractionDigits: decimalDigits
+//     }).format(price);
+// }
+
+// function formatPrice(value) {
+//     // Om värdet är extremt litet, visa med upp till 6 decimaler för att inte förlora små värden
+//     if (Math.abs(value) < 0.01) {
+//         // För mycket små värden, visa med upp till 6 decimaler
+//         return `${value < 0 ? '-' : ''}$${Math.abs(value).toFixed(6)}`;
+//     } 
+
+//     // Om värdet är större än eller lika med 1, visa med upp till 2 decimaler
+//     if (Math.abs(value) >= 1) {
+//         return `${value < 0 ? '-' : ''}$${Math.abs(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+//     }
+
+//     // Om värdet är mellan 0 och 1 men större än eller lika med 0.01, visa med upp till 4 decimaler
+//     if (Math.abs(value) >= 0.01) {
+//         return `${value < 0 ? '-' : ''}$${Math.abs(value).toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}`;
+//     }
+
+//     // För värden som är mindre än 0.01, visa med upp till 6 decimaler
+//     return `${value < 0 ? '-' : ''}$${Math.abs(value).toFixed(6)}`;
+// }
+
+
 
 // Funktion för att formatera datum
 function formatDate(dateString) {
@@ -642,7 +748,7 @@ function hideInfo() {
 }
 
 async function calcuateInvestment(coinId) {
-    const url = `${api}/transactions/coin/${coinId}`;
+    const url = `${api}/transactions/${coinId}`;
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -651,8 +757,6 @@ async function calcuateInvestment(coinId) {
     }
 
     const transactions = await response.json();
-
-    console.log(transactions);
 
     let totalInvested = 0;
 
