@@ -5,15 +5,14 @@
 // Lagra serverns adress i en variabel
 const api = 'https://localhost:7026';
 
-// Finns för att spara CoinGecko-data i minnet.
-let coinGeckoData = {}; // Nollställ minnet
-let isPortfolioOn = true; // Startvärde
-let isTransactionsOn = true; // Startvärde
+// Deklarera variabler för att lagra data
+let coinGeckoData = {};
+let isPortfolioOn = true;
+let isTransactionsOn = true;
 let isMarketOn = true;
-let tempTotPortValue = 0;
-let tempTotPortDollar = 0;
-let tempTotPortPercent = 0;
-let tempTotPortInvested = 0;
+let tempTotalValue = 0;
+let tempTotalInvested = 0;
+let tempTotalChange24h = 0;
 
 // Hämta element från HTML
 let labelPortfolio = document.getElementById('labelPortfolio'); // Hämta label för att visa portfolion
@@ -22,10 +21,8 @@ let labelMarket = document.getElementById('labelMarket'); // Hämta label för a
 let switchPortfolio = document.getElementById('switchPortfolio'); // Hämta switchen för att visa portfolion
 let switchTransactions = document.getElementById('switchTransactions'); // Hämta switchen för att visa transaktioner
 let switchMarket = document.getElementById('switchMarket'); // Hämta switchen för att visa marknaden
-let totPortValue = document.getElementById('totPortValue'); // Hämta element för att visa totala portföljvärdet
-let totPortDollar = document.getElementById('totPortDollar'); // Hämta element för att visa totala portföljförändringen
-let totPortPercent = document.getElementById('totPortPercent'); // Hämta element för att visa totala portföljförändringen i procent
-
+let totalValue = document.getElementById('totalValue'); // Hämta element för att visa totala portföljvärdet
+let totalROIChange = document.getElementById('totalROIChange'); // Hämta element för att visa totala portföljförändringen
 const inputSearchCoin = document.getElementById('inputSearchCoin');
 
 // Hämta tbody-elementen från alla tabeller i HTML
@@ -117,9 +114,9 @@ async function getPortfolio() {
     portfolioTableBody.replaceChildren();
 
     // Nollställ totala värden för att undvika att de adderas på varandra
-    tempTotPortValue = 0;
-    tempTotPortInvested = 0;
-    tempTotPortPercent = 0;
+    tempTotalValue = 0;
+    tempTotalInvested = 0;
+    tempTotalChange24h = 0;
 
     // Lägg till alla coins och dess värden i portfolion
     for (const coin of coins) {
@@ -162,14 +159,9 @@ async function getPortfolio() {
         const tickerCell = document.createElement('td');
         tickerCell.textContent = updatedTicker; 
 
-        // const priceCell = document.createElement('td');
-        // priceCell.textContent = '$' + parseFloat(updatedPrice).toLocaleString('en-US', 
-        //     { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-
         const priceCell = document.createElement('td');
         priceCell.textContent = formatPrice(parseFloat(updatedPrice));
             
-        
         const change24hCell = document.createElement('td');
         const change24h = `${price24hDollar} \n ${price24hPercent}`;
         change24hCell.textContent = change24h;
@@ -267,12 +259,12 @@ async function getPortfolio() {
         // Lägger till raden i tabellen
         portfolioTableBody.appendChild(rowForCoin);
         
-        tempTotPortValue += (updatedPrice * coin.holdings);
-        tempTotPortInvested += invested;
-        tempTotPortPercent += roiPercent;
+        tempTotalValue += (updatedPrice * coin.holdings);
+        tempTotalInvested += invested;
+        tempTotalChange24h += updatedPriceChange24h * coin.holdings;
     };
 
-    getPortfolioTotalValues(tempTotPortValue, tempTotPortInvested);
+    getPortfolioTotalValues(tempTotalValue, tempTotalInvested, tempTotalChange24h);
 }
 
 async function fetchPortfolioCoins(){
@@ -298,14 +290,34 @@ async function getTransactions() {
     renderTransactions(transactions);
 }
 
-async function getPortfolioTotalValues(tempTotPortValue, tempTotPortInvested) {
+// Funktion för att uppdatera totala värden och förändringar i portfolion
+async function getPortfolioTotalValues(tempTotalValue, tempTotalInvested, tempTotalChange24h) {
 
-    totPortValue.textContent = formatPrice(parseFloat(tempTotPortValue));
-    totPortDollar.textContent = formatPrice(parseFloat(tempTotPortValue - tempTotPortInvested));
-    totPortDollar.style.color = getTrendColor(tempTotPortValue - tempTotPortInvested);
-    totPortPercent.textContent = parseFloat((tempTotPortValue - tempTotPortInvested) / tempTotPortInvested * 100).toLocaleString('en-US',
-        { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
-    totPortPercent.style.color = totPortDollar.style.color; 
+    // Formatera totalt värde
+    const totalValueFormated = formatPrice(parseFloat(tempTotalValue));
+
+    // Beräkna och formatera ROI
+    const totalPriceChangeFormated = formatPrice(parseFloat(tempTotalValue - tempTotalInvested));
+    const totalPercentChangeFormated = parseFloat((tempTotalValue - tempTotalInvested) / tempTotalInvested * 100)
+        .toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
+
+    // Beräkna och formatera 24h förändring
+    const total24hChangeFormated = formatPrice(parseFloat(tempTotalChange24h));
+    const total24hPercentChangeFormated = parseFloat((tempTotalChange24h / (tempTotalValue - tempTotalChange24h)) * 100)
+        .toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
+
+    // Uppdatera totalt värde
+    totalValue.textContent = totalValueFormated;
+
+    // Uppdatera ROI
+    totalROIChange.textContent = `${totalPriceChangeFormated} \n ${totalPercentChangeFormated}`;
+    totalROIChange.style.whiteSpace = 'pre-line';
+    totalROIChange.style.color = getTrendColor(tempTotalValue - tempTotalInvested);
+
+    // Uppdatera 24h förändring
+    total24hChange.textContent = `${total24hChangeFormated} \n ${total24hPercentChangeFormated}`;
+    total24hChange.style.whiteSpace = 'pre-line';
+    total24hChange.style.color = getTrendColor(tempTotalChange24h);
 }
 
 // Funktion för att lägga till coin i portfolion
@@ -563,63 +575,7 @@ function renderTransactions(transactions) {
 /// EXTRA FUNCTIONS ///
 ///////////////////////
 
-// Funktion för att formatera priser (hanterar även negativa tal korrekt)
-// function formatPrice(price) {
-//     const absPrice = Math.abs(price); // Tar absolutbeloppet för att jämföra storleken
-
-//     // Om priset är ett heltal (oavsett om det är positivt eller negativt), formatera utan decimaler
-//     if (absPrice % 1 === 0) {
-//         return new Intl.NumberFormat('en-US', {
-//             style: 'currency',
-//             currency: 'USD',
-//             minimumFractionDigits: 0,
-//             maximumFractionDigits: 0
-//         }).format(price);
-//     } else if (absPrice >= 1) {
-//         // Om priset är större än eller lika med 1, visa 2 decimaler
-//         return new Intl.NumberFormat('en-US', {
-//             style: 'currency',
-//             currency: 'USD',
-//             minimumFractionDigits: 2,
-//             maximumFractionDigits: 2
-//         }).format(price);
-//     } else if (absPrice >= 0.01) {
-//         // Om priset är under 1 men större än eller lika med 0.01, visa 4 decimaler
-//         return new Intl.NumberFormat('en-US', {
-//             style: 'currency',
-//             currency: 'USD',
-//             minimumFractionDigits: 4,
-//             maximumFractionDigits: 4
-//         }).format(price);
-//     } else {
-//         // Om priset är under 0.01, visa 8 decimaler för mycket små värden
-//         return new Intl.NumberFormat('en-US', {
-//             style: 'currency',
-//             currency: 'USD',
-//             minimumFractionDigits: 8,
-//             maximumFractionDigits: 8
-//         }).format(price);
-//     }
-// }
-
-// function formatPrice(value) {
-//     // Om värdet är extremt litet, visa med upp till 6 decimaler för att inte förlora små värden
-//     if (Math.abs(value) < 0.01) {
-//         return `$${value.toFixed(6)}`; // Lägg till dollartecken och visa med upp till 6 decimaler för små belopp
-//     } 
-//     // Annars formaterar vi med upp till 2 decimaler och lägger till dollartecken
-//     return `$${parseFloat(value).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
-// }
-
-// function formatPrice(value) {
-//     // Om värdet är extremt litet, visa med upp till 6 decimaler för att inte förlora små värden
-//     if (Math.abs(value) < 0.01) {
-//         return `$${value.toFixed(6)}`; // Lägg till dollartecken och visa med upp till 6 decimaler för små belopp
-//     } 
-//     // Annars formaterar vi med upp till 2 decimaler och lägger till dollartecken
-//     return `$${value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
-// }
-
+// Funktion för att formatera priser
 function formatPrice(value) {
     // Om värdet är extremt litet, visa med upp till 6 decimaler för att inte förlora små värden
     if (Math.abs(value) < 0.01) {
@@ -630,55 +586,6 @@ function formatPrice(value) {
     // Annars formaterar vi med upp till 2 decimaler och lägger till dollartecken
     return `${value < 0 ? '-' : ''}$${Math.abs(value).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
 }
-
-
-
-// // Funktion för att formatera priser (hanterar även negativa tal korrekt)
-// function formatPrice(price) {
-//     const absPrice = Math.abs(price); // Tar absolutbeloppet för att jämföra storleken
-//     let decimalDigits = 0;
-
-//     if (absPrice % 1 !== 0) {
-//         // Bestämmer hur många decimaler som behövs
-//         if (absPrice >= 1) {
-//             decimalDigits = 2;
-//         } else if (absPrice >= 0.01) {
-//             decimalDigits = 4;
-//         } else {
-//             decimalDigits = 8;
-//         }
-//     }
-
-//     return new Intl.NumberFormat('en-US', {
-//         style: 'currency',
-//         currency: 'USD',
-//         minimumFractionDigits: decimalDigits,
-//         maximumFractionDigits: decimalDigits
-//     }).format(price);
-// }
-
-// function formatPrice(value) {
-//     // Om värdet är extremt litet, visa med upp till 6 decimaler för att inte förlora små värden
-//     if (Math.abs(value) < 0.01) {
-//         // För mycket små värden, visa med upp till 6 decimaler
-//         return `${value < 0 ? '-' : ''}$${Math.abs(value).toFixed(6)}`;
-//     } 
-
-//     // Om värdet är större än eller lika med 1, visa med upp till 2 decimaler
-//     if (Math.abs(value) >= 1) {
-//         return `${value < 0 ? '-' : ''}$${Math.abs(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-//     }
-
-//     // Om värdet är mellan 0 och 1 men större än eller lika med 0.01, visa med upp till 4 decimaler
-//     if (Math.abs(value) >= 0.01) {
-//         return `${value < 0 ? '-' : ''}$${Math.abs(value).toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}`;
-//     }
-
-//     // För värden som är mindre än 0.01, visa med upp till 6 decimaler
-//     return `${value < 0 ? '-' : ''}$${Math.abs(value).toFixed(6)}`;
-// }
-
-
 
 // Funktion för att formatera datum
 function formatDate(dateString) {
@@ -727,7 +634,7 @@ function showInfo(event) {
     } else if (event.target.classList.contains('btnDecrease')) {
         infoText = 'Remove an amount of coins from your holdings.';
     } else if (event.target.classList.contains('btnShowInfo')) {
-        infoText = 'Show more information about this coin.';
+        infoText = 'View coin transactions.';
     } else if (event.target.classList.contains('btnRemove')) {
         infoText = 'Remove this coin from your portfolio.';
     } else if (event.target.classList.contains('btnAddCoinToPortfolio')) {
@@ -747,6 +654,7 @@ function hideInfo() {
     infoParagraph.style.display = 'none'; // Dölj paragrafen
 }
 
+// Funktion för att räkna ut total investering för ett coin
 async function calcuateInvestment(coinId) {
     const url = `${api}/transactions/${coinId}`;
     const response = await fetch(url);
@@ -771,6 +679,7 @@ async function calcuateInvestment(coinId) {
     return totalInvested;
 }
 
+// Funktion för att sätta färg på trenden beroende på om värdet är positivt, negativt eller noll
 function getTrendColor(value){
 
     if (value > 0) {

@@ -4,10 +4,16 @@ main, header {
     justify-content: center;
     align-items: center;
     width: 100%;
-    background-color: black;
+    background-color: #ffffff;
     font-family: "Exo 2", serif;
     font-weight: 200;
     font-style: normal;
+}
+
+h1{
+    font-size: 120px;
+    font-weight: 600;
+    margin-bottom: 0px;
 }
 
 nav{
@@ -20,7 +26,7 @@ nav{
     padding: 10px;
     margin-bottom: 10px;
     width: 1000px;
-    height: 60px;
+    height: 100px;
 }
 
 button{
@@ -52,10 +58,9 @@ button:active{
     background-color: #f0b7f6;
     border-radius: 10px;
     padding: 10px;
-    height: 60px;
+    height: 100px;
     width: 800px;
     font-weight: 300;
-    font-size: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -66,34 +71,50 @@ button:active{
     
 }
 
-#totPortValue{
+#totalValue{
     background-color: #f9e7fb;
     border-radius: 10px;
     padding: 10px;
     padding-left: 20px;
     padding-right: 20px;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 35px;
     margin: 10px;
+    height: 70px;
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#totPortDollar{
+#total24hChange{
     background-color: #f9e7fb;
     border-radius: 10px;
     padding: 10px;
     padding-left: 20px;
     padding-right: 20px;
     font-weight: 500;
+    font-size: 25px;
     margin: 10px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#totPortPercent{
+#totalROIChange{
     background-color: #f9e7fb;
     border-radius: 10px;
     padding: 10px;
     padding-left: 20px;
     padding-right: 20px;
     font-weight: 500;
+    font-size: 25px;
     margin: 10px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .divSwitch {
@@ -274,6 +295,7 @@ input{
 
 #inputSearchCoin{
     width: 80px;
+    margin-left: 10px;
 }
 
 
