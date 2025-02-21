@@ -7,6 +7,7 @@ const api = 'https://localhost:7026';
 
 // Deklarera variabler för att lagra data
 let coinGeckoData = {};
+let isTotalsOn = true;
 let isPortfolioOn = true;
 let isTransactionsOn = true;
 let isMarketOn = true;
@@ -15,12 +16,16 @@ let tempTotalInvested = 0;
 let tempTotalChange24h = 0;
 
 // Hämta element från HTML
+let labelTotals = document.getElementById('labelTotals'); // Hämta label för att visa totala värden
 let labelPortfolio = document.getElementById('labelPortfolio'); // Hämta label för att visa portfolion
 let labelTransactions = document.getElementById('labelTransactions'); // Hämta label för att visa transaktioner
 let labelMarket = document.getElementById('labelMarket'); // Hämta label för att visa marknaden
+
+let switchTotals = document.getElementById('switchTotals'); // Hämta switchen för att visa totala värden
 let switchPortfolio = document.getElementById('switchPortfolio'); // Hämta switchen för att visa portfolion
 let switchTransactions = document.getElementById('switchTransactions'); // Hämta switchen för att visa transaktioner
 let switchMarket = document.getElementById('switchMarket'); // Hämta switchen för att visa marknaden
+
 let totalValue = document.getElementById('totalValue'); // Hämta element för att visa totala portföljvärdet
 let totalROIChange = document.getElementById('totalROIChange'); // Hämta element för att visa totala portföljförändringen
 const inputSearchCoin = document.getElementById('inputSearchCoin');
@@ -721,7 +726,6 @@ document.querySelectorAll('#inputSearchCoin').forEach(element => {
 });
 
 function ShowHidePortfolio(isPortfolioOn) {
-    labelPortfolio.style.fontWeight = isPortfolioOn ? '500' : '200';
     labelPortfolio.style.color = isPortfolioOn ? 'black' : 'gray';
     const portfolio = document.querySelector('.portfolio');
     portfolio.style.display = isPortfolioOn ? 'block' : 'none';
@@ -733,7 +737,6 @@ switchPortfolio.addEventListener('click', () => {
 });
 
 function ShowHideTransactions(isTransactionsOn) {
-    labelTransactions.style.fontWeight = isTransactionsOn ? '500' : '200';
     labelTransactions.style.color = isTransactionsOn ? 'black' : 'gray';
     const transactions = document.querySelector('.transactions');
     transactions.style.display = isTransactionsOn ? 'block' : 'none';
@@ -745,7 +748,6 @@ switchTransactions.addEventListener('click', () => {
 });
 
 function ShowHideMarket(isMarketOn) {
-    labelMarket.style.fontWeight = isMarketOn ? '500' : '200';
     labelMarket.style.color = isMarketOn ? 'black' : 'gray';
     const market = document.querySelector('.market');
     market.style.display = isMarketOn ? 'block' : 'none';
@@ -754,6 +756,17 @@ function ShowHideMarket(isMarketOn) {
 switchMarket.addEventListener('click', () => {
     isMarketOn = !isMarketOn;
     ShowHideMarket(isMarketOn);
+});
+
+function ShowHideTotals() {
+    labelTotals.style.color = switchTotals.checked ? 'black' : 'gray';
+    const totals = document.querySelector('.totals');
+    totals.style.display = switchTotals.checked ? 'block' : 'none';
+}
+
+switchTotals.addEventListener('click', () => {
+    isTotalsOn = !isTotalsOn;
+    ShowHideTotals(isTotalsOn);
 });
 
 // Körs när sidan laddas

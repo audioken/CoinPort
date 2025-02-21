@@ -20,45 +20,33 @@
           <p id="infoParagraph"></p>
         </div>
 
-        <nav>
-          <div class="divSwitch" id="divSwitchPortfolio">
-            <label id="labelPortfolio" class="navLabels">Portfolio</label>
+        <div class="tableTitleContainer" id="totalsTitle">
+          <label class="switch switchTotals">
+            <input type="checkbox" id="switchTotals" checked>
+            <span class="slider round"></span>
+          </label>
+          <h2 class="tableTitle" id="labelTotals">Total</h2> 
+        </div>  
 
+        <div class="totals">
+          <nav>
+            <div class="totalValueContainer">
+              <label class="totalsLabel" id="totalValue"></label>
+              <label class="totalsLabel" id="total24hChange"></label>
+              <label class="totalsLabel" id="totalROIChange"></label>
+            </div>
+          </nav>
+        </div>  
+  
+        <div class="allTablesContainer">
+          <div class="tableTitleContainer" id="portfolioTableTitle">
             <label class="switch switchPortfolio">
               <input type="checkbox" id="switchPortfolio" checked>
               <span class="slider round"></span>
             </label>
+            <h2 class="tableTitle" id="labelPortfolio">Portfolio</h2>
           </div>
-
-          <div class="divSwitch" id="divSwitchTransactions">
-            <label id="labelTransactions" class="navLabels">Transactions</label>
-
-            <label class="switch switchTransactions">
-              <input type="checkbox" id="switchTransactions" checked>
-              <span class="slider round"></span>
-            </label>
-          </div>
-
-          <div class="divSwitch" id="divSwitchMarket">
-            <label id="labelMarket" class="navLabels">Market</label>
-
-            <label class="switch switchMarket">
-              <input type="checkbox" id="switchMarket" checked>
-              <span class="slider round"></span>
-            </label>
-          </div>
-          <div class="totalValueContainer">
-            <label class="totals" id="totalValue"></label>
-            <label class="totals" id="total24hChange"></label>
-            <label class="totals" id="totalROIChange"></label>
-          </div>
-        </nav>
-  
-        <div class="allTablesContainer">
           <div class="portfolio">
-            <div class="tableTitleContainer" id="portfolioTableTitle">
-              <h2>Portfolio</h2>
-            </div>
               <table id="portfolioTable">
                 <thead>
                   <tr id="portfolioHead">
@@ -79,10 +67,14 @@
             </table>
           </div>
           
+          <div class="tableTitleContainer" id="transactionsTableTitle">
+            <label class="switch switchTransactions">
+              <input type="checkbox" id="switchTransactions" checked>
+              <span class="slider round"></span>
+            </label>
+            <h2 class="tableTitle" id="labelTransactions">Transactions</h2>
+          </div>
           <div class="transactions">
-            <div class="tableTitleContainer" id="transactionsTableTitle">
-              <h2>Transactions</h2>
-            </div>
             <table id="transactionTable">
               <thead>
                 <tr id="transactionsHead">
@@ -102,10 +94,14 @@
             </table>
           </div>
   
+          <div class="tableTitleContainer" id="marketTableTitle">
+            <label class="switch switchMarket">
+              <input type="checkbox" id="switchMarket" checked>
+              <span class="slider round"></span>
+            </label>
+            <h2 class="tableTitle" id="labelMarket">Market</h2> 
+          </div>  
           <div class="market">
-            <div class="tableTitleContainer" id="marketTableTitle">
-              <h2>Market</h2>
-            </div>  
             <table id="marketTable">
               <thead>
                 <tr id="marketHead">
