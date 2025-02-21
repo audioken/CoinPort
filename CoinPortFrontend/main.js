@@ -85,7 +85,6 @@ async function getMarket() {
         const btnAddCoinToPortfolio = document.createElement('button');
         btnAddCoinToPortfolio.classList.add('btnAddCoinToPortfolio');
         btnAddCoinToPortfolio.textContent = '➕';
-        // btnAddCoinToPortfolio.style.alt = 'Add coin to portfolio';
     
         // Visa eller döljer info om vad knappen gör
         btnAddCoinToPortfolio.addEventListener('mouseover', showInfo); // Visa info när musen hovrar
@@ -288,6 +287,64 @@ async function getTransactions() {
     const transactions = await response.json(); // Konvertera data till JSON
 
     renderTransactions(transactions);
+}
+
+// Funktion för att rendera (skapa och visa) transaktioner i transaktionstabellen
+function renderTransactions(transactions) {
+    transactionsTableBody.replaceChildren(); // Rensa tabellen
+
+    // Loopa igenom alla coins och skapa en rad i tabellen för varje coin
+    transactions.forEach(transaction => {
+
+        // Skapa själva raden som transaktionen ska ligga i
+        const rowForTransaction = document.createElement('tr');
+
+        // Skapa celler med den uppdaterade datan för varje värde i transaction-objektet
+        const coinIdCell = document.createElement('td');
+        coinIdCell.textContent = transaction.coinId; 
+
+        const nameCell = document.createElement('td');
+        nameCell.textContent = transaction.name; 
+
+        const tickerCell = document.createElement('td');
+        tickerCell.textContent = transaction.ticker; 
+
+        const typeCell = document.createElement('td');
+        typeCell.textContent = transaction.type; 
+
+        const amountCell = document.createElement('td');
+        amountCell.textContent = transaction.coinAmount; 
+
+        const priceCell = document.createElement('td');
+        priceCell.textContent = '$' + parseFloat(transaction.coinPrice).toLocaleString('en-US', 
+            { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+        
+        const valueCell = document.createElement('td');
+        valueCell.textContent = formatPrice(parseFloat(transaction.coinPrice * transaction.coinAmount)); 
+
+        const dateCell = document.createElement('td');
+        dateCell.textContent = formatDate(transaction.date); 
+
+        const actionCell = document.createElement('td');
+        const btnEditTransaction = document.createElement('button');
+        btnEditTransaction.classList.add('btnEditTransaction');
+        btnEditTransaction.textContent = '✏️';
+
+        btnEditTransaction.onclick = () => editTransaction();
+
+        // Lägger till alla celler i sina tillhörande HTML-element
+        rowForTransaction.append(nameCell, tickerCell, typeCell, amountCell, priceCell, valueCell, dateCell, actionCell);
+        
+        // Lägger till knappen i actionCell
+        actionCell.appendChild(btnEditTransaction);
+
+        // Lägger till raden i tabellen
+        transactionsTableBody.appendChild(rowForTransaction);
+    });
+}
+
+async function editTransaction(){
+    
 }
 
 // Funktion för att uppdatera totala värden och förändringar i portfolion
@@ -527,49 +584,7 @@ async function getCoinTransactions(coinId) {
     renderTransactions(transactions);
 }
 
-// Funktion för att rendera (skapa och visa) transaktioner i transaktionstabellen
-function renderTransactions(transactions) {
-    transactionsTableBody.replaceChildren(); // Rensa tabellen
 
-    // Loopa igenom alla coins och skapa en rad i tabellen för varje coin
-    transactions.forEach(transaction => {
-
-        // Skapa själva raden som transaktionen ska ligga i
-        const rowForTransaction = document.createElement('tr');
-
-        // Skapa celler med den uppdaterade datan för varje värde i transaction-objektet
-        const coinIdCell = document.createElement('td');
-        coinIdCell.textContent = transaction.coinId; 
-
-        const nameCell = document.createElement('td');
-        nameCell.textContent = transaction.name; 
-
-        const tickerCell = document.createElement('td');
-        tickerCell.textContent = transaction.ticker; 
-
-        const typeCell = document.createElement('td');
-        typeCell.textContent = transaction.type; 
-
-        const amountCell = document.createElement('td');
-        amountCell.textContent = transaction.coinAmount; 
-
-        const priceCell = document.createElement('td');
-        priceCell.textContent = '$' + parseFloat(transaction.coinPrice).toLocaleString('en-US', 
-            { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-        
-        const valueCell = document.createElement('td');
-        valueCell.textContent = formatPrice(parseFloat(transaction.coinPrice * transaction.coinAmount)); 
-
-        const dateCell = document.createElement('td');
-        dateCell.textContent = formatDate(transaction.date); 
-
-        // Lägger till alla celler i sina tillhörande HTML-element
-        rowForTransaction.append(nameCell, tickerCell, typeCell, amountCell, priceCell, valueCell, dateCell);
-
-        // Lägger till raden i tabellen
-        transactionsTableBody.appendChild(rowForTransaction);
-    });
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// EXTRA FUNCTIONS ///
