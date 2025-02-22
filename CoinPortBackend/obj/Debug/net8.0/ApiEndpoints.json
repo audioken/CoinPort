@@ -116,22 +116,6 @@
   },
   {
     "ContainingType": "CoinPortBackend.Controllers.TransactionController",
-    "Method": "GetAllCoinTransactions",
-    "RelativePath": "transactions/{coinId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "coinId",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "CoinPortBackend.Controllers.TransactionController",
     "Method": "DeleteTransaction",
     "RelativePath": "transactions/{id}",
     "HttpMethod": "DELETE",
@@ -141,6 +125,38 @@
       {
         "Name": "id",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoinPortBackend.Controllers.TransactionController",
+    "Method": "GetTransaction",
+    "RelativePath": "transactions/{transactionId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "transactionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CoinPortBackend.Controllers.TransactionController",
+    "Method": "GetAllCoinTransactions",
+    "RelativePath": "transactions/coin/{coinId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "coinId",
+        "Type": "System.String",
         "IsRequired": true
       }
     ],

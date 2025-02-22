@@ -22,7 +22,7 @@ namespace CoinPortBackend.Controllers
         }
 
         // Hämta alla transaktioner för ett specifikt coin
-        [HttpGet("{coinId}")]
+        [HttpGet("coin/{coinId}")]
         public IActionResult GetAllCoinTransactions(string coinId)
         {
             var transactions = _database.Transactions
@@ -30,6 +30,21 @@ namespace CoinPortBackend.Controllers
                 .ToList();
 
             return Ok(transactions);
+        }
+
+        // Hämta en specifik transaktion
+        [HttpGet("{transactionId}")]
+        public IActionResult GetTransaction(int transactionId)
+        {
+            var transaction = _database.Transactions
+                .FirstOrDefault(t => t.Id == transactionId);
+
+            if (transaction == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(transaction);
         }
 
         // Lägg till en transaktion
@@ -51,6 +66,21 @@ namespace CoinPortBackend.Controllers
             if (transaction == null)
             {
                 return NotFound();
+            }
+
+            var coin = _database.Coins
+                .FirstOrDefault(c => c.CoinId == transaction.CoinId);
+
+            if (coin != null)
+            {
+                // Minska holdings med transaktionens coinAmount
+                coin.Holdings -= transaction.CoinAmount;
+
+                // Se till att holdings inte blir negativ
+                if (coin.Holdings < 0) coin.Holdings = 0;
+
+                // Spara ändringen i databasen
+                _database.Coins.Update(coin);
             }
 
             _database.Transactions.Remove(transaction);

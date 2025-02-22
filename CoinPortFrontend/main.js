@@ -332,29 +332,38 @@ function renderTransactions(transactions) {
         dateCell.textContent = formatDate(transaction.date); 
 
         const actionCell = document.createElement('td');
+
         const btnEditTransaction = document.createElement('button');
         btnEditTransaction.classList.add('btnEditTransaction');
         btnEditTransaction.textContent = '✏️';
-
         btnEditTransaction.onclick = () => editTransaction();
+
+        const btnDeleteTransaction = document.createElement('button');
+        btnDeleteTransaction.classList.add('btnDeleteTransaction');
+        btnDeleteTransaction.textContent = '❌';
+        btnDeleteTransaction.onclick = () => deleteTransaction(transaction.id);
 
         // Lägger till alla celler i sina tillhörande HTML-element
         rowForTransaction.append(nameCell, tickerCell, typeCell, amountCell, priceCell, valueCell, dateCell, actionCell);
         
         // Lägger till knappen i actionCell
-        actionCell.appendChild(btnEditTransaction);
+        actionCell.append(btnEditTransaction, btnDeleteTransaction);
 
         // Lägger till raden i tabellen
         transactionsTableBody.appendChild(rowForTransaction);
     });
 }
 
+// FIXA EN METOD SOM MÖJLIGGÖR REDIGERING AV TRANSAKTIONER
 async function editTransaction(){
-    
+    // FIXA EN METOD SOM MÖJLIGGÖR REDIGERING AV TRANSAKTIONER
 }
 
 // Funktion för att uppdatera totala värden och förändringar i portfolion
 async function getPortfolioTotalValues(tempTotalValue, tempTotalInvested, tempTotalChange24h) {
+
+    // Rensa tabellen för att undvika dubletter
+    totalsTableBody.replaceChildren();
 
     // Formatera totalt värde
     const totalValueFormated = formatPrice(parseFloat(tempTotalValue));
@@ -573,6 +582,25 @@ async function addTransaction(coinId, name, ticker, type, amount, price, date) {
     }
 }
 
+// Funktion för att ta bort en transaktion
+async function deleteTransaction(id) {
+    console.log(`Deleting transaction ID: ${id}`);
+
+    const url = `${api}/transactions/${id}`;
+    const response = await fetch(url, {
+        method: 'DELETE'
+    });
+
+    if (!response.ok) {
+        alert('Failed to delete transaction');
+        return;
+    }
+
+    // Uppdatera portfolion efter att transaktionen tagits bort
+    getPortfolio();
+    getTransactions();
+}
+
 // Funktion för att hämta ett coin från portfolion baserat på coinId
 async function getCoinFromPortfolio(coinId) {
     const url = `${api}/coins/${coinId}`; // Hämta URL för att hämta coins från portfolion
@@ -588,10 +616,9 @@ async function getCoinFromPortfolio(coinId) {
     return coin;
 }
 
-
 // Funktion för att hämta transaktioner för ett coin baserat på coinId
 async function getCoinTransactions(coinId) {
-    const url = `${api}/transactions/${coinId}`;
+    const url = `${api}/transactions/coin/${coinId}`;
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -689,7 +716,7 @@ function hideInfo() {
 
 // Funktion för att räkna ut total investering för ett coin
 async function calcuateInvestment(coinId) {
-    const url = `${api}/transactions/${coinId}`;
+    const url = `${api}/transactions/coin/${coinId}`;
     const response = await fetch(url);
 
     if (!response.ok) {
