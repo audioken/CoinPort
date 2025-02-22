@@ -16,19 +16,6 @@ h1{
     margin-bottom: 0px;
 }
 
-nav{
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    gap: 20px;
-    background-color: transparent;
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 10px;
-    width: 1000px;
-    height: 100px;
-}
-
 button{
     border: none;
     border-radius: 10px;
@@ -65,11 +52,6 @@ button:active{
     justify-content: center;
     align-items: center;
 }
-
-.totalsLabel{
-    padding: 40px;
-}
-
 
 #totalValue{
     background-color: #f9e7fb;
@@ -115,30 +97,6 @@ button:active{
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.divSwitch {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Vertikal centrering */
-    justify-content: center; /* Horisontell centrering */
-    gap: 10px; /* Mellanrum mellan slider och knapp */
-    padding: 10px;
-}
-
-#divSwitchPortfolio{
-    background-color: #ffcb3d;
-    border-radius: 10px;
-}
-
-#divSwitchTransactions{
-    background-color: #a2ee5f;
-    border-radius: 10px;
-}
-
-#divSwitchMarket{
-    background-color: #bddbe6;
-    border-radius: 10px;
 }
 
 .switch {
@@ -219,6 +177,7 @@ h2{
 
 table {
     background-color:rgb(236, 227, 215);
+    background-color:rgb(255, 255, 255);
     padding: 10px;
     width: 1000px;
     border-radius: 10px;
@@ -233,14 +192,16 @@ table {
     margin-bottom: 100px;
 }
 
-#totalsTitle{
+#totalsTableTitle{
     background-color: #f0b7f6;
-    margin-bottom: 10px;
+}
+
+#totalsTableTitle{
+    background-color: #f0b7f6;
 }
 
 #portfolioTableTitle{
     background-color: #ffcb3d;
-    /* margin-top: 10px */
 }
 
 #transactionsTableTitle{
@@ -265,9 +226,29 @@ td, th {
     white-space: nowrap; /* Förhindrar radbrytning i 8:e kolumnen */
 }
 
+#totalsTable{
+    background-color: #fcf5fd;
+}
+
+#portfolioTable{
+    background-color: #f9f1d9;
+}
+
+#transactionTable{
+    background-color: #e3f8e6;
+}
+
+#marketTable{
+    background-color: #ecf5fa;
+}
 
 table td {
     border-radius: 10px;
+}
+
+#totalsHead th{
+    background-color: #f7dff9;
+    font-size: 20px;
 }
 
 #portfolioHead th{
@@ -282,8 +263,24 @@ table td {
     background-color: #d3dfe6;
 }
 
+.cellTotal{
+    font-size: 50px;
+    font-weight: 600;
+}
+
+.cellROI{
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.cell24h{
+    font-size: 30px;
+    font-weight: 500;
+}
+
 tbody tr:hover td {
-    background-color: #f3ecb7;
+    background-color: #ffffff;
+    /* background-color: #f3ecb7; */
 }
 
 
@@ -292,6 +289,12 @@ table {
     border-collapse: separate; /* Viktigt! */
     border-radius: 12px; /* Rundade hörn på hela tabellen */
     overflow: hidden; /* Om det behövs */
+    margin-top: -10px;
+    margin-bottom: 10px;
+    padding-top: 5px;
+    border-bottom: 1px solid #d3d3d3;
+    border-left: 1px solid #d3d3d3;
+    border-right: 1px solid #d3d3d3;
 }
   
 td, th {

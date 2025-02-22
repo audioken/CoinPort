@@ -31,6 +31,7 @@ let totalROIChange = document.getElementById('totalROIChange'); // Hämta elemen
 const inputSearchCoin = document.getElementById('inputSearchCoin');
 
 // Hämta tbody-elementen från alla tabeller i HTML
+const totalsTableBody = document.getElementById('totalsTableBody');
 const marketTableBody = document.getElementById('marketTableBody');
 const portfolioTableBody = document.getElementById('portfolioTableBody');
 const transactionsTableBody = document.getElementById('transactionsTableBody');
@@ -357,29 +358,44 @@ async function getPortfolioTotalValues(tempTotalValue, tempTotalInvested, tempTo
 
     // Formatera totalt värde
     const totalValueFormated = formatPrice(parseFloat(tempTotalValue));
+    
+    // Beräkna och formatera 24h förändring
+    const total24hChangeFormated = formatPrice(parseFloat(tempTotalChange24h));
+    const total24hPercentChangeFormated = parseFloat((tempTotalChange24h / (tempTotalValue - tempTotalChange24h)) * 100)
+        .toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
 
     // Beräkna och formatera ROI
     const totalPriceChangeFormated = formatPrice(parseFloat(tempTotalValue - tempTotalInvested));
     const totalPercentChangeFormated = parseFloat((tempTotalValue - tempTotalInvested) / tempTotalInvested * 100)
         .toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
 
-    // Beräkna och formatera 24h förändring
-    const total24hChangeFormated = formatPrice(parseFloat(tempTotalChange24h));
-    const total24hPercentChangeFormated = parseFloat((tempTotalChange24h / (tempTotalValue - tempTotalChange24h)) * 100)
-        .toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
+    // Skapa en rad för totala värden
+    const rowForTotal = document.createElement('tr');
 
     // Uppdatera totalt värde
-    totalValue.textContent = totalValueFormated;
-
-    // Uppdatera ROI
-    totalROIChange.textContent = `${totalPriceChangeFormated} \n ${totalPercentChangeFormated}`;
-    totalROIChange.style.whiteSpace = 'pre-line';
-    totalROIChange.style.color = getTrendColor(tempTotalValue - tempTotalInvested);
+    const totalValueCell = document.createElement('td');
+    totalValueCell.classList.add('cellTotal');
+    totalValueCell.textContent = totalValueFormated;
 
     // Uppdatera 24h förändring
-    total24hChange.textContent = `${total24hChangeFormated} \n ${total24hPercentChangeFormated}`;
-    total24hChange.style.whiteSpace = 'pre-line';
-    total24hChange.style.color = getTrendColor(tempTotalChange24h);
+    const _24hChangeCell = document.createElement('td');
+    _24hChangeCell.classList.add('cell24h');
+    _24hChangeCell.textContent = `${total24hChangeFormated} \n ${total24hPercentChangeFormated}`;
+    _24hChangeCell.style.whiteSpace = 'pre-line';
+    _24hChangeCell.style.color = getTrendColor(tempTotalChange24h);
+
+    // Uppdatera ROI
+    const roiChangeCell = document.createElement('td');
+    roiChangeCell.classList.add('cellROI');
+    roiChangeCell.textContent = `${totalPriceChangeFormated} \n ${totalPercentChangeFormated}`;
+    roiChangeCell.style.whiteSpace = 'pre-line';
+    roiChangeCell.style.color = getTrendColor(tempTotalValue - tempTotalInvested);
+
+    // Lägg till cellerna i raden
+    rowForTotal.append(totalValueCell, _24hChangeCell, roiChangeCell);
+
+    // Lägg till raden i tabellen
+    totalsTableBody.appendChild(rowForTotal);
 }
 
 // Funktion för att lägga till coin i portfolion
@@ -567,8 +583,6 @@ async function getCoinFromPortfolio(coinId) {
         return null;
     }
 
-
-
     const coin = await response.json();
 
     return coin;
@@ -589,8 +603,6 @@ async function getCoinTransactions(coinId) {
 
     renderTransactions(transactions);
 }
-
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// EXTRA FUNCTIONS ///

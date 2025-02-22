@@ -19,26 +19,33 @@
         <div style="height: 50px; padding: 10px;">
           <p id="infoParagraph"></p>
         </div>
-
-        <div class="tableTitleContainer" id="totalsTitle">
-          <label class="switch switchTotals">
-            <input type="checkbox" id="switchTotals" checked>
-            <span class="slider round"></span>
-          </label>
-          <h2 class="tableTitle" id="labelTotals">Total</h2> 
-        </div>  
-
-        <div class="totals">
-          <nav>
-            <div class="totalValueContainer">
-              <label class="totalsLabel" id="totalValue"></label>
-              <label class="totalsLabel" id="total24hChange"></label>
-              <label class="totalsLabel" id="totalROIChange"></label>
-            </div>
-          </nav>
-        </div>  
   
         <div class="allTablesContainer">
+
+          <!-- TOTALS TABLE -->
+          <div class="tableTitleContainer" id="totalsTableTitle">
+            <label class="switch switchTotals">
+              <input type="checkbox" id="switchTotals" checked>
+              <span class="slider round"></span>
+            </label>
+            <h2 class="tableTitle" id="labelTotals">Total</h2> 
+          </div>  
+          <div class="totals">
+              <table id="totalsTable">
+                <thead>
+                  <tr id="totalsHead">
+                    <th>Total Portfolio Value</th>
+                    <th>24h Change</th>
+                    <th>Total ROI </th>
+                  </tr>
+                </thead>
+              <tbody id="totalsTableBody">
+                <!-- Coins kommer att läggas här via JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- PORTFOLIO TABLE -->
           <div class="tableTitleContainer" id="portfolioTableTitle">
             <label class="switch switchPortfolio">
               <input type="checkbox" id="switchPortfolio" checked>
@@ -67,6 +74,7 @@
             </table>
           </div>
           
+          <!-- TRANSACTIONS TABLE -->
           <div class="tableTitleContainer" id="transactionsTableTitle">
             <label class="switch switchTransactions">
               <input type="checkbox" id="switchTransactions" checked>
@@ -94,6 +102,7 @@
             </table>
           </div>
   
+          <!-- MARKET TABLE -->
           <div class="tableTitleContainer" id="marketTableTitle">
             <label class="switch switchMarket">
               <input type="checkbox" id="switchMarket" checked>
@@ -118,8 +127,8 @@
               </tbody>
             </table>
           </div>
-        </div>
 
+        </div>
       </main>
     <script src="main.js" defer></script>
 </body>
