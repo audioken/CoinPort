@@ -44,8 +44,10 @@ namespace CoinPortBackend.Controllers
         {
             _context.Coins.Add(coin);
             _context.SaveChanges();
-            return Ok();
+
+            return Ok(coin);  // Skicka tillbaka coin så att frontend får det
         }
+
 
         // Uppdatera holdings för ett coin i portfolion
         [HttpPut("{coinId}")]

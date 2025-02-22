@@ -511,22 +511,20 @@ async function adjustHoldings(coinId, coinAmountInput, currentHoldings, isBuy) {
 
     if (responsePut.ok) {
         // Spara transaktionen i databasen
-        await addTransactionToCoinTransactions(coinId, coin.name, coin.ticker, isBuy ? 'Buy' : 'Sell', amount, coin.price, new Date().toISOString());
+        await addTransaction(coinId, coin.name, coin.ticker, isBuy ? 'Buy' : 'Sell', amount, coin.price, new Date().toISOString());
 
         // Ladda om portfolion
         await getPortfolio();
 
         await getTransactions();
 
-        // Återställ scrollpositionen
-        window.scrollTo(0, scrollPosition);
     } else {
         alert('Kunde inte uppdatera holdings');
     }
 }
 
 // Funktion för att lägga till en transaktion i CoinTransactions-tabellen
-async function addTransactionToCoinTransactions(coinId, name, ticker, type, amount, price, date) {
+async function addTransaction(coinId, name, ticker, type, amount, price, date) {
     const url = api + '/transactions'; // Hämta fullständig URL
 
     // Konvertera date till rätt format (yyyy-MM-ddTHH:mm:ss.fffZ)
@@ -569,10 +567,13 @@ async function getCoinFromPortfolio(coinId) {
         return null;
     }
 
+
+
     const coin = await response.json();
 
     return coin;
 }
+
 
 // Funktion för att hämta transaktioner för ett coin baserat på coinId
 async function getCoinTransactions(coinId) {
@@ -689,6 +690,7 @@ async function calcuateInvestment(coinId) {
     let totalInvested = 0;
 
     transactions.forEach(transaction => {
+
         if (transaction.type === 'Buy') {
             totalInvested += transaction.coinAmount * transaction.coinPrice;
         } else {
