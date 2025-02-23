@@ -68,6 +68,11 @@ namespace CoinPortBackend.Controllers
                 return NotFound();
             }
 
+            if (updatedTransaction == null)
+            {
+                return NotFound();
+            }
+
             transaction.CoinId = updatedTransaction.CoinId;
             transaction.Name = updatedTransaction.Name;
             transaction.Ticker = updatedTransaction.Ticker;
@@ -75,21 +80,6 @@ namespace CoinPortBackend.Controllers
             transaction.CoinAmount = updatedTransaction.CoinAmount;
             transaction.CoinPrice = updatedTransaction.CoinPrice;
             transaction.Date = updatedTransaction.Date;
-
-            var coin = _database.Coins
-                .FirstOrDefault(c => c.CoinId == transaction.CoinId);
-
-            if (coin != null)
-            {
-                // Minska holdings med transaktionens coinAmount
-                coin.Holdings -= transaction.CoinAmount;
-
-                // Se till att holdings inte blir negativ
-                if (coin.Holdings < 0) coin.Holdings = 0;
-
-                // Spara ändringen i databasen
-                _database.Coins.Update(coin);
-            }
 
             _database.Transactions.Update(transaction);
             _database.SaveChanges();
@@ -107,29 +97,6 @@ namespace CoinPortBackend.Controllers
             if (transaction == null)
             {
                 return NotFound();
-            }
-
-            var coin = _database.Coins
-                .FirstOrDefault(c => c.CoinId == transaction.CoinId);
-
-            if (coin != null)
-            {
-                if (transaction.Type == "Buy")
-                {
-                    // Minska holdings med transaktionens coinAmount
-                    coin.Holdings -= transaction.CoinAmount;
-
-                    // Se till att holdings inte blir negativ
-                    if (coin.Holdings < 0) coin.Holdings = 0;
-                }
-                else if (transaction.Type == "Sell")
-                {
-                    // Öka holdings med transaktionens coinAmount
-                    coin.Holdings += transaction.CoinAmount;
-                }
-
-                // Spara ändringen i databasen
-                _database.Coins.Update(coin);
             }
 
             _database.Transactions.Remove(transaction);
@@ -162,5 +129,23 @@ namespace CoinPortBackend.Controllers
             // Returnera NoContent för att indikera att det gick bra
             return NoContent();
         }
+
+        //// Hjälpmetod för att ta bort $-tecken och byta komma till punkt
+        //private decimal SanitizeAmount(string amount)
+        //{
+        //    // Ta bort $-tecken och byt komma till punkt
+        //    if (amount != null)
+        //    {
+        //        amount = amount.Replace("$", "").Replace(",", ".");
+        //    }
+
+        //    // Försök att konvertera till decimal och returnera, annars 0 om invalid format
+        //    if (decimal.TryParse(amount, out decimal result))
+        //    {
+        //        return result;
+        //    }
+
+        //    return 0; // Om det inte går att konvertera, sätt till 0
+        //}
     }
 }

@@ -76,6 +76,8 @@ async function getMarket() {
         const priceCell = document.createElement('td');
         priceCell.textContent = formatPrice(parseFloat(coin.price));
 
+        const priceChange24h = coin.priceChange24h !== null && !isNaN(parseFloat(coin.priceChange24h)) ? parseFloat(coin.priceChange24h) : 0;
+
         const priceChange24hPercentCell = document.createElement('td');
         priceChange24hPercentCell.textContent = parseFloat(coin.priceChange24hPercent).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
         priceChange24hPercentCell.style.color = getTrendColor(coin.priceChange24hPercent);
@@ -97,7 +99,6 @@ async function getMarket() {
         btnAddCoinToPortfolio.addEventListener('mouseout', hideInfo); // Dölj info när musen lämnar
 
         // Lägger till coinet i portfolion och sparar det i databasen
-        // btnAddCoinToPortfolio.onclick = () => addCoinToPortfolio(coin.coinId, coin.name, coin.ticker, coin.price, coin.priceChange24hPercent);
         btnAddCoinToPortfolio.onclick = () => addCoin(coin.coinId, coin.name, coin.ticker, 'Add', 0, 0, Date.now());
         
         // Lägger till alla celler i sina tillhörande HTML-element
@@ -157,7 +158,7 @@ async function addCoin(coinId, name, ticker, type, amount, price, date) {
 async function createPortfolio(){
     const transactions = await fetchTransactions();
     const coins = await sortCoins(transactions);
-    renderPortfolio(coins);
+    await renderPortfolio(coins);
 }
 
 // Hämta transaktioner från databasen
@@ -427,7 +428,7 @@ function renderTransactions(transactions) {
     transactions.forEach(transaction => {
 
         // Skapa själva raden som transaktionen ska ligga i
-        const rowForTransaction = document.createElement('tr');
+        const row = document.createElement('tr');
 
         // Skapa celler med den uppdaterade datan för varje värde i transaction-objektet
         const coinIdCell = document.createElement('td');
@@ -457,25 +458,61 @@ function renderTransactions(transactions) {
         const actionCell = document.createElement('td');
 
         if (transaction.type != 'Add') {
+
+            if (transaction.type === 'Buy') {
+                row.style.color = 'green';
+            } else {
+                row.style.color = 'red';
+            }
+     
             const btnEditTransaction = document.createElement('button');
             btnEditTransaction.classList.add('btnEditTransaction');
             btnEditTransaction.textContent = '✏️';
-            btnEditTransaction.onclick = () => editTransaction();
-    
+            btnEditTransaction.onclick = () => { 
+                editTransaction(
+                    btnEditTransaction, 
+                    btnUpdateTransaction, 
+                    amountCell, 
+                    priceCell);
+            };
+
+            const btnUpdateTransaction = document.createElement('button');
+            btnUpdateTransaction.classList.add('btnApplyChanges');
+            btnUpdateTransaction.textContent = '✔️';
+            btnUpdateTransaction.style.display = 'none';
+            btnUpdateTransaction.onclick = () => {
+                saveChanges(
+                    btnUpdateTransaction, 
+                    btnEditTransaction, 
+                    amountCell, priceCell, 
+                    transaction.id);
+                updateTransaction(
+                    transaction.id, 
+                    transaction.coinId,
+                    transaction.name,
+                    transaction.ticker,
+                    transaction.type,
+                    amountCell.textContent,
+                    priceCell.textContent,
+                    transaction.date);
+            };
+
             const btnDeleteTransaction = document.createElement('button');
             btnDeleteTransaction.classList.add('btnDeleteTransaction');
             btnDeleteTransaction.textContent = '❌';
             btnDeleteTransaction.onclick = () => deleteTransaction(transaction.id);
 
             // Lägger till knappen i actionCell
-            actionCell.append(btnEditTransaction, btnDeleteTransaction);
+            actionCell.append(btnEditTransaction, btnUpdateTransaction, btnDeleteTransaction);
+        } else{
+            row.style.color = 'grey';
         }
 
         // Lägger till alla celler i sina tillhörande HTML-element
-        rowForTransaction.append(nameCell, tickerCell, typeCell, amountCell, priceCell, valueCell, dateCell, actionCell);
+        row.append(nameCell, tickerCell, typeCell, amountCell, priceCell, valueCell, dateCell, actionCell);
 
         // Lägger till raden i tabellen
-        transactionsTableBody.appendChild(rowForTransaction);
+        transactionsTableBody.appendChild(row);
     });
 }
 
@@ -490,15 +527,98 @@ async function deleteCoin(coinId) {
     }
 }
 
-// FIXA EN METOD SOM MÖJLIGGÖR REDIGERING AV TRANSAKTIONER
-async function editTransaction(){
-    // FIXA EN METOD SOM MÖJLIGGÖR REDIGERING AV TRANSAKTIONER
+// Redigera en transaktion
+async function editTransaction(btnEdit, btnUpdate, amountCell, priceCell) {
+
+    // Visa eller dölj knappar
+    btnEdit.style.display = 'none'; 
+    btnUpdate.style.display = 'inline-block';
+
+    // Ändra bakgrundsfärg för att visa att raden är redigerbar
+    amountCell.style.backgroundColor = 'salmon'; 
+    priceCell.style.backgroundColor = 'salmon'; 
+
+    // Gör cellerna redigerbara
+    amountCell.contentEditable = true; 
+    priceCell.contentEditable = true;
+    
+    // Markera all text i cellen
+    markAllText(amountCell); 
+}
+
+// Markera all text i en cell
+async function markAllText(cell){
+
+    // Fokusera cellen
+    cell.focus();
+    
+    // Markera all text i cellen
+    const range = document.createRange();
+    const selection = window.getSelection();
+    range.selectNodeContents(cell);
+    selection.removeAllRanges();
+    selection.addRange(range);
+}
+
+// Uppdatera en transaktion
+async function saveChanges(btnUpdate, btnEdit, amountCell, priceCell) {
+    
+    // Göm eller visa knappar
+    btnUpdate.style.display = 'none'; 
+    btnEdit.style.display = 'inline-block';
+
+    // Återställ bakgrundsfärg
+    amountCell.style.backgroundColor = ''; 
+    priceCell.style.backgroundColor = ''; 
+
+    // Gör celler oredigerbara
+    amountCell.contentEditable = false; 
+    priceCell.contentEditable = false;
+
+    // Ta bort fokus från cellerna
+    amountCell.isFocused = false; 
+    priceCell.isFocused = false; 
+
+    // Avmarkera all text
+    const selection = window.getSelection();
+    selection.removeAllRanges(); // Tar bort markeringen
+}
+
+async function updateTransaction(id, coinId, name, ticker, type, amount, price, date) {
+
+    // Sanera amount och price innan du skickar dem
+    const sanitizedAmount = amount.replace(',', '.');  // Byt komma till punkt
+    const sanitizedPrice = price.replace('$', '').replace(',', '.');  // Ta bort $ och byt komma till punkt
+
+    const transactionData = {
+        CoinId: coinId,
+        Name: name,
+        Ticker: ticker,
+        Type: type,
+        CoinAmount: sanitizedAmount,
+        CoinPrice: sanitizedPrice,
+        Date: date
+    };
+
+    const url = `${api}/transactions/${id}`;
+    const response = await fetch(url, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(transactionData)
+    });
+
+    if (!response.ok) {
+        alert('Failed to update transaction');
+        return;
+    }
+
+    getTransactions();
+    createPortfolio();
 }
 
 // Ta bort en transaktion från databasen
 async function deleteTransaction(id) {
-    console.log(`Deleting transaction ID: ${id}`);
-
+    
     const url = `${api}/transactions/${id}`;
     const response = await fetch(url, {
         method: 'DELETE'
@@ -510,8 +630,8 @@ async function deleteTransaction(id) {
     }
 
     // Uppdatera portfolion efter att transaktionen tagits bort
-    createPortfolio();
-    getTransactions();
+    await getTransactions();
+    await createPortfolio();
 }
 
 // Generera totala värden för portfolion

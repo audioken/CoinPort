@@ -43,8 +43,9 @@ namespace CoinPortBackend.Controllers
                 PriceChange24hPercent = c["price_change_percentage_24h"] != null && decimal.TryParse(c["price_change_percentage_24h"]?.ToString(), out var percentChange)
                     ? Math.Round(percentChange, 2)
                     : 0m,
-                PriceChange24h = c["price_change_24h"]?.Value<decimal>() ?? 0m, // Direkt konvertering istället för TryParse
-
+                PriceChange24h = c["price_change_24h"]?.Type == JTokenType.Float || c["price_change_24h"]?.Type == JTokenType.Integer
+                    ? c["price_change_24h"].Value<decimal>()
+                    : 0m,
                 MarketCap = c["market_cap"]?.Value<decimal>() ?? 0m
             });
 
