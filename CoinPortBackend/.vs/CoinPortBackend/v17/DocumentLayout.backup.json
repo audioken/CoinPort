@@ -3,40 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|c:\\users\\kenza\\onedrive\\skrivbord\\newton\\01. kurser\\05. objektorienterad programmering, forts\u00E4ttning\\egna projekt\\coinport\\coinportbackend\\controllers\\transactioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|solutionrelative:controllers\\transactioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|c:\\users\\kenza\\onedrive\\skrivbord\\newton\\01. kurser\\05. objektorienterad programmering, forts\u00E4ttning\\egna projekt\\coinport\\coinportbackend\\controllers\\portfoliocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|solutionrelative:controllers\\portfoliocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|c:\\users\\kenza\\onedrive\\skrivbord\\newton\\01. kurser\\05. objektorienterad programmering, forts\u00E4ttning\\egna projekt\\coinport\\coinportbackend\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|solutionrelative:data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|c:\\users\\kenza\\onedrive\\skrivbord\\newton\\01. kurser\\05. objektorienterad programmering, forts\u00E4ttning\\egna projekt\\coinport\\coinportbackend\\models\\transaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|solutionrelative:models\\transaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|c:\\users\\kenza\\onedrive\\skrivbord\\newton\\01. kurser\\05. objektorienterad programmering, forts\u00E4ttning\\egna projekt\\coinport\\coinportbackend\\models\\coin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|solutionrelative:models\\coin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|c:\\users\\kenza\\onedrive\\skrivbord\\newton\\01. kurser\\05. objektorienterad programmering, forts\u00E4ttning\\egna projekt\\coinport\\coinportbackend\\controllers\\transactioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|solutionrelative:controllers\\transactioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|c:\\users\\kenza\\onedrive\\skrivbord\\newton\\01. kurser\\05. objektorienterad programmering, forts\u00E4ttning\\egna projekt\\coinport\\coinportbackend\\controllers\\marketcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|solutionrelative:controllers\\marketcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|c:\\users\\kenza\\onedrive\\skrivbord\\newton\\01. kurser\\05. objektorienterad programmering, forts\u00E4ttning\\egna projekt\\coinport\\coinportbackend\\migrations\\20250220194323_changedmodelfortransaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|solutionrelative:migrations\\20250220194323_changedmodelfortransaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|c:\\users\\kenza\\onedrive\\skrivbord\\newton\\01. kurser\\05. objektorienterad programmering, forts\u00E4ttning\\egna projekt\\coinport\\coinportbackend\\migrations\\20250220202843_newtest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|solutionrelative:migrations\\20250220202843_newtest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|c:\\users\\kenza\\onedrive\\skrivbord\\newton\\01. kurser\\05. objektorienterad programmering, forts\u00E4ttning\\egna projekt\\coinport\\coinportbackend\\migrations\\20250222161535_fixeddecimalprecisioninappdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|solutionrelative:migrations\\20250222161535_fixeddecimalprecisioninappdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|c:\\users\\kenza\\onedrive\\skrivbord\\newton\\01. kurser\\05. objektorienterad programmering, forts\u00E4ttning\\egna projekt\\coinport\\coinportbackend\\models\\transaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{868A05DC-C9B7-4D56-BA68-736D37C2F7D6}|CoinPortBackend.csproj|solutionrelative:models\\transaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -46,20 +26,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 213,
-          "SelectedChildIndex": 14,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
               "Title": "Coin.cs",
               "DocumentMoniker": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Models\\Coin.cs",
               "RelativeDocumentMoniker": "Models\\Coin.cs",
               "ToolTip": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Models\\Coin.cs",
               "RelativeToolTip": "Models\\Coin.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-15T19:56:47.405Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Bookmark",
@@ -103,64 +84,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "20250222161535_fixedDecimalPrecisionInAppDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Migrations\\20250222161535_fixedDecimalPrecisionInAppDbContext.cs",
-              "RelativeDocumentMoniker": "Migrations\\20250222161535_fixedDecimalPrecisionInAppDbContext.cs",
-              "ToolTip": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Migrations\\20250222161535_fixedDecimalPrecisionInAppDbContext.cs",
-              "RelativeToolTip": "Migrations\\20250222161535_fixedDecimalPrecisionInAppDbContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-22T16:15:35.231Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "20250220202843_newTest.cs",
-              "DocumentMoniker": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Migrations\\20250220202843_newTest.cs",
-              "RelativeDocumentMoniker": "Migrations\\20250220202843_newTest.cs",
-              "ToolTip": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Migrations\\20250220202843_newTest.cs",
-              "RelativeToolTip": "Migrations\\20250220202843_newTest.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-20T20:28:43.26Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "20250220194323_changedModelForTransaction.cs",
-              "DocumentMoniker": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Migrations\\20250220194323_changedModelForTransaction.cs",
-              "RelativeDocumentMoniker": "Migrations\\20250220194323_changedModelForTransaction.cs",
-              "ToolTip": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Migrations\\20250220194323_changedModelForTransaction.cs",
-              "RelativeToolTip": "Migrations\\20250220194323_changedModelForTransaction.cs",
-              "ViewState": "AgIAABcAAAAAAAAAAAAwwCUAAAA4AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-20T19:43:23.245Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "TransactionController.cs",
               "DocumentMoniker": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Controllers\\TransactionController.cs",
               "RelativeDocumentMoniker": "Controllers\\TransactionController.cs",
               "ToolTip": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Controllers\\TransactionController.cs",
               "RelativeToolTip": "Controllers\\TransactionController.cs",
-              "ViewState": "AgIAADMAAAAAAAAAAAAcwEwAAAA4AAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAIwAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-20T19:10:17.072Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "AppDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Data\\AppDbContext.cs",
-              "RelativeDocumentMoniker": "Data\\AppDbContext.cs",
-              "ToolTip": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Data\\AppDbContext.cs",
-              "RelativeToolTip": "Data\\AppDbContext.cs",
-              "ViewState": "AgIAAAIAAAAAAAAAAAAmwCYAAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-20T19:08:17.061Z"
             },
             {
               "$type": "Document",
@@ -176,27 +109,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 2,
               "Title": "MarketController.cs",
               "DocumentMoniker": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Controllers\\MarketController.cs",
               "RelativeDocumentMoniker": "Controllers\\MarketController.cs",
               "ToolTip": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Controllers\\MarketController.cs",
               "RelativeToolTip": "Controllers\\MarketController.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAmwBsAAABUAAAAAAAAAA==",
+              "ViewState": "AgIAABMAAAAAAAAAAAAmwCcAAAA6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-20T18:46:50.013Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "PortfolioController.cs",
-              "DocumentMoniker": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Controllers\\PortfolioController.cs",
-              "RelativeDocumentMoniker": "Controllers\\PortfolioController.cs",
-              "ToolTip": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Controllers\\PortfolioController.cs",
-              "RelativeToolTip": "Controllers\\PortfolioController.cs",
-              "ViewState": "AgIAABIAAAAAAAAAAAAIwCIAAAAiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-20T18:46:39.379Z",
+              "WhenOpened": "2025-02-20T18:46:50.013Z",
               "EditorCaption": ""
             }
           ]

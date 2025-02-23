@@ -43,12 +43,12 @@ const transactionsTableBody = document.getElementById('transactionsTableBody');
 // Starta sidan och hämta data från CoinGecko och API:et
 function start() {
     getMarket()
-        .then(getPortfolio)
         .then(getTransactions)
+        .then(createPortfolio)
         .then(searchCoin);
 }
 
-// Hämta senaste marknadsdata för coins från CoinGecko och fyll i CoinGecko-tabellen
+// Hämta senaste marknadsdata för coins
 async function getMarket() {
     const url = api + '/market'; // Hämta fullständig URL
     const response = await fetch(url); // Hämta data från URL
@@ -97,7 +97,8 @@ async function getMarket() {
         btnAddCoinToPortfolio.addEventListener('mouseout', hideInfo); // Dölj info när musen lämnar
 
         // Lägger till coinet i portfolion och sparar det i databasen
-        btnAddCoinToPortfolio.onclick = () => addCoinToPortfolio(coin.coinId, coin.name, coin.ticker, coin.price, coin.priceChange24hPercent);
+        // btnAddCoinToPortfolio.onclick = () => addCoinToPortfolio(coin.coinId, coin.name, coin.ticker, coin.price, coin.priceChange24hPercent);
+        btnAddCoinToPortfolio.onclick = () => addCoin(coin.coinId, coin.name, coin.ticker, 'Add', 0, 0, Date.now());
         
         // Lägger till alla celler i sina tillhörande HTML-element
         row.append(nameCell, tickerCell, priceCell, priceChange24hPercentCell, marketCapCell, actionCell);
@@ -109,11 +110,102 @@ async function getMarket() {
     
 }
 
-// Hämta coins från API och fyll i portfolio-tabellen
-async function getPortfolio() {
+// Lägg till ett coin i portfolion
+async function addCoin(coinId, name, ticker, type, amount, price, date) {
+    const url = api + '/transactions'; // Hämta fullständig URL
 
-    // Hämta alla coins från portfolion
-    const coins = await fetchPortfolioCoins();
+    const transactions = await fetchTransactions();
+    const isAlreadyAdded = transactions.some(t => t.coinId === coinId);
+
+    // Konvertera date till rätt format (yyyy-MM-ddTHH:mm:ss.fffZ)
+    const formattedDate = new Date(date).toISOString();
+
+    // Skapa JSON-objektet
+    const transactionData = {
+        CoinId: coinId.toString(),
+        Name: name,
+        Ticker: ticker,
+        Type: type,
+        CoinAmount: amount,
+        CoinPrice: price,
+        Date: formattedDate  // Använd det konverterade datumet
+    };
+
+    if (!isAlreadyAdded) {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(transactionData)
+        });
+
+        if (response.ok) {
+            getTransactions();
+            createPortfolio();
+        } else {
+            // Logga det fullständiga svaret för att få mer information om varför begäran misslyckades
+            const errorDetails = await response.text();
+            console.error("Failed to add transaction. Error details:", errorDetails);
+            alert('Failed to add transaction!');
+        }
+    } else {
+        alert('Coin already added to portfolio');
+        return;
+    }
+}
+
+// Skapa portfolion baserat på transaktioner
+async function createPortfolio(){
+    const transactions = await fetchTransactions();
+    const coins = await sortCoins(transactions);
+    renderPortfolio(coins);
+}
+
+// Hämta transaktioner från databasen
+async function fetchTransactions(){
+    const url = api + '/transactions';
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        alert('Transaktioner hittades inte');
+        return null;
+    }
+
+    return await response.json();
+}
+
+// Sortera coins baserat på transaktioner
+async function sortCoins(transactions) {
+    const coins = [];
+
+    for (const transaction of transactions) {
+        let coin = coins.find(c => c.coinId === transaction.coinId);
+
+        if (!coin) {
+            coin = {
+                coinId: transaction.coinId,
+                name: transaction.name,
+                ticker: transaction.ticker,
+                price: transaction.coinPrice,
+                priceChange24hPercent: 0,
+                priceChange24h: 0,
+                holdings: 0
+            };
+            coins.push(coin);
+        }
+
+        // Uppdatera holdings baserat på transaktionstyp
+        if (transaction.type === "Buy") {
+            coin.holdings += transaction.coinAmount;
+        } else if (transaction.type === "Sell") {
+            coin.holdings -= transaction.coinAmount;
+        }
+    }
+
+    return coins;
+}
+
+// Rendera portfolion
+async function renderPortfolio(coins){
 
     // Rensa tabellen för att undvika dubletter
     portfolioTableBody.replaceChildren();
@@ -142,7 +234,8 @@ async function getPortfolio() {
 
         // Räkna ut värden beräknade på senaste datan
         const invested = await calcuateInvestment(coin.coinId);
-        
+        const holdings = await calculateHoldings(coin.coinId);
+
         const roiDollar = formatPrice(parseFloat((coin.holdings * updatedPrice) - invested));
         const roiPercent = parseFloat(((coin.holdings * updatedPrice) - invested) / invested * 100)
             .toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
@@ -176,7 +269,7 @@ async function getPortfolio() {
         priceCell.style.color = change24hCell.style.color;
 
         const holdingsCell = document.createElement('td');
-        holdingsCell.textContent = coin.holdings; 
+        holdingsCell.textContent = holdings; 
 
         const investedCell = document.createElement('td'); 
         investedCell.textContent = formatPrice(parseFloat(invested));
@@ -241,11 +334,11 @@ async function getPortfolio() {
         // Anropa funktioner baserat på vilken knapp som klickas
         btnIncreaseHolding.onclick = (event) => {
             event.preventDefault();
-            adjustHoldings(coin.coinId, inputAmount, coin.holdings, true);
+            buyOrSell(geckoCoin, inputAmount, true);
         };
         btnDecreaseHolding.onclick = (event) => {
             event.preventDefault();
-            adjustHoldings(coin.coinId, inputAmount, coin.holdings, false);
+            buyOrSell(geckoCoin, inputAmount, false);
         }
         btnShowCoinTransactions.onclick = (event) => {
             event.preventDefault();
@@ -253,7 +346,7 @@ async function getPortfolio() {
         };
         btnRemoveCoinFromPortfolio.onclick = (event) => {
             event.preventDefault();
-            deleteCoinFromPortfolio(coin.coinId, coin.holdings); 
+            deleteCoin(coin.coinId);
         };
 
         // Lägger till alla celler i sina tillhörande HTML-element
@@ -269,33 +362,64 @@ async function getPortfolio() {
         tempTotalChange24h += updatedPriceChange24h * coin.holdings;
     };
 
-    getPortfolioTotalValues(tempTotalValue, tempTotalInvested, tempTotalChange24h);
+    generateTotalValues(tempTotalValue, tempTotalInvested, tempTotalChange24h);
 }
 
-async function fetchPortfolioCoins(){
+// Köp eller sälj ett coin
+async function buyOrSell(coin, coinAmountInput, isBuy) {
 
-    // Hämta data från URL och konvertera till JSON
-    const url = api + '/coins';
-    const response = await fetch(url); 
-    return await response.json();
-}
+    const amount = parseFloat(coinAmountInput.value);
 
-// Hämta transaktioner för coins och fyll i transaktionstabellen
-async function getTransactions() {
-    const url = api + '/transactions';  // Hämta fullständig URL
-    const response = await fetch(url); // Hämta data från URL
-
-    if (!response.ok) {
-        alert('Transaktioner hittades inte');
-        return null;
+    if (isNaN(amount) || amount <= 0) {
+        alert('Ange ett giltigt värde för holdings');
+        return;
     }
 
-    const transactions = await response.json(); // Konvertera data till JSON
+    await addTransaction(coin.coinId, coin.name, coin.ticker, isBuy ? 'Buy' : 'Sell', amount, coin.price, new Date().toISOString());
+    await createPortfolio();
+}
 
+// Lägg till en transaktion i databasen
+async function addTransaction(coinId, name, ticker, type, amount, price, date) {
+    const url = api + '/transactions'; // Hämta fullständig URL
+
+    // Konvertera date till rätt format (yyyy-MM-ddTHH:mm:ss.fffZ)
+    const formattedDate = new Date(date).toISOString();
+
+    // Skapa JSON-objektet
+    const transactionData = {
+        CoinId: coinId.toString(),
+        Name: name,
+        Ticker: ticker,
+        Type: type,
+        CoinAmount: amount,
+        CoinPrice: price,
+        Date: formattedDate  // Använd det konverterade datumet
+    };
+
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(transactionData)
+    });
+
+    if (response.ok) {
+        getTransactions();
+    } else {
+        // Logga det fullständiga svaret för att få mer information om varför begäran misslyckades
+        const errorDetails = await response.text();
+        console.error("Failed to add transaction. Error details:", errorDetails);
+        alert('Failed to add transaction!');
+    }
+}
+
+// Hämta transaktioner från databasen
+async function getTransactions() {
+    const transactions = await fetchTransactions();
     renderTransactions(transactions);
 }
 
-// Funktion för att rendera (skapa och visa) transaktioner i transaktionstabellen
+// Rendera transaktioner
 function renderTransactions(transactions) {
     transactionsTableBody.replaceChildren(); // Rensa tabellen
 
@@ -322,8 +446,7 @@ function renderTransactions(transactions) {
         amountCell.textContent = transaction.coinAmount; 
 
         const priceCell = document.createElement('td');
-        priceCell.textContent = '$' + parseFloat(transaction.coinPrice).toLocaleString('en-US', 
-            { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+        priceCell.textContent = formatPrice(parseFloat(transaction.coinPrice));
         
         const valueCell = document.createElement('td');
         valueCell.textContent = formatPrice(parseFloat(transaction.coinPrice * transaction.coinAmount)); 
@@ -333,25 +456,38 @@ function renderTransactions(transactions) {
 
         const actionCell = document.createElement('td');
 
-        const btnEditTransaction = document.createElement('button');
-        btnEditTransaction.classList.add('btnEditTransaction');
-        btnEditTransaction.textContent = '✏️';
-        btnEditTransaction.onclick = () => editTransaction();
+        if (transaction.type != 'Add') {
+            const btnEditTransaction = document.createElement('button');
+            btnEditTransaction.classList.add('btnEditTransaction');
+            btnEditTransaction.textContent = '✏️';
+            btnEditTransaction.onclick = () => editTransaction();
+    
+            const btnDeleteTransaction = document.createElement('button');
+            btnDeleteTransaction.classList.add('btnDeleteTransaction');
+            btnDeleteTransaction.textContent = '❌';
+            btnDeleteTransaction.onclick = () => deleteTransaction(transaction.id);
 
-        const btnDeleteTransaction = document.createElement('button');
-        btnDeleteTransaction.classList.add('btnDeleteTransaction');
-        btnDeleteTransaction.textContent = '❌';
-        btnDeleteTransaction.onclick = () => deleteTransaction(transaction.id);
+            // Lägger till knappen i actionCell
+            actionCell.append(btnEditTransaction, btnDeleteTransaction);
+        }
 
         // Lägger till alla celler i sina tillhörande HTML-element
         rowForTransaction.append(nameCell, tickerCell, typeCell, amountCell, priceCell, valueCell, dateCell, actionCell);
-        
-        // Lägger till knappen i actionCell
-        actionCell.append(btnEditTransaction, btnDeleteTransaction);
 
         // Lägger till raden i tabellen
         transactionsTableBody.appendChild(rowForTransaction);
     });
+}
+
+// Ta bort ett coin från portfolion
+async function deleteCoin(coinId) {
+    const transactions = await fetchTransactions();
+
+    for (const transaction of transactions) {
+        if (transaction.coinId === coinId) {
+            await deleteTransaction(transaction.id);
+        }
+    }
 }
 
 // FIXA EN METOD SOM MÖJLIGGÖR REDIGERING AV TRANSAKTIONER
@@ -359,8 +495,27 @@ async function editTransaction(){
     // FIXA EN METOD SOM MÖJLIGGÖR REDIGERING AV TRANSAKTIONER
 }
 
-// Funktion för att uppdatera totala värden och förändringar i portfolion
-async function getPortfolioTotalValues(tempTotalValue, tempTotalInvested, tempTotalChange24h) {
+// Ta bort en transaktion från databasen
+async function deleteTransaction(id) {
+    console.log(`Deleting transaction ID: ${id}`);
+
+    const url = `${api}/transactions/${id}`;
+    const response = await fetch(url, {
+        method: 'DELETE'
+    });
+
+    if (!response.ok) {
+        alert('Failed to delete transaction');
+        return;
+    }
+
+    // Uppdatera portfolion efter att transaktionen tagits bort
+    createPortfolio();
+    getTransactions();
+}
+
+// Generera totala värden för portfolion
+async function generateTotalValues(tempTotalValue, tempTotalInvested, tempTotalChange24h) {
 
     // Rensa tabellen för att undvika dubletter
     totalsTableBody.replaceChildren();
@@ -407,216 +562,7 @@ async function getPortfolioTotalValues(tempTotalValue, tempTotalInvested, tempTo
     totalsTableBody.appendChild(rowForTotal);
 }
 
-// Funktion för att lägga till coin i portfolion
-async function addCoinToPortfolio(coinId, name, ticker, price, priceChange24h, priceChange24hPercent) {
-
-    // Anropa den nya funktionen för att kolla om coinet redan finns
-    if (await isCoinInPortfolio(coinId)) {
-        alert('Coin is already added to portfolio. Please adjust holdings instead.');
-        return;
-    }
-
-    const url = api + '/coins'; // Hämta fullständig URL
-
-    // Skicka en POST-request med coinId, name, ticker, price, priceChange24hPercent och holdings
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }, // Sätt header för att skicka JSON
-        body: JSON.stringify({ // Konvertera objekt till JSON
-            coinId: coinId,
-            name: name,
-            ticker: ticker,
-            price: price,
-            priceChange24hPercent: priceChange24hPercent,
-            priceChange24h : priceChange24h,
-            holdings: 0
-        })
-    });
-
-    // Om requesten lyckades, ladda om coins
-    if (response.ok) {
-        getPortfolio();
-    } else {
-        alert('Failed to add coin!');
-    }
-}
-
-// Funktion för att kontrollera om ett coin redan finns i portfolion 
-async function isCoinInPortfolio(coinId) {
-    const urlGet = `${api}/coins`; // Hämta coins från portfolion
-    const responseGet = await fetch(urlGet);
-    
-    // Kontrollera om requesten lyckades
-    if (!responseGet.ok) {
-        alert('Kunde inte hämta portfolion');
-        return false; // Om det inte går att hämta, returnera false
-    }
-
-    const coins = await responseGet.json(); // Hämta JSON-objekt med coins
-
-    // Returnera true om coinet finns, annars false
-    return coins.some(c => c.coinId === coinId);
-}
-
-// Funktion för att ta bort ett coin från portfolion
-async function deleteCoinFromPortfolio(coinId, coinHoldings) {
-    const url = `${api}/coins/${coinId}`; // Hämta fullständig URL
-
-    // Skicka en DELETE-request
-    const response = await fetch(url, {
-        method: 'DELETE'
-    });
-
-    // Om requesten lyckades, ladda om coins
-    if (response.ok) {
-        deleteAllCoinTransactions(coinId, coinHoldings);
-        getPortfolio();
-    } else {
-        alert('Failed to remove coin!');
-    }
-}
-
-// Funktion för att ta bort alla transaktioner för ett coin
-async function deleteAllCoinTransactions(coinId, coinHoldings) {
-    const url = `${api}/transactions/coin/${coinId}`;
-
-    const response = await fetch(url, {
-        method: 'DELETE'
-    });
-
-    if (response.ok) {
-        getTransactions(); // Inte nödvändig, men för att se vad som händer efter borttagning
-    } else {
-        if (coinHoldings === 0) {
-            return;
-        }
-        alert('Failed to remove transactions!');
-    }
-}
-
-// Funktion för att justera holdings för ett coin i portfolion
-async function adjustHoldings(coinId, coinAmountInput, currentHoldings, isBuy) {
-
-    // Kontrollera att användaren har angett ett giltigt värde för holdings
-    const amount = parseFloat(coinAmountInput.value);
-    if (isNaN(amount) || amount <= 0) {
-        alert('Ange ett giltigt värde för holdings');
-        return;
-    }
-
-    let newHoldings = 0;
-
-    if (isBuy) {
-        newHoldings = currentHoldings + amount;
-    } else {
-        if (currentHoldings - amount < 0) {
-            alert('Kan inte ta bort mer än vad du har');
-            return;
-        }
-        newHoldings = currentHoldings - amount;
-    }
-
-    // Hämta coin från portfolio för att få hela objektet
-    const coin = await getCoinFromPortfolio(coinId);
-
-    if (!coin) {
-        alert('Coin hittades inte');
-        return;
-    }
-
-    // Uppdatera holdings
-    coin.holdings = newHoldings;
-
-    const urlPut = `${api}/coins/${coinId}`;
-    const responsePut = await fetch(urlPut, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(coin)
-    });
-
-    if (responsePut.ok) {
-        // Spara transaktionen i databasen
-        await addTransaction(coinId, coin.name, coin.ticker, isBuy ? 'Buy' : 'Sell', amount, coin.price, new Date().toISOString());
-
-        // Ladda om portfolion
-        await getPortfolio();
-
-        await getTransactions();
-
-    } else {
-        alert('Kunde inte uppdatera holdings');
-    }
-}
-
-// Funktion för att lägga till en transaktion i CoinTransactions-tabellen
-async function addTransaction(coinId, name, ticker, type, amount, price, date) {
-    const url = api + '/transactions'; // Hämta fullständig URL
-
-    // Konvertera date till rätt format (yyyy-MM-ddTHH:mm:ss.fffZ)
-    const formattedDate = new Date(date).toISOString();
-
-    // Skapa JSON-objektet
-    const transactionData = {
-        CoinId: coinId.toString(),
-        Name: name,
-        Ticker: ticker,
-        Type: type,
-        CoinAmount: amount,
-        CoinPrice: price,
-        Date: formattedDate  // Använd det konverterade datumet
-    };
-
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(transactionData)
-    });
-
-    if (response.ok) {
-        getTransactions();
-    } else {
-        // Logga det fullständiga svaret för att få mer information om varför begäran misslyckades
-        const errorDetails = await response.text();
-        console.error("Failed to add transaction. Error details:", errorDetails);
-        alert('Failed to add transaction!');
-    }
-}
-
-// Funktion för att ta bort en transaktion
-async function deleteTransaction(id) {
-    console.log(`Deleting transaction ID: ${id}`);
-
-    const url = `${api}/transactions/${id}`;
-    const response = await fetch(url, {
-        method: 'DELETE'
-    });
-
-    if (!response.ok) {
-        alert('Failed to delete transaction');
-        return;
-    }
-
-    // Uppdatera portfolion efter att transaktionen tagits bort
-    getPortfolio();
-    getTransactions();
-}
-
-// Funktion för att hämta ett coin från portfolion baserat på coinId
-async function getCoinFromPortfolio(coinId) {
-    const url = `${api}/coins/${coinId}`; // Hämta URL för att hämta coins från portfolion
-    const response = await fetch(url); // Hämta data från URL
-
-    if (!response.ok) {
-        alert('Coin hittades inte');
-        return null;
-    }
-
-    const coin = await response.json();
-
-    return coin;
-}
-
-// Funktion för att hämta transaktioner för ett coin baserat på coinId
+// Hämta transaktioner för ett coin
 async function getCoinTransactions(coinId) {
     const url = `${api}/transactions/coin/${coinId}`;
     const response = await fetch(url);
@@ -637,10 +583,11 @@ async function getCoinTransactions(coinId) {
 
 // Funktion för att formatera priser
 function formatPrice(value) {
+
     // Om värdet är extremt litet, visa med upp till 6 decimaler för att inte förlora små värden
     if (Math.abs(value) < 0.01) {
         // Ta bort extra nollor genom att använda toFixed(6) och ta bort slutförande nollor
-        return `${value < 0 ? '-' : ''}$${Math.abs(value).toFixed(6).replace(/\.?0+$/, '')}`;
+        return `${value < 0 ? '-' : ''}$${Math.abs(value).toFixed(8).replace(/\.?0+$/, '')}`;
     } 
     
     // Annars formaterar vi med upp till 2 decimaler och lägger till dollartecken
@@ -738,6 +685,31 @@ async function calcuateInvestment(coinId) {
     });
 
     return totalInvested;
+}
+
+async function calculateHoldings(coinId) {
+    const url = `${api}/transactions/coin/${coinId}`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        alert('Transaktioner hittades inte');
+        return null;
+    }
+
+    const transactions = await response.json();
+
+    let totalHoldings = 0;
+
+    transactions.forEach(transaction => {
+
+        if (transaction.type === 'Buy') {
+            totalHoldings += transaction.coinAmount;
+        } else {
+            totalHoldings -= transaction.coinAmount;
+        }
+    });
+
+    return totalHoldings;
 }
 
 // Funktion för att sätta färg på trenden beroende på om värdet är positivt, negativt eller noll

@@ -17,128 +17,6 @@
         }
       }
     },
-    "/coins": {
-      "get": {
-        "tags": [
-          "Portfolio"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Portfolio"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Coin"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Coin"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Coin"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/coins/{coinId}": {
-      "get": {
-        "tags": [
-          "Portfolio"
-        ],
-        "parameters": [
-          {
-            "name": "coinId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Portfolio"
-        ],
-        "parameters": [
-          {
-            "name": "coinId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Coin"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Coin"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Coin"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Portfolio"
-        ],
-        "parameters": [
-          {
-            "name": "coinId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/transactions": {
       "get": {
         "tags": [
@@ -173,6 +51,29 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/transactions/{transactionId}": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -222,14 +123,14 @@
         }
       }
     },
-    "/transactions/{transactionId}": {
-      "get": {
+    "/transactions/{id}": {
+      "put": {
         "tags": [
           "Transaction"
         ],
         "parameters": [
           {
-            "name": "transactionId",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
@@ -238,14 +139,31 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Transaction"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Transaction"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Transaction"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
           }
         }
-      }
-    },
-    "/transactions/{id}": {
+      },
       "delete": {
         "tags": [
           "Transaction"
@@ -271,52 +189,6 @@
   },
   "components": {
     "schemas": {
-      "Coin": {
-        "required": [
-          "coinId",
-          "name",
-          "ticker"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "coinId": {
-            "maxLength": 50,
-            "minLength": 1,
-            "type": "string"
-          },
-          "name": {
-            "maxLength": 50,
-            "minLength": 1,
-            "type": "string"
-          },
-          "ticker": {
-            "maxLength": 50,
-            "minLength": 1,
-            "type": "string"
-          },
-          "price": {
-            "type": "number",
-            "format": "double"
-          },
-          "change24hPercent": {
-            "type": "number",
-            "format": "double"
-          },
-          "holdings": {
-            "type": "number",
-            "format": "double"
-          },
-          "value": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "additionalProperties": false
-      },
       "Transaction": {
         "required": [
           "coinAmount",
