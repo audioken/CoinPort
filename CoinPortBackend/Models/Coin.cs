@@ -8,6 +8,9 @@ namespace CoinPortBackend.Models
         public int Id { get; set; }
 
         [Required]
+        public int Rank { get; set; }
+
+        [Required]
         [MaxLength(50)]
         public string CoinId { get; set; }
 

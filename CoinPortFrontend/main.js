@@ -34,6 +34,8 @@ const tableBodyMarket = document.getElementById('tableBodyMarket');
 const tableBodyPortfolio = document.getElementById('tableBodyPortfolio');
 const tableBodyTransactions = document.getElementById('tableBodyTransactions');
 
+document.querySelector('.sortMarketCap').classList.add('active');
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// MAIN FUNCTIONS ///
 //////////////////////
@@ -64,6 +66,9 @@ async function getMarket() {
         // Skapa celler för varje värde i coin-objektet
         const coinIdCell = document.createElement('td');
         coinIdCell.textContent = coin.coinId;
+
+        const rankCell = document.createElement('td');
+        rankCell.textContent = coin.rank;
     
         const nameCell = document.createElement('td');
         nameCell.textContent = coin.name;
@@ -73,8 +78,6 @@ async function getMarket() {
 
         const priceCell = document.createElement('td');
         priceCell.textContent = formatPrice(parseFloat(coin.price));
-
-        const priceChange24h = coin.priceChange24h !== null && !isNaN(parseFloat(coin.priceChange24h)) ? parseFloat(coin.priceChange24h) : 0;
 
         const priceChange24hPercentCell = document.createElement('td');
         priceChange24hPercentCell.textContent = parseFloat(coin.priceChange24hPercent).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
@@ -100,7 +103,7 @@ async function getMarket() {
         btnAddCoinToPortfolio.onclick = () => addCoin(coin.coinId, coin.name, coin.ticker, 'Add', 0, 0, Date.now());
         
         // Lägger till alla celler i sina tillhörande HTML-element
-        row.append(nameCell, tickerCell, priceCell, priceChange24hPercentCell, marketCapCell, actionCell);
+        row.append(rankCell, nameCell, tickerCell, priceCell, priceChange24hPercentCell, marketCapCell, actionCell);
         actionCell.appendChild(btnAddCoinToPortfolio);
 
         // Lägger till raden i tabellen
@@ -839,43 +842,6 @@ function getTrendColor(value){
     }
 }
 
-// // Funktion för att sortera tabellen
-// function sortTable(columnIndex, order) {
-//     const table = document.getElementById('tableMarket');
-//     const tbody = table.querySelector('tbody');
-//     const rows = Array.from(tbody.querySelectorAll('tr'));
-
-//     rows.sort((a, b) => {
-//         const cellA = a.children[columnIndex].textContent.trim();
-//         const cellB = b.children[columnIndex].textContent.trim();
-
-//         if (!isNaN(cellA) && !isNaN(cellB)) {
-//             // Sortera som nummer
-//             return order === 'asc' ? cellA - cellB : cellB - cellA;
-//         } else {
-//             // Sortera som text
-//             return order === 'asc' ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
-//         }
-//     });
-
-//     // Lägg tillbaka de sorterade raderna i tbody
-//     rows.forEach(row => tbody.appendChild(row));
-// }
-
-// // Lägg till eventlyssnare för sorteringspilarna
-// document.querySelectorAll('.sort').forEach(sortElement => {
-//     sortElement.addEventListener('click', () => {
-//         const columnIndex = sortElement.getAttribute('data-column');
-//         const order = sortElement.getAttribute('data-order');
-//         sortTable(columnIndex, order);
-
-//         // Växla sorteringsordning
-//         sortElement.setAttribute('data-order', order === 'asc' ? 'desc' : 'asc');
-//         sortElement.textContent = order === 'asc' ? '▲' : '▼';
-//     });
-// });
-
-
 // Funktion för att sanera och konvertera cellvärden till nummer
 function sanitizeAndConvert(value) {
     // Ta bort alla icke-numeriska tecken förutom punkt och minus
@@ -883,9 +849,10 @@ function sanitizeAndConvert(value) {
     return parseFloat(sanitizedValue);
 }
 
-// Funktion för att sortera tabellen
-function sortTable(columnIndex, order) {
-    const table = document.getElementById('tableMarket');
+// Funktion för att sortera tabeller
+function sortTable(columnIndex, order, tableClass) {
+    
+    const table = document.querySelector(`.${tableClass}`);
     const tbody = table.querySelector('tbody');
     const rows = Array.from(tbody.querySelectorAll('tr'));
 
@@ -911,36 +878,33 @@ function sortTable(columnIndex, order) {
     rows.forEach(row => tbody.appendChild(row));
 }
 
-// Lägg till eventlyssnare för sorteringspilarna
-document.querySelectorAll('.sort').forEach(sortElement => {
-    sortElement.addEventListener('click', () => {
-        const columnIndex = sortElement.getAttribute('data-column');
-        let order = sortElement.getAttribute('data-order');
+// Funktion för att visa eller dölja totals
+function ShowHideTotals() {
+    tableTitleTextTotals.style.color = switchTotals.checked ? 'black' : 'gray';
+    const tableTotalsContainer = document.querySelector('.tableTotalsContainer');
+    tableTotalsContainer.style.display = switchTotals.checked ? 'block' : 'none';
+}
 
-        // Om pilen är nedåt vid första klicket, sortera från högst till lägst
-        if (order === 'asc') {
-            order = 'desc';
-        } else {
-            order = 'asc';
-        }
+// Funktion för att visa eller dölja portfolion
+function ShowHidePortfolio(isPortfolioOn) {
+    tableTitleTextPortfolio.style.color = isPortfolioOn ? 'black' : 'gray';
+    const tablePortfolioContainer = document.querySelector('.tablePortfolioContainer');
+    tablePortfolioContainer.style.display = isPortfolioOn ? 'block' : 'none';
+}
 
-        sortTable(columnIndex, order);
+// Funktion för att visa eller dölja transaktioner
+function ShowHideTransactions(isTransactionsOn) {
+    tableTitleTextTransactions.style.color = isTransactionsOn ? 'black' : 'gray';
+    const tableTransactionsContainer = document.querySelector('.tableTransactionsContainer');
+    tableTransactionsContainer.style.display = isTransactionsOn ? 'block' : 'none';
+}
 
-        // Återställ alla pilar till nedåt och ta bort aktiv klass
-        document.querySelectorAll('.sort').forEach(el => {
-            el.textContent = '▼';
-            el.setAttribute('data-order', 'asc');
-            el.classList.remove('active');
-        });
-
-        // Växla sorteringsordning för den klickade pilen och sätt aktiv klass
-        sortElement.setAttribute('data-order', order);
-        sortElement.textContent = order === 'asc' ? '▲' : '▼';
-        sortElement.classList.add('active');
-    });
-});
-
-document.querySelector('.sortMarketCap').classList.add('active');
+// Funktion för att visa eller dölja marknaden
+function ShowHideMarket(isMarketOn) {
+    tableTitleTextMarket.style.color = isMarketOn ? 'black' : 'gray';
+    const tableMarketContainer = document.querySelector('.tableMarketContainer');
+    tableMarketContainer.style.display = isMarketOn ? 'block' : 'none';
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// EVENT LISTENERS ///
@@ -956,48 +920,58 @@ document.querySelectorAll('#inputSearchCoin').forEach(element => {
     element.addEventListener('mouseout', hideInfo);  // Dölj information när musen lämnar
 });
 
-function ShowHidePortfolio(isPortfolioOn) {
-    tableTitleTextPortfolio.style.color = isPortfolioOn ? 'black' : 'gray';
-    const tablePortfolioContainer = document.querySelector('.tablePortfolioContainer');
-    tablePortfolioContainer.style.display = isPortfolioOn ? 'block' : 'none';
-}
+// Eventlyssnare för att sortera tabeller
+document.querySelectorAll('.sort').forEach(sortElement => {
+    sortElement.addEventListener('click', () => {
+        const columnIndex = sortElement.getAttribute('data-column');
+        let order = sortElement.getAttribute('data-order');
+        const tableClass = sortElement.closest('table').className;
 
+        // Om pilen är nedåt vid första klicket, sortera från högst till lägst
+        if (order === 'asc') {
+            order = 'desc';
+        } else {
+            order = 'asc';
+        }
+
+        sortTable(columnIndex, order, tableClass);
+
+        // Återställ alla pilar till nedåt och ta bort aktiv klass
+        document.querySelectorAll('.sort').forEach(el => {
+            el.textContent = '▼';
+            el.setAttribute('data-order', 'asc');
+            el.classList.remove('active');
+        });
+
+        // Växla sorteringsordning för den klickade pilen och sätt aktiv klass
+        sortElement.setAttribute('data-order', order);
+        sortElement.textContent = order === 'asc' ? '▲' : '▼';
+        sortElement.classList.add('active');
+    });
+});
+
+// Eventlyssnare för att visa/dölja totals
+switchTotals.addEventListener('click', () => {
+    isTotalsOn = !isTotalsOn;
+    ShowHideTotals(isTotalsOn);
+});
+
+// Eventlyssnare för att visa/dölja portfolion
 switchPortfolio.addEventListener('click', () => {
     isPortfolioOn = !isPortfolioOn; 
     ShowHidePortfolio(isPortfolioOn);
 });
 
-function ShowHideTransactions(isTransactionsOn) {
-    tableTitleTextTransactions.style.color = isTransactionsOn ? 'black' : 'gray';
-    const tableTransactionsContainer = document.querySelector('.tableTransactionsContainer');
-    tableTransactionsContainer.style.display = isTransactionsOn ? 'block' : 'none';
-}
-
+// Eventlyssnare för att visa/dölja transaktioner
 switchTransactions.addEventListener('click', () => {
     isTransactionsOn = !isTransactionsOn;
     ShowHideTransactions(isTransactionsOn);
 });
 
-function ShowHideMarket(isMarketOn) {
-    tableTitleTextMarket.style.color = isMarketOn ? 'black' : 'gray';
-    const tableMarketContainer = document.querySelector('.tableMarketContainer');
-    tableMarketContainer.style.display = isMarketOn ? 'block' : 'none';
-}
-
+// Eventlyssnare för att visa/dölja marknaden
 switchMarket.addEventListener('click', () => {
     isMarketOn = !isMarketOn;
     ShowHideMarket(isMarketOn);
-});
-
-function ShowHideTotals() {
-    tableTitleTextTotals.style.color = switchTotals.checked ? 'black' : 'gray';
-    const tableTotalsContainer = document.querySelector('.tableTotalsContainer');
-    tableTotalsContainer.style.display = switchTotals.checked ? 'block' : 'none';
-}
-
-switchTotals.addEventListener('click', () => {
-    isTotalsOn = !isTotalsOn;
-    ShowHideTotals(isTotalsOn);
 });
 
 // Körs när sidan laddas

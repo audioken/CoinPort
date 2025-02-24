@@ -282,7 +282,7 @@ input{
     background-color: #ffcb3d;
     border-radius: 10px;
     height: 50px;
-    min-width: 1000px;
+    min-width: 1200px;
     display: flex;
     justify-content: left;
     align-items: center;
@@ -301,7 +301,7 @@ input{
 table {
     background-color: #fff;
     padding: 10px;
-    width: 1000px;
+    width: 1200px;
     border-radius: 12px;
     text-align: center;
     border-collapse: separate;
@@ -353,7 +353,7 @@ tbody tr:hover td { background-color: #ffffff; }
 /* Lägg till denna CSS för att göra tbody scrollbar */
 .tableMarketContainer tbody {
     display: block;
-    max-height: 400px; /* Justera höjden efter behov */
+    max-height: 400px; 
     overflow-y: auto;
 }
 
@@ -361,6 +361,38 @@ tbody tr:hover td { background-color: #ffffff; }
     display: table;
     width: 100%;
     table-layout: fixed;
+}
+
+#rankHeadCell {
+    width: 50px; 
+}
+
+#tableBodyMarket td:first-child {
+    width: 54px; 
+}
+
+#coinHeadCell {
+    width: 150px; 
+}
+
+#tableBodyMarket td:nth-child(2) {
+    width: 154px; 
+}
+
+#_24hHeadCell {
+    width: 80px; 
+}
+
+#tableBodyMarket td:nth-child(5) {
+    width: 84px; 
+}
+
+#actionHeadCell {
+    width: 50px; 
+}
+
+#tableBodyMarket td:last-child {
+    width: 54px; 
 }
 
 /* INPUTS */
