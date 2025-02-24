@@ -16,47 +16,47 @@
 
     <main>
 
-        <div style="height: 50px; padding: 10px;">
+        <div class="infoParagraphContainer">
           <p id="infoParagraph"></p>
         </div>
   
         <div class="allTablesContainer">
 
           <!-- TOTALS TABLE -->
-          <div class="tableTitleContainer" id="totalsTableTitle">
-            <label class="switch switchTotals">
+          <div class="tableAllTitlesContainer" id="tableTitleTotalsContainer">
+            <label class="switch">
               <input type="checkbox" id="switchTotals" checked>
               <span class="slider round"></span>
             </label>
-            <h2 class="tableTitle" id="labelTotals">Total</h2> 
+            <h2 class="tableAllTitlesText" id="tableTitleTextTotals">Total</h2> 
           </div>  
-          <div class="totals">
-              <table id="totalsTable">
+          <div class="tableTotalsContainer">
+              <table id="tableTotals">
                 <thead>
-                  <tr id="totalsHead">
+                  <tr id="tableHeadTotals">
                     <th>Total Portfolio Value</th>
                     <th>24h Change</th>
                     <th>Total ROI </th>
                   </tr>
                 </thead>
-              <tbody id="totalsTableBody">
+              <tbody id="tableBodyTotals">
                 <!-- Coins kommer att läggas här via JS -->
               </tbody>
             </table>
           </div>
 
           <!-- PORTFOLIO TABLE -->
-          <div class="tableTitleContainer" id="portfolioTableTitle">
-            <label class="switch switchPortfolio">
+          <div class="tableAllTitlesContainer" id="tableTitlePortfolioContainer">
+            <label class="switch">
               <input type="checkbox" id="switchPortfolio" checked>
               <span class="slider round"></span>
             </label>
-            <h2 class="tableTitle" id="labelPortfolio">Portfolio</h2>
+            <h2 class="tableAllTitlesText" id="tableTitleTextPortfolio">Portfolio</h2>
           </div>
-          <div class="portfolio">
-              <table id="portfolioTable">
+          <div class="tablePortfolioContainer">
+              <table id="tablePortfolio">
                 <thead>
-                  <tr id="portfolioHead">
+                  <tr id="tableHeadPortfolio">
                     <th>Coin</th>
                     <th>Ticker</th>
                     <th>Price</th>
@@ -68,24 +68,24 @@
                     <th>Action</th>
                   </tr>
                 </thead>
-              <tbody id="portfolioTableBody">
+              <tbody id="tableBodyPortfolio">
                 <!-- Coins kommer att läggas här via JS -->
               </tbody>
             </table>
           </div>
           
           <!-- TRANSACTIONS TABLE -->
-          <div class="tableTitleContainer" id="transactionsTableTitle">
-            <label class="switch switchTransactions">
+          <div class="tableAllTitlesContainer" id="tableTitleTransactionsContainer">
+            <label class="switch">
               <input type="checkbox" id="switchTransactions" checked>
               <span class="slider round"></span>
             </label>
-            <h2 class="tableTitle" id="labelTransactions">Transactions</h2>
+            <h2 class="tableAllTitlesText" id="tableTitleTextTransactions">Transactions</h2>
           </div>
-          <div class="transactions">
-            <table id="transactionTable">
+          <div class="tableTransactionsContainer">
+            <table id="tableTransactions">
               <thead>
-                <tr id="transactionsHead">
+                <tr id="tableHeadTransactions">
                   <th>Coin</th>
                   <th>Ticker</th>
                   <th>Type</th>
@@ -96,24 +96,24 @@
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody id="transactionsTableBody">
+              <tbody id="tableBodyTransactions">
                 <!-- Coins kommer att läggas här via JS -->
               </tbody>
             </table>
           </div>
   
           <!-- MARKET TABLE -->
-          <div class="tableTitleContainer" id="marketTableTitle">
-            <label class="switch switchMarket">
+          <div class="tableAllTitlesContainer" id="tableTitleMarketContainer">
+            <label class="switch">
               <input type="checkbox" id="switchMarket" checked>
               <span class="slider round"></span>
             </label>
-            <h2 class="tableTitle" id="labelMarket">Market</h2> 
+            <h2 class="tableAllTitlesText" id="tableTitleTextMarket">Market</h2> 
           </div>  
-          <div class="market">
-            <table id="marketTable">
+          <div class="tableMarketContainer">
+            <table id="tableMarket">
               <thead>
-                <tr id="marketHead">
+                <tr id="tableHeadMarket">
                   <th>Coin <input type="text" id="inputSearchCoin" placeholder="search.."></th>
                   <th>Ticker</th>
                   <th>Price</th>
@@ -122,12 +122,10 @@
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody id="marketTableBody">
-                <!-- Coins kommer att läggas här via JS -->
+              <tbody id="tableBodyMarket" class="marketBodyScroll">
               </tbody>
             </table>
           </div>
-
         </div>
       </main>
     <script src="main.js" defer></script>

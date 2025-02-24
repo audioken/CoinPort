@@ -6,7 +6,7 @@
 const api = 'https://localhost:7026';
 
 // Deklarera variabler för att lagra data
-let coinGeckoData = {};
+let marketData = {};
 let isTotalsOn = true;
 let isPortfolioOn = true;
 let isTransactionsOn = true;
@@ -16,25 +16,23 @@ let tempTotalInvested = 0;
 let tempTotalChange24h = 0;
 
 // Hämta element från HTML
-let labelTotals = document.getElementById('labelTotals'); // Hämta label för att visa totala värden
-let labelPortfolio = document.getElementById('labelPortfolio'); // Hämta label för att visa portfolion
-let labelTransactions = document.getElementById('labelTransactions'); // Hämta label för att visa transaktioner
-let labelMarket = document.getElementById('labelMarket'); // Hämta label för att visa marknaden
+let tableTitleTextTotals = document.getElementById('tableTitleTextTotals'); // Hämta label för att visa totala värden
+let tableTitleTextPortfolio = document.getElementById('tableTitleTextPortfolio'); // Hämta label för att visa portfolion
+let tableTitleTextTransactions = document.getElementById('tableTitleTextTransactions'); // Hämta label för att visa transaktioner
+let tableTitleTextMarket = document.getElementById('tableTitleTextMarket'); // Hämta label för att visa marknaden
 
 let switchTotals = document.getElementById('switchTotals'); // Hämta switchen för att visa totala värden
 let switchPortfolio = document.getElementById('switchPortfolio'); // Hämta switchen för att visa portfolion
 let switchTransactions = document.getElementById('switchTransactions'); // Hämta switchen för att visa transaktioner
 let switchMarket = document.getElementById('switchMarket'); // Hämta switchen för att visa marknaden
 
-let totalValue = document.getElementById('totalValue'); // Hämta element för att visa totala portföljvärdet
-let totalROIChange = document.getElementById('totalROIChange'); // Hämta element för att visa totala portföljförändringen
 const inputSearchCoin = document.getElementById('inputSearchCoin');
 
 // Hämta tbody-elementen från alla tabeller i HTML
-const totalsTableBody = document.getElementById('totalsTableBody');
-const marketTableBody = document.getElementById('marketTableBody');
-const portfolioTableBody = document.getElementById('portfolioTableBody');
-const transactionsTableBody = document.getElementById('transactionsTableBody');
+const tableBodyTotals = document.getElementById('tableBodyTotals');
+const tableBodyMarket = document.getElementById('tableBodyMarket');
+const tableBodyPortfolio = document.getElementById('tableBodyPortfolio');
+const tableBodyTransactions = document.getElementById('tableBodyTransactions');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// MAIN FUNCTIONS ///
@@ -54,12 +52,12 @@ async function getMarket() {
     const response = await fetch(url); // Hämta data från URL
     const coins = await response.json(); // Konvertera data till JSON
 
-    marketTableBody.replaceChildren(); // Rensa tabellen
+    tableBodyMarket.replaceChildren(); // Rensa tabellen
 
-    coinGeckoData = {}; // Nollställ minnet av CoinGecko-data
+    marketData = {}; // Nollställ minnet av CoinGecko-data
 
     coins.forEach(coin => {
-        coinGeckoData[coin.coinId] = coin; // Spara coinet med coinId som nyckel
+        marketData[coin.coinId] = coin; // Spara coinet med coinId som nyckel
         
         const row = document.createElement('tr'); // Skapa en rad
     
@@ -106,7 +104,7 @@ async function getMarket() {
         actionCell.appendChild(btnAddCoinToPortfolio);
 
         // Lägger till raden i tabellen
-        marketTableBody.appendChild(row);
+        tableBodyMarket.appendChild(row);
     });
     
 }
@@ -209,7 +207,7 @@ async function sortCoins(transactions) {
 async function renderPortfolio(coins){
 
     // Rensa tabellen för att undvika dubletter
-    portfolioTableBody.replaceChildren();
+    tableBodyPortfolio.replaceChildren();
 
     // Nollställ totala värden för att undvika att de adderas på varandra
     tempTotalValue = 0;
@@ -223,15 +221,15 @@ async function renderPortfolio(coins){
         const rowForCoin = document.createElement('tr');
 
         // Hämta den senaste CoinGecko-datan för coinet
-        const geckoCoin = coinGeckoData[coin.coinId];
+        const marketCoin = marketData[coin.coinId];
 
         // Uppdatera värden för coinet om det finns ny data
-        const updatedCoinId = geckoCoin ? geckoCoin.coinId : coin.coinId;
-        const updatedName = geckoCoin ? geckoCoin.name : coin.name;
-        const updatedTicker = geckoCoin ? geckoCoin.ticker : coin.ticker;
-        const updatedPrice = geckoCoin ? geckoCoin.price : coin.price;
-        const updatedPriceChange24hPercent = geckoCoin ? geckoCoin.priceChange24hPercent : coin.priceChange24hPercent;
-        const updatedPriceChange24h = geckoCoin ? geckoCoin.priceChange24h : coin.priceChange24h;
+        const updatedCoinId = marketCoin ? marketCoin.coinId : coin.coinId;
+        const updatedName = marketCoin ? marketCoin.name : coin.name;
+        const updatedTicker = marketCoin ? marketCoin.ticker : coin.ticker;
+        const updatedPrice = marketCoin ? marketCoin.price : coin.price;
+        const updatedPriceChange24hPercent = marketCoin ? marketCoin.priceChange24hPercent : coin.priceChange24hPercent;
+        const updatedPriceChange24h = marketCoin ? marketCoin.priceChange24h : coin.priceChange24h;
 
         // Räkna ut värden beräknade på senaste datan
         const invested = await calcuateInvestment(coin.coinId);
@@ -335,11 +333,11 @@ async function renderPortfolio(coins){
         // Anropa funktioner baserat på vilken knapp som klickas
         btnIncreaseHolding.onclick = (event) => {
             event.preventDefault();
-            buyOrSell(geckoCoin, inputAmount, true);
+            buyOrSell(marketCoin, inputAmount, true);
         };
         btnDecreaseHolding.onclick = (event) => {
             event.preventDefault();
-            buyOrSell(geckoCoin, inputAmount, false);
+            buyOrSell(marketCoin, inputAmount, false);
         }
         btnShowCoinTransactions.onclick = (event) => {
             event.preventDefault();
@@ -356,7 +354,7 @@ async function renderPortfolio(coins){
         btnBar.append(btnIncreaseHolding, btnDecreaseHolding, btnShowCoinTransactions, btnRemoveCoinFromPortfolio);
 
         // Lägger till raden i tabellen
-        portfolioTableBody.appendChild(rowForCoin);
+        tableBodyPortfolio.appendChild(rowForCoin);
         
         tempTotalValue += (updatedPrice * coin.holdings);
         tempTotalInvested += invested;
@@ -369,7 +367,8 @@ async function renderPortfolio(coins){
 // Köp eller sälj ett coin
 async function buyOrSell(coin, coinAmountInput, isBuy) {
 
-    const amount = parseFloat(coinAmountInput.value);
+    const amount = parseFloat(coinAmountInput.value.replace(',', '.'));
+
 
     if (isNaN(amount) || amount <= 0) {
         alert('Ange ett giltigt värde för holdings');
@@ -421,8 +420,8 @@ async function getTransactions() {
 }
 
 // Rendera transaktioner
-function renderTransactions(transactions) {
-    transactionsTableBody.replaceChildren(); // Rensa tabellen
+async function renderTransactions(transactions) {
+    tableBodyTransactions.replaceChildren(); // Rensa tabellen
 
     // Loopa igenom alla coins och skapa en rad i tabellen för varje coin
     transactions.forEach(transaction => {
@@ -505,14 +504,16 @@ function renderTransactions(transactions) {
             // Lägger till knappen i actionCell
             actionCell.append(btnEditTransaction, btnUpdateTransaction, btnDeleteTransaction);
         } else{
-            row.style.color = 'grey';
+
+            // Dölj raden för 'Add'-transaktioner
+            row.style.visibility = 'collapse';
         }
 
         // Lägger till alla celler i sina tillhörande HTML-element
         row.append(nameCell, tickerCell, typeCell, amountCell, priceCell, valueCell, dateCell, actionCell);
 
         // Lägger till raden i tabellen
-        transactionsTableBody.appendChild(row);
+        tableBodyTransactions.appendChild(row);
     });
 }
 
@@ -638,7 +639,7 @@ async function deleteTransaction(id) {
 async function generateTotalValues(tempTotalValue, tempTotalInvested, tempTotalChange24h) {
 
     // Rensa tabellen för att undvika dubletter
-    totalsTableBody.replaceChildren();
+    tableBodyTotals.replaceChildren();
 
     // Formatera totalt värde
     const totalValueFormated = formatPrice(parseFloat(tempTotalValue));
@@ -679,7 +680,7 @@ async function generateTotalValues(tempTotalValue, tempTotalInvested, tempTotalC
     rowForTotal.append(totalValueCell, _24hChangeCell, roiChangeCell);
 
     // Lägg till raden i tabellen
-    totalsTableBody.appendChild(rowForTotal);
+    tableBodyTotals.appendChild(rowForTotal);
 }
 
 // Hämta transaktioner för ett coin
@@ -859,9 +860,9 @@ document.querySelectorAll('#inputSearchCoin').forEach(element => {
 });
 
 function ShowHidePortfolio(isPortfolioOn) {
-    labelPortfolio.style.color = isPortfolioOn ? 'black' : 'gray';
-    const portfolio = document.querySelector('.portfolio');
-    portfolio.style.display = isPortfolioOn ? 'block' : 'none';
+    tableTitleTextPortfolio.style.color = isPortfolioOn ? 'black' : 'gray';
+    const tablePortfolioContainer = document.querySelector('.tablePortfolioContainer');
+    tablePortfolioContainer.style.display = isPortfolioOn ? 'block' : 'none';
 }
 
 switchPortfolio.addEventListener('click', () => {
@@ -870,9 +871,9 @@ switchPortfolio.addEventListener('click', () => {
 });
 
 function ShowHideTransactions(isTransactionsOn) {
-    labelTransactions.style.color = isTransactionsOn ? 'black' : 'gray';
-    const transactions = document.querySelector('.transactions');
-    transactions.style.display = isTransactionsOn ? 'block' : 'none';
+    tableTitleTextTransactions.style.color = isTransactionsOn ? 'black' : 'gray';
+    const tableTransactionsContainer = document.querySelector('.tableTransactionsContainer');
+    tableTransactionsContainer.style.display = isTransactionsOn ? 'block' : 'none';
 }
 
 switchTransactions.addEventListener('click', () => {
@@ -881,9 +882,9 @@ switchTransactions.addEventListener('click', () => {
 });
 
 function ShowHideMarket(isMarketOn) {
-    labelMarket.style.color = isMarketOn ? 'black' : 'gray';
-    const market = document.querySelector('.market');
-    market.style.display = isMarketOn ? 'block' : 'none';
+    tableTitleTextMarket.style.color = isMarketOn ? 'black' : 'gray';
+    const tableMarketContainer = document.querySelector('.tableMarketContainer');
+    tableMarketContainer.style.display = isMarketOn ? 'block' : 'none';
 }
 
 switchMarket.addEventListener('click', () => {
@@ -892,9 +893,9 @@ switchMarket.addEventListener('click', () => {
 });
 
 function ShowHideTotals() {
-    labelTotals.style.color = switchTotals.checked ? 'black' : 'gray';
-    const totals = document.querySelector('.totals');
-    totals.style.display = switchTotals.checked ? 'block' : 'none';
+    tableTitleTextTotals.style.color = switchTotals.checked ? 'black' : 'gray';
+    const tableTotalsContainer = document.querySelector('.tableTotalsContainer');
+    tableTotalsContainer.style.display = switchTotals.checked ? 'block' : 'none';
 }
 
 switchTotals.addEventListener('click', () => {

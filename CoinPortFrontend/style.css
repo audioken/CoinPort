@@ -1,4 +1,5 @@
-main, header {
+/* GLOBALT */
+body {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -10,12 +11,29 @@ main, header {
     font-style: normal;
 }
 
+header{
+    font-size: 30px;
+}
+
 h1{
     font-size: 120px;
     font-weight: 600;
     margin-bottom: 0px;
 }
 
+h2{
+    text-align: center;
+}
+
+/* INFOPARAGRAF */
+.infoParagraphContainer{
+    height: 50px;
+    padding: 10px;
+    font-size: 20px;
+    text-align: center;
+}
+
+/* KNAPPAR */
 button{
     border: none;
     border-radius: 10px;
@@ -33,72 +51,7 @@ button:active{
     background-color: #d9d9d9;
 }
 
-.navLabels {
-    font-weight: 500;
-    display: inline-block;
-    width: 100px; /* Justera bredden efter behov */
-    text-align: center; /* Centrerar texten inom labeln */
-    user-select: none; /* Förhindrar att texten kan markeras */
-}
-
-.totalValueContainer{
-    background-color: rgb(236, 227, 215);
-    border-radius: 10px;
-    padding: 10px;
-    height: 100px;
-    width: 1000px;
-    font-weight: 300;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#totalValue{
-    background-color: #f9e7fb;
-    border-radius: 10px;
-    padding: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
-    font-weight: 600;
-    font-size: 35px;
-    margin: 10px;
-    height: 70px;
-    width: 200px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#total24hChange{
-    background-color: #f9e7fb;
-    border-radius: 10px;
-    padding: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
-    font-weight: 500;
-    font-size: 25px;
-    margin: 10px;
-    height: 70px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#totalROIChange{
-    background-color: #f9e7fb;
-    border-radius: 10px;
-    padding: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
-    font-weight: 500;
-    font-size: 25px;
-    margin: 10px;
-    height: 70px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
+/* SWITCHAR */
 .switch {
     position: relative;
     display: inline-block;
@@ -107,18 +60,20 @@ button:active{
     margin-left: 20px;
 }
 
-/* Hide default HTML checkbox */
 .switch input {
     opacity: 0;
     width: 0;
     height: 0;
 }
 
-
 input:checked + .slider:before {
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
     transform: translateX(26px);
+}
+
+input:checked + .slider {
+    background-color: #5fd656;
 }
 
 .slider {
@@ -145,10 +100,6 @@ input:checked + .slider:before {
     transition: .4s;
 }
 
-input:checked + .slider {
-    background-color: #5fd656;
-}
-
 .slider.round {
     border-radius: 34px;
 }
@@ -157,15 +108,7 @@ input:checked + .slider {
     border-radius: 50%;
 }
 
-header{
-    font-size: 30px;
-}
-
-h2{
-    text-align: center;
-}
-
-.tableTitleContainer{
+/* .tableAllTitlesContainer{
     background-color: #ffcb3d;
     border-radius: 10px;
     height: 50px;
@@ -184,31 +127,27 @@ table {
     text-align: center;
 }
 
-.tableTitle{
-    margin-left: 20px;
-}
-
 .allTablesContainer{
     margin-bottom: 100px;
 }
 
-#totalsTableTitle{
+.tableAllTitlesText{
+    margin-left: 20px;
+}
+
+#tableTitleTotalsContainer{
     background-color: #f0b7f6;
 }
 
-#totalsTableTitle{
-    background-color: #f0b7f6;
-}
-
-#portfolioTableTitle{
+#tableTitlePortfolioContainer{
     background-color: #ffcb3d;
 }
 
-#transactionsTableTitle{
+#tableTitleTransactionsContainer{
     background-color: #a2ee5f;
 }
 
-#marketTableTitle{
+#tableTitleMarketContainer{
     background-color: #bddbe6;
 }
 
@@ -222,23 +161,23 @@ td, th {
     vertical-align: middle;
 }
 
-#portfolioTable td:nth-child(8) {
-    white-space: nowrap; /* Förhindrar radbrytning i 8:e kolumnen */
+#tablePortfolio td:nth-child(8) {
+    white-space: nowrap; 
 }
 
-#totalsTable{
+#tableTotals{
     background-color: #fcf5fd;
 }
 
-#portfolioTable{
+#tablePortfolio{
     background-color: #f9f1d9;
 }
 
-#transactionTable{
-    background-color: #e3f8e6;
+#tableTransactions{
+    background-color: rgb(227, 248, 230);
 }
 
-#marketTable{
+#tableMarket{
     background-color: #ecf5fa;
 }
 
@@ -246,21 +185,26 @@ table td {
     border-radius: 10px;
 }
 
-#totalsHead th{
+#tableHeadTotals th{
     background-color: #f7dff9;
     font-size: 20px;
 }
 
-#portfolioHead th{
+#tableHeadPortfolio th{
     background-color: #e9d292;
 }
 
-#transactionsHead th{
+#tableHeadTransactions th{
     background-color: #cce9b3;
 }
 
-#marketHead th{
+#tableHeadMarket th{
     background-color: #d3dfe6;
+}
+
+.market {
+    border-bottom: 1px solid #d3d3d3;
+    border-radius: 10px;
 }
 
 .cellTotal{
@@ -280,15 +224,14 @@ table td {
 
 tbody tr:hover td {
     background-color: #ffffff;
-    /* background-color: #f3ecb7; */
 }
 
 
 
 table {
-    border-collapse: separate; /* Viktigt! */
-    border-radius: 12px; /* Rundade hörn på hela tabellen */
-    overflow: hidden; /* Om det behövs */
+    border-collapse: separate; 
+    border-radius: 12px; 
+    overflow: hidden; 
     margin-top: -10px;
     margin-bottom: 10px;
     padding-top: 5px;
@@ -299,7 +242,7 @@ table {
   
 td, th {
     padding: 8px;
-    border-radius: 8px; /* Rundade hörn per cell */
+    border-radius: 8px; 
 }
 
 input{
@@ -323,9 +266,106 @@ input{
     flex-direction: column;
     justify-content: center;
 
-    gap: 10px; /* Mellanrum mellan tabeller */
+    gap: 10px;
+} */
+
+/* TABELLER */
+.allTablesContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 100px;
 }
 
+.tableAllTitlesContainer {
+    background-color: #ffcb3d;
+    border-radius: 10px;
+    height: 50px;
+    min-width: 1000px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+.tableAllTitlesText {
+    margin-left: 20px;
+}
+
+#tableTitleTotalsContainer { background-color: #f0b7f6; }
+#tableTitlePortfolioContainer { background-color: #ffcb3d; }
+#tableTitleTransactionsContainer { background-color: #a2ee5f; }
+#tableTitleMarketContainer { background-color: #bddbe6; }
+
+/* Tabellen generellt */
+table {
+    background-color: #fff;
+    padding: 10px;
+    width: 1000px;
+    border-radius: 12px;
+    text-align: center;
+    border-collapse: separate;
+    overflow: hidden;
+    margin: -10px 0 10px 0;
+    border: 1px solid #d3d3d3;
+    padding-top: 5px;
+}
+
+/* Specifika tabellbakgrunder */
+#tableTotals { background-color: #fcf5fd; }
+#tablePortfolio { background-color: #f9f1d9; }
+#tableTransactions { background-color: #e3f8e6; }
+#tableMarket { background-color: #ecf5fa; }
+
+/* Tabellens celler */
+th, td {
+    padding: 8px;
+    border-radius: 8px;
+    vertical-align: middle;
+}
+
+table td { border-radius: 10px; }
+
+th {
+    background-color: #e9d292;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+#tableHeadTotals th { background-color: #f7dff9; font-size: 20px; }
+#tableHeadPortfolio th { background-color: #e9d292; }
+#tableHeadTransactions th { background-color: #cce9b3; }
+#tableHeadMarket th { background-color: #d3dfe6; }
+
+/* Specifik styling för vissa celler */
+.cellTotal { font-size: 50px; font-weight: 600; }
+.cellROI, .cell24h { font-size: 30px; font-weight: 500; }
+
+#tablePortfolio td:nth-child(8) { white-space: nowrap; }
+
+tbody tr:hover td { background-color: #ffffff; }
+
+.market {
+    border-bottom: 1px solid #d3d3d3;
+    border-radius: 10px;
+}
+
+/* INPUTS */
+input {
+    width: 120px;
+    padding: 6px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+/* Sökfältet */
+#inputSearchCoin {
+    width: 80px;
+    margin-left: 10px;
+}
 
   
   
