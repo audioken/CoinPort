@@ -839,6 +839,107 @@ function getTrendColor(value){
     }
 }
 
+// // Funktion för att sortera tabellen
+// function sortTable(columnIndex, order) {
+//     const table = document.getElementById('tableMarket');
+//     const tbody = table.querySelector('tbody');
+//     const rows = Array.from(tbody.querySelectorAll('tr'));
+
+//     rows.sort((a, b) => {
+//         const cellA = a.children[columnIndex].textContent.trim();
+//         const cellB = b.children[columnIndex].textContent.trim();
+
+//         if (!isNaN(cellA) && !isNaN(cellB)) {
+//             // Sortera som nummer
+//             return order === 'asc' ? cellA - cellB : cellB - cellA;
+//         } else {
+//             // Sortera som text
+//             return order === 'asc' ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
+//         }
+//     });
+
+//     // Lägg tillbaka de sorterade raderna i tbody
+//     rows.forEach(row => tbody.appendChild(row));
+// }
+
+// // Lägg till eventlyssnare för sorteringspilarna
+// document.querySelectorAll('.sort').forEach(sortElement => {
+//     sortElement.addEventListener('click', () => {
+//         const columnIndex = sortElement.getAttribute('data-column');
+//         const order = sortElement.getAttribute('data-order');
+//         sortTable(columnIndex, order);
+
+//         // Växla sorteringsordning
+//         sortElement.setAttribute('data-order', order === 'asc' ? 'desc' : 'asc');
+//         sortElement.textContent = order === 'asc' ? '▲' : '▼';
+//     });
+// });
+
+
+// Funktion för att sanera och konvertera cellvärden till nummer
+function sanitizeAndConvert(value) {
+    // Ta bort alla icke-numeriska tecken förutom punkt och minus
+    const sanitizedValue = value.replace(/[^0-9.-]+/g, "");
+    return parseFloat(sanitizedValue);
+}
+
+// Funktion för att sortera tabellen
+function sortTable(columnIndex, order) {
+    const table = document.getElementById('tableMarket');
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+
+    rows.sort((a, b) => {
+        let cellA = a.children[columnIndex].textContent.trim();
+        let cellB = b.children[columnIndex].textContent.trim();
+
+        // Försök att konvertera cellvärdena till nummer
+        const numA = sanitizeAndConvert(cellA);
+        const numB = sanitizeAndConvert(cellB);
+
+        // Kontrollera om båda cellvärdena är nummer
+        if (!isNaN(numA) && !isNaN(numB)) {
+            // Sortera som nummer
+            return order === 'asc' ? numA - numB : numB - numA;
+        } else {
+            // Sortera som text
+            return order === 'desc' ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
+        }
+    });
+
+    // Lägg tillbaka de sorterade raderna i tbody
+    rows.forEach(row => tbody.appendChild(row));
+}
+
+// Lägg till eventlyssnare för sorteringspilarna
+document.querySelectorAll('.sort').forEach(sortElement => {
+    sortElement.addEventListener('click', () => {
+        const columnIndex = sortElement.getAttribute('data-column');
+        let order = sortElement.getAttribute('data-order');
+
+        // Om pilen är nedåt vid första klicket, sortera från högst till lägst
+        if (order === 'asc') {
+            order = 'desc';
+        } else {
+            order = 'asc';
+        }
+
+        sortTable(columnIndex, order);
+
+        // Återställ alla pilar till nedåt och ta bort aktiv klass
+        document.querySelectorAll('.sort').forEach(el => {
+            el.textContent = '▼';
+            el.setAttribute('data-order', 'asc');
+            el.classList.remove('active');
+        });
+
+        // Växla sorteringsordning för den klickade pilen och sätt aktiv klass
+        sortElement.setAttribute('data-order', order);
+        sortElement.textContent = order === 'asc' ? '▲' : '▼';
+        sortElement.classList.add('active');
+    });
+});
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// EVENT LISTENERS ///
 ///////////////////////

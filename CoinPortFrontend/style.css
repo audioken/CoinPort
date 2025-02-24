@@ -378,9 +378,28 @@ input {
 #inputSearchCoin {
     width: 80px;
     margin: -8px;
-    margin-left: 10px;
+    margin-left: 4px;
     margin-bottom: -4px;
 }
 
+/* Stil för sorteringspilarna */
+.sort {
+    cursor: pointer;
+    margin-left: 5px;
+    visibility: hidden; /* Dölj pilarna som standard */
+}
+
+th:hover .sort {
+    visibility: visible; /* Visa pilarna när du hovrar över kolumnhuvudet */
+}
+
+.sort.active {
+    visibility: visible; /* Visa den aktiva pilen */
+}
+
+/* Stil för sorteringspilarna */
+.sortCoin{
+    margin-left: 10px;
+}
   
   
