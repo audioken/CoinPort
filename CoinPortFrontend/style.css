@@ -350,6 +350,19 @@ tbody tr:hover td { background-color: #ffffff; }
     border-radius: 10px;
 }
 
+/* Lägg till denna CSS för att göra tbody scrollbar */
+.tableMarketContainer tbody {
+    display: block;
+    max-height: 400px; /* Justera höjden efter behov */
+    overflow-y: auto;
+}
+
+.tableMarketContainer thead, .tableMarketContainer tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
 /* INPUTS */
 input {
     width: 120px;
@@ -364,7 +377,9 @@ input {
 /* Sökfältet */
 #inputSearchCoin {
     width: 80px;
+    margin: -8px;
     margin-left: 10px;
+    margin-bottom: -4px;
 }
 
   

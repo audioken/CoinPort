@@ -36,7 +36,7 @@
               "RelativeDocumentMoniker": "Models\\Coin.cs",
               "ToolTip": "C:\\Users\\kenza\\OneDrive\\Skrivbord\\NEWTON\\01. Kurser\\05. Objektorienterad programmering, forts\u00E4ttning\\Egna projekt\\CoinPort\\CoinPortBackend\\Models\\Coin.cs",
               "RelativeToolTip": "Models\\Coin.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-15T19:56:47.405Z",
               "IsPinned": true,
@@ -92,8 +92,7 @@
               "RelativeToolTip": "Controllers\\TransactionController.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAAIIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-20T19:10:17.072Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-20T19:10:17.072Z"
             },
             {
               "$type": "Document",
@@ -105,8 +104,7 @@
               "RelativeToolTip": "Models\\Transaction.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-20T19:07:26.409Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-20T19:07:26.409Z"
             },
             {
               "$type": "Document",
@@ -118,8 +116,7 @@
               "RelativeToolTip": "Controllers\\MarketController.cs",
               "ViewState": "AgIAAD0AAAAAAAAAAAAqwEcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-20T18:46:50.013Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-20T18:46:50.013Z"
             }
           ]
         }

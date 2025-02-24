@@ -724,24 +724,18 @@ function formatDate(dateString) {
 
 // Funktion för att filtrera coins i CoinGecko-tabellen baserat på användarens sökterm
 function searchCoin() {
-    const filter = inputSearchCoin.value.toLowerCase();
-    const rows = document.getElementById('marketTableBody').getElementsByTagName('tr');
+    const searchInput = inputSearchCoin.value.toLowerCase();
+    const rows = document.querySelectorAll('#tableBodyMarket tr');
 
-    for (let i = 0; i < rows.length; i++) {
-        const nameCell = rows[i].getElementsByTagName('td')[0];
-        const tickerCell = rows[i].getElementsByTagName('td')[1];
-
-        if (nameCell && tickerCell) {
-            const nameText = nameCell.textContent.toLowerCase();
-            const tickerText = tickerCell.textContent.toLowerCase();
-
-            if (nameText.includes(filter) || tickerText.includes(filter)) {
-                rows[i].style.display = '';
-            } else {
-                rows[i].style.display = 'none';
-            }
+    rows.forEach(row => {
+        const coinName = row.querySelector('td:first-child').textContent.toLowerCase();
+        const coinTricker = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        if (coinName.includes(searchInput) || coinTricker.includes(searchInput)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
         }
-    }
+    });
 }
 
 // Funktion för att returnera information beroende på vilket element användaren håller musen över
