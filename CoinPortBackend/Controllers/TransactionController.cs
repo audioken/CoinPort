@@ -129,23 +129,5 @@ namespace CoinPortBackend.Controllers
             // Returnera NoContent för att indikera att det gick bra
             return NoContent();
         }
-
-        //// Hjälpmetod för att ta bort $-tecken och byta komma till punkt
-        //private decimal SanitizeAmount(string amount)
-        //{
-        //    // Ta bort $-tecken och byt komma till punkt
-        //    if (amount != null)
-        //    {
-        //        amount = amount.Replace("$", "").Replace(",", ".");
-        //    }
-
-        //    // Försök att konvertera till decimal och returnera, annars 0 om invalid format
-        //    if (decimal.TryParse(amount, out decimal result))
-        //    {
-        //        return result;
-        //    }
-
-        //    return 0; // Om det inte går att konvertera, sätt till 0
-        //}
     }
 }
