@@ -393,7 +393,7 @@ th:hover .sort {
     visibility: visible; /* Visa pilarna när du hovrar över kolumnhuvudet */
 }
 
-.sort.active {
+.sort.active, .sortMarketCap.active{
     visibility: visible; /* Visa den aktiva pilen */
 }
 
@@ -401,5 +401,4 @@ th:hover .sort {
 .sortCoin{
     margin-left: 10px;
 }
-  
-  
+
