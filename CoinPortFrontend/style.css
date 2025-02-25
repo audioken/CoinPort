@@ -257,6 +257,18 @@ tbody tr:last-child{ border-bottom: none; }
 #headCellTransactionsAction { width: 80px; }
 #tableBodyTransactions td:last-child { width: 84px; }
 
+/* Justera hur kolumnernas text i tabellerna ska visas */
+#tablePortfolio tbody td:nth-child(1) { font-weight: 500; }
+#tablePortfolio tbody td:nth-child(3) { font-weight: 500; }
+#tablePortfolio tbody td:nth-child(7) { font-weight: 500; }
+
+#tableTransactions tbody td:nth-child(1) { font-weight: 500; color: black}
+#tableTransactions tbody td:nth-child(2) { color: black}
+#tableTransactions tbody td:nth-child(3) { font-weight: 500; }
+
+#tableMarket tbody td:nth-child(2) { font-weight: 500; }
+#tableMarket tbody td:nth-child(2) { font-weight: 500; }
+
 /* INPUTS */
 input {
     width: 120px;

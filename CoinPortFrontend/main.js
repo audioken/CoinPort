@@ -276,7 +276,12 @@ async function renderPortfolio(coins){
         holdingsCell.textContent = holdings; 
 
         const investedCell = document.createElement('td'); 
-        investedCell.textContent = formatPrice(parseFloat(invested));
+
+        if (invested <= 0) {
+            investedCell.textContent = "Breakeven";
+        } else{
+            investedCell.textContent = formatPrice(parseFloat(invested));
+        }
 
         const currentValueCell = document.createElement('td');
         currentValueCell.textContent = formatPrice(parseFloat(updatedPrice * coin.holdings)); 
@@ -380,9 +385,17 @@ async function buyOrSell(coin, coinAmountInput, isBuy) {
 
     const amount = parseFloat(coinAmountInput.value.replace(',', '.'));
 
-
     if (isNaN(amount) || amount <= 0) {
-        alert('Ange ett giltigt värde för holdings');
+        alert('Invalid amount');
+        return;
+    }
+
+    const isAmountValid = await validateAmount(coinAmountInput.value, coin.coinId);
+
+    console.log(coinAmountInput);
+    console.log(isAmountValid);
+
+    if (isAmountValid === false) {
         return;
     }
 
@@ -484,7 +497,7 @@ async function renderTransactions(transactions) {
                 editTransaction(
                     btnEditTransaction, 
                     btnUpdateTransaction,
-                    btnCancelChanges,
+                    btnRestoreChanges,
                     btnDeleteTransaction, 
                     amountCell, 
                     priceCell
@@ -494,7 +507,7 @@ async function renderTransactions(transactions) {
                 activeEdit = [
                     btnEditTransaction, 
                     btnUpdateTransaction, 
-                    btnCancelChanges, 
+                    btnRestoreChanges, 
                     btnDeleteTransaction, 
                     amountCell, 
                     priceCell, 
@@ -504,6 +517,7 @@ async function renderTransactions(transactions) {
             };
 
             let isNumbersValid = false;
+            let isAmountValid = false;
             const btnUpdateTransaction = document.createElement('button');
             btnUpdateTransaction.classList.add('btnApplyChanges');
             btnUpdateTransaction.textContent = '✓';
@@ -511,17 +525,20 @@ async function renderTransactions(transactions) {
             btnUpdateTransaction.style.fontSize = "15px";
             btnUpdateTransaction.style.fontWeight = "bold";
             btnUpdateTransaction.style.display = 'none';
-            btnUpdateTransaction.onclick = () => {
-                isNumbersValid = validateNumbers(amountCell.textContent, priceCell.textContent);
+            btnUpdateTransaction.onclick = async () => {
+                isNumbersValid = await validateNumbers(amountCell.textContent, priceCell.textContent);
+                isAmountValid = await validateAmount((amountCell.textContent - transaction.coinAmount), transaction.coinId);
 
-                if (isNumbersValid === true) {
+                if (isNumbersValid === true && isAmountValid === true) {
 
-                    saveChanges(
+                    restoreButtonsAndCells(
                         btnEditTransaction, 
                         btnUpdateTransaction, 
                         amountCell, 
                         priceCell, 
-                        transaction.id);
+                        transaction.id
+                    );
+
                     updateTransaction(
                         transaction.id, 
                         transaction.coinId,
@@ -530,30 +547,32 @@ async function renderTransactions(transactions) {
                         transaction.type,
                         amountCell.textContent,
                         priceCell.textContent,
-                        transaction.date);
+                        transaction.date
+                    );
                 }
 
                 // Ingen redigering pågår längre
                 activeEdit = null;
             };
 
-            const btnCancelChanges = document.createElement('button');
-            btnCancelChanges.classList.add('btnCancelChanges');
-            btnCancelChanges.textContent = '✘';
-            btnCancelChanges.style.color = 'green';
-            btnCancelChanges.style.fontSize = "15px";
-            btnCancelChanges.style.fontWeight = "bold";
-            btnCancelChanges.style.display = 'none';
-            btnCancelChanges.onclick = () => {
-                cancelChanges(
+            const btnRestoreChanges = document.createElement('button');
+            btnRestoreChanges.classList.add('btnCancelChanges');
+            btnRestoreChanges.textContent = '✘';
+            btnRestoreChanges.style.color = 'green';
+            btnRestoreChanges.style.fontSize = "15px";
+            btnRestoreChanges.style.fontWeight = "bold";
+            btnRestoreChanges.style.display = 'none';
+            btnRestoreChanges.onclick = () => {
+                restoreChanges(
                     btnEditTransaction, 
                     btnUpdateTransaction,
-                    btnCancelChanges,
+                    btnRestoreChanges,
                     btnDeleteTransaction, 
                     amountCell,
                     priceCell,
                     transaction.coinAmount, 
-                    transaction.coinPrice);
+                    transaction.coinPrice
+                );
 
                 // Ingen redigering pågår längre
                 activeEdit = null;
@@ -569,7 +588,7 @@ async function renderTransactions(transactions) {
             btnDeleteTransaction.onclick = () => deleteTransaction(transaction.id);
 
             // Lägger till knappen i actionCell
-            actionCell.append(btnEditTransaction, btnUpdateTransaction, btnCancelChanges, btnDeleteTransaction);
+            actionCell.append(btnEditTransaction, btnUpdateTransaction, btnRestoreChanges, btnDeleteTransaction);
         } else{
 
             // Dölj raden för 'Add'-transaktioner
@@ -584,17 +603,32 @@ async function renderTransactions(transactions) {
     };
 }
 
+// Validera att inmatade värden är giltiga
+async function validateAmount(amount, coinId) {  
+    
+    const holdings = await calculateHoldings(coinId);
+
+    if (amount > holdings) {
+        alert('Amount is too high. Cannot sell more than you own.');
+        return false;
+    } else {
+        return true;
+    }
+}
+
+// Avbryt pågående redigering
 async function cancelOtherEdits() {
     if (activeEdit) {
-        cancelChanges(...activeEdit);
+        restoreChanges(...activeEdit);
         activeEdit = null;
     }
 }
 
-async function cancelChanges(btnEdit, btnUpdate, btnCancel, btnDelete, amountCell, priceCell, amount, price) {
+// Återställ ändringar i en transaktion
+async function restoreChanges(btnEdit, btnUpdate, btnRestore, btnDelete, amountCell, priceCell, amount, price) {
     btnUpdate.style.display = 'none'; 
     btnEdit.style.display = 'inline-block';
-    btnCancel.style.display = 'none';
+    btnRestore.style.display = 'none';
     btnDelete.style.display = 'inline-block';
 
     amountCell.style.backgroundColor = ''; 
@@ -623,12 +657,12 @@ async function deleteCoin(coinId) {
 }
 
 // Redigera en transaktion
-async function editTransaction(btnEdit, btnUpdate, btnCancel, btnDelete, amountCell, priceCell) {
+async function editTransaction(btnEdit, btnUpdate, btnRestore, btnDelete, amountCell, priceCell) {
 
     // Visa eller dölj knappar
     btnEdit.style.display = 'none'; 
     btnUpdate.style.display = 'inline-block';
-    btnCancel.style.display = 'inline-block';
+    btnRestore.style.display = 'inline-block';
     btnDelete.style.display = 'none';
 
     // Ändra bakgrundsfärg för att visa att raden är redigerbar
@@ -657,8 +691,8 @@ async function markAllText(cell){
     selection.addRange(range);
 }
 
-// Uppdatera en transaktion
-async function saveChanges(btnEdit, btnUpdate, amountCell, priceCell) {
+// Återställ celler och knappar efter att ändringar har sparats
+async function restoreButtonsAndCells(btnEdit, btnUpdate, amountCell, priceCell) {
     
     // Göm eller visa knappar
     btnEdit.style.display = 'inline-block';
@@ -681,6 +715,7 @@ async function saveChanges(btnEdit, btnUpdate, amountCell, priceCell) {
     selection.removeAllRanges(); // Tar bort markeringen
 }
 
+// Uppdatera en transaktion i databasen
 async function updateTransaction(id, coinId, name, ticker, type, amount, price, date) {
 
     // Sanera amount och price innan du skickar dem
@@ -935,13 +970,10 @@ function getTrendColor(value){
     }
 }
 
-function validateNumbers(amount, price){
+async function validateNumbers(amount, price){
 
     const sanitizedAmount = sanitizeAndConvert(amount);
     const sanitizedPrice = sanitizeAndConvert(price);
-
-    console.log(sanitizedAmount);
-    console.log(sanitizedPrice);
 
     if (isNaN(sanitizedAmount) || isNaN(sanitizedPrice) || 
         sanitizedAmount <= 0 || sanitizedPrice <= 0) {
