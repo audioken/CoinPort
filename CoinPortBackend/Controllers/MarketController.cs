@@ -29,7 +29,7 @@ namespace CoinPortBackend.Controllers
             }
 
             var allCoins = new List<object>();
-            int totalCoinsToFetch = 2000;
+            int totalCoinsToFetch = 1000;
             int coinsPerPage = 250;
             int totalPages = (int)Math.Ceiling((double)totalCoinsToFetch / coinsPerPage);
 

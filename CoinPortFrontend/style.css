@@ -235,19 +235,7 @@ tbody tr:last-child{ border-bottom: none; }
     table-layout: fixed;
 }
 
-/* Justera bredden för kolumnerna i marknadstabellen */
-#headCellMarketRank { width: 50px; }
-#tableBodyMarket td:first-child { width: 54px; }
-
-#headCellMarketCoin { width: 150px; }
-#tableBodyMarket td:nth-child(2) { width: 154px; }
-
-#headCellMarket24h { width: 80px; }
-#tableBodyMarket td:nth-child(5) { width: 84px; }
-
-#headCellMarketAction { width: 50px; }
-#tableBodyMarket td:last-child { width: 54px; }
-
+/* Justera bredden för kolumnerna i tabellerna */
 #headCellPortfolioAction { width: 160px; }
 #tableBodyPortfolio td:last-child { width: 164px; }
 
@@ -256,6 +244,21 @@ tbody tr:last-child{ border-bottom: none; }
 
 #headCellTransactionsAction { width: 80px; }
 #tableBodyTransactions td:last-child { width: 84px; }
+
+#headCellMarketRank { width: 50px; }
+#tableBodyMarket td:first-child { width: 54px; }
+
+#headCellMarketTicker { width: 100px; }
+#tableBodyMarket td:nth-child(3) { width: 104px; }
+
+#headCellMarketPrice { width: 100px; }
+#tableBodyMarket td:nth-child(4) { width: 104px; }
+
+#headCellMarket24h { width: 80px; }
+#tableBodyMarket td:nth-child(5) { width: 84px; }
+
+#headCellMarketAction { width: 50px; }
+#tableBodyMarket td:last-child { width: 54px; }
 
 /* Justera hur kolumnernas text i tabellerna ska visas */
 #tablePortfolio tbody td:nth-child(1) { font-weight: 500; }
@@ -266,8 +269,16 @@ tbody tr:last-child{ border-bottom: none; }
 #tableTransactions tbody td:nth-child(2) { color: black}
 #tableTransactions tbody td:nth-child(3) { font-weight: 500; }
 
-#tableMarket tbody td:nth-child(2) { font-weight: 500; }
-#tableMarket tbody td:nth-child(2) { font-weight: 500; }
+#tableMarket tbody td:nth-child(2) { 
+    font-weight: 500; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 8px; 
+    /* white-space: nowrap;  */
+    height: 40px; 
+}
+
 
 /* INPUTS */
 input {

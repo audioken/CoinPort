@@ -70,9 +70,17 @@ async function getMarket() {
 
         const rankCell = document.createElement('td');
         rankCell.textContent = coin.rank;
-    
+
+        const img = document.createElement('img');
+        img.src = coin.image;
+        img.width = 25;
+        img.height = 25;
+
         const nameCell = document.createElement('td');
-        nameCell.textContent = coin.name;
+        const nameCellText = document.createTextNode(coin.name); // Skapa en textnod
+
+        nameCell.appendChild(img);  // Lägg först till bilden
+        nameCell.appendChild(nameCellText);  // Lägg sedan till texten
     
         const tickerCell = document.createElement('td');
         tickerCell.textContent = coin.ticker;
@@ -858,7 +866,9 @@ async function getCoinTransactions(coinId) {
 function formatPrice(value) {
 
     // Om värdet är extremt litet, visa med upp till 6 decimaler för att inte förlora små värden
-    if (Math.abs(value) < 0.01) {
+    if (Math.abs(value) < 0.0001) {
+        return `${value < 0 ? '-' : ''}$${Math.abs(value).toFixed(10).replace(/\.?0+$/, '')}`;
+    } else if (Math.abs(value) < 0.01) {
         // Ta bort extra nollor genom att använda toFixed(6) och ta bort slutförande nollor
         return `${value < 0 ? '-' : ''}$${Math.abs(value).toFixed(8).replace(/\.?0+$/, '')}`;
     } 

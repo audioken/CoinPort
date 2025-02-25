@@ -4,6 +4,7 @@ using CoinPortBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoinPortBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class CoinDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250225205759_increasedDecimalsinDbContext")]
+    partial class increasedDecimalsinDbContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,8 +34,8 @@ namespace CoinPortBackend.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Change24hPercent")
-                        .HasPrecision(18, 6)
-                        .HasColumnType("decimal(18,6)");
+                        .HasPrecision(18, 10)
+                        .HasColumnType("decimal(18,10)");
 
                     b.Property<string>("CoinId")
                         .IsRequired()
@@ -49,8 +52,8 @@ namespace CoinPortBackend.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("Price")
-                        .HasPrecision(18, 12)
-                        .HasColumnType("decimal(18,12)");
+                        .HasPrecision(18, 14)
+                        .HasColumnType("decimal(18,14)");
 
                     b.Property<int>("Rank")
                         .HasColumnType("int");
@@ -61,8 +64,8 @@ namespace CoinPortBackend.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("Value")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("decimal(18,4)");
+                        .HasPrecision(18, 10)
+                        .HasColumnType("decimal(18,10)");
 
                     b.HasKey("Id");
 
@@ -78,8 +81,8 @@ namespace CoinPortBackend.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("CoinAmount")
-                        .HasPrecision(24, 10)
-                        .HasColumnType("decimal(24,10)");
+                        .HasPrecision(18, 10)
+                        .HasColumnType("decimal(18,10)");
 
                     b.Property<string>("CoinId")
                         .IsRequired()
@@ -87,8 +90,8 @@ namespace CoinPortBackend.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("CoinPrice")
-                        .HasPrecision(24, 10)
-                        .HasColumnType("decimal(24,10)");
+                        .HasPrecision(18, 14)
+                        .HasColumnType("decimal(18,14)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");

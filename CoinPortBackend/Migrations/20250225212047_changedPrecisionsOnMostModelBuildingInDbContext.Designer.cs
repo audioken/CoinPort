@@ -4,6 +4,7 @@ using CoinPortBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoinPortBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class CoinDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250225212047_changedPrecisionsOnMostModelBuildingInDbContext")]
+    partial class changedPrecisionsOnMostModelBuildingInDbContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -78,8 +81,8 @@ namespace CoinPortBackend.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("CoinAmount")
-                        .HasPrecision(24, 10)
-                        .HasColumnType("decimal(24,10)");
+                        .HasPrecision(18, 10)
+                        .HasColumnType("decimal(18,10)");
 
                     b.Property<string>("CoinId")
                         .IsRequired()

@@ -16,11 +16,11 @@ namespace CoinPortBackend.Data
         {
             modelBuilder.Entity<Coin>()
                 .Property(c => c.Price)
-                .HasPrecision(18, 10);
+                .HasPrecision(18, 12);
 
             modelBuilder.Entity<Coin>()
                 .Property(c => c.Change24hPercent)
-                .HasPrecision(18, 10);
+                .HasPrecision(18, 6);
 
             modelBuilder.Entity<Coin>()
                 .Property(c => c.Holdings)
@@ -28,15 +28,15 @@ namespace CoinPortBackend.Data
 
             modelBuilder.Entity<Coin>()
                 .Property(c => c.Value)
-                .HasPrecision(18, 10);
+                .HasPrecision(18, 4);
 
             modelBuilder.Entity<Transaction>()
                 .Property(c => c.CoinPrice)
-                .HasPrecision(18, 10);
+                .HasPrecision(24, 10);
 
             modelBuilder.Entity<Transaction>()
                 .Property(c => c.CoinAmount)
-                .HasPrecision(18, 10);
+                .HasPrecision(24, 10);
         }
     }
 }
