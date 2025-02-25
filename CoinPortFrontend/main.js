@@ -237,8 +237,12 @@ async function renderPortfolio(coins){
         const updatedPriceChange24h = marketCoin ? marketCoin.priceChange24h : coin.priceChange24h;
 
         // Räkna ut värden beräknade på senaste datan
-        const invested = await calcuateInvestment(coin.coinId);
+        let invested = await calcuateInvestment(coin.coinId);
         const holdings = await calculateHoldings(coin.coinId);
+
+        if (invested < 0){
+            invested = 0;
+        }
 
         const roiDollar = formatPrice(parseFloat((coin.holdings * updatedPrice) - invested));
         const roiPercent = parseFloat(((coin.holdings * updatedPrice) - invested) / invested * 100)
@@ -390,13 +394,9 @@ async function buyOrSell(coin, coinAmountInput, isBuy) {
         return;
     }
 
-    const isAmountValid = await validateAmount(coinAmountInput.value, coin.coinId);
-
-    console.log(coinAmountInput);
-    console.log(isAmountValid);
-
-    if (isAmountValid === false) {
-        return;
+    if (!isBuy){
+        let isAmountValid = await validateAmount(coinAmountInput.value, coin.coinId);
+        if (isAmountValid === false) { return; }
     }
 
     await addTransaction(coin.coinId, coin.name, coin.ticker, isBuy ? 'Buy' : 'Sell', amount, coin.price, new Date().toISOString());
@@ -526,8 +526,14 @@ async function renderTransactions(transactions) {
             btnUpdateTransaction.style.fontWeight = "bold";
             btnUpdateTransaction.style.display = 'none';
             btnUpdateTransaction.onclick = async () => {
+
                 isNumbersValid = await validateNumbers(amountCell.textContent, priceCell.textContent);
-                isAmountValid = await validateAmount((amountCell.textContent - transaction.coinAmount), transaction.coinId);
+
+                if (transaction.type === 'Buy') { 
+                    isAmountValid = await validateAmount((transaction.coinAmount - amountCell.textContent), transaction.coinId); 
+                } else { 
+                    isAmountValid = await validateAmount((amountCell.textContent - transaction.coinAmount), transaction.coinId); 
+                }
 
                 if (isNumbersValid === true && isAmountValid === true) {
 
@@ -585,7 +591,16 @@ async function renderTransactions(transactions) {
             btnDeleteTransaction.style.fontSize = "15px";
             btnDeleteTransaction.style.fontWeight = "bold";
 
-            btnDeleteTransaction.onclick = () => deleteTransaction(transaction.id);
+            btnDeleteTransaction.onclick = async () => {
+                
+                if (transaction.type === 'Buy') {
+
+                    isAmountValid = await validateAmount(transaction.coinAmount, transaction.coinId); 
+
+                    if (isAmountValid === true) { deleteTransaction(transaction.id, true); }
+
+                } else{ deleteTransaction(transaction.id, true); }
+            };
 
             // Lägger till knappen i actionCell
             actionCell.append(btnEditTransaction, btnUpdateTransaction, btnRestoreChanges, btnDeleteTransaction);
@@ -651,9 +666,13 @@ async function deleteCoin(coinId) {
 
     for (const transaction of transactions) {
         if (transaction.coinId === coinId) {
-            await deleteTransaction(transaction.id);
+            await deleteTransaction(transaction.id, false);
         }
     }
+
+    // Uppdatera portfolion efter att transaktionerna tagits bort
+    await getTransactions();
+    await createPortfolio();
 }
 
 // Redigera en transaktion
@@ -749,7 +768,7 @@ async function updateTransaction(id, coinId, name, ticker, type, amount, price, 
 }
 
 // Ta bort en transaktion från databasen
-async function deleteTransaction(id) {
+async function deleteTransaction(id, deletingSingleTransaction) {
     
     const url = `${api}/transactions/${id}`;
     const response = await fetch(url, {
@@ -761,9 +780,11 @@ async function deleteTransaction(id) {
         return;
     }
 
-    // Uppdatera portfolion efter att transaktionen tagits bort
-    await getTransactions();
-    await createPortfolio();
+    // Uppdatera om det är en enskild transaktion som tas bort
+    if (deletingSingleTransaction === true) {
+        getTransactions();
+        createPortfolio();
+    }
 }
 
 // Generera totala värden för portfolion
