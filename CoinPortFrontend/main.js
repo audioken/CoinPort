@@ -14,6 +14,7 @@ let isMarketOn = true;
 let tempTotalValue = 0;
 let tempTotalInvested = 0;
 let tempTotalChange24h = 0;
+let activeEdit = null;
 
 // Hämta element från HTML
 let tableTitleTextTotals = document.getElementById('tableTitleTextTotals'); // Hämta label för att visa totala värden
@@ -478,14 +479,28 @@ async function renderTransactions(transactions) {
             btnEditTransaction.classList.add('btnEditTransaction');
             btnEditTransaction.textContent = '✏️';
             btnEditTransaction.style.fontSize = "15px";
-            btnEditTransaction.onclick = () => { 
+            btnEditTransaction.onclick = () => {    
+                cancelOtherEdits();
                 editTransaction(
                     btnEditTransaction, 
                     btnUpdateTransaction,
                     btnCancelChanges,
                     btnDeleteTransaction, 
                     amountCell, 
-                    priceCell);
+                    priceCell
+                );
+
+                // Pågående redigering
+                activeEdit = [
+                    btnEditTransaction, 
+                    btnUpdateTransaction, 
+                    btnCancelChanges, 
+                    btnDeleteTransaction, 
+                    amountCell, 
+                    priceCell, 
+                    transaction.coinAmount, 
+                    transaction.coinPrice
+                ];
             };
 
             let isNumbersValid = false;
@@ -497,11 +512,7 @@ async function renderTransactions(transactions) {
             btnUpdateTransaction.style.fontWeight = "bold";
             btnUpdateTransaction.style.display = 'none';
             btnUpdateTransaction.onclick = () => {
-
-                console.log(isNumbersValid);
                 isNumbersValid = validateNumbers(amountCell.textContent, priceCell.textContent);
-                console.log(isNumbersValid);
-
 
                 if (isNumbersValid === true) {
 
@@ -521,6 +532,9 @@ async function renderTransactions(transactions) {
                         priceCell.textContent,
                         transaction.date);
                 }
+
+                // Ingen redigering pågår längre
+                activeEdit = null;
             };
 
             const btnCancelChanges = document.createElement('button');
@@ -540,6 +554,9 @@ async function renderTransactions(transactions) {
                     priceCell,
                     transaction.coinAmount, 
                     transaction.coinPrice);
+
+                // Ingen redigering pågår längre
+                activeEdit = null;
             };
 
             const btnDeleteTransaction = document.createElement('button');
@@ -565,6 +582,13 @@ async function renderTransactions(transactions) {
         // Lägger till raden i tabellen
         tableBodyTransactions.appendChild(row);
     };
+}
+
+async function cancelOtherEdits() {
+    if (activeEdit) {
+        cancelChanges(...activeEdit);
+        activeEdit = null;
+    }
 }
 
 async function cancelChanges(btnEdit, btnUpdate, btnCancel, btnDelete, amountCell, priceCell, amount, price) {
@@ -631,23 +655,6 @@ async function markAllText(cell){
     range.selectNodeContents(cell);
     selection.removeAllRanges();
     selection.addRange(range);
-}
-
-function validateNumbers(amount, price){
-
-    const sanitizedAmount = sanitizeAndConvert(amount);
-    const sanitizedPrice = sanitizeAndConvert(price);
-
-    console.log(sanitizedAmount);
-    console.log(sanitizedPrice);
-
-    if (isNaN(sanitizedAmount) || isNaN(sanitizedPrice) || 
-        sanitizedAmount <= 0 || sanitizedPrice <= 0) {
-        alert('Ange giltiga värden..');
-        return false;
-    } else {
-        return true;
-    }
 }
 
 // Uppdatera en transaktion
@@ -925,6 +932,23 @@ function getTrendColor(value){
         return 'red';
     } else {
         return 'black';
+    }
+}
+
+function validateNumbers(amount, price){
+
+    const sanitizedAmount = sanitizeAndConvert(amount);
+    const sanitizedPrice = sanitizeAndConvert(price);
+
+    console.log(sanitizedAmount);
+    console.log(sanitizedPrice);
+
+    if (isNaN(sanitizedAmount) || isNaN(sanitizedPrice) || 
+        sanitizedAmount <= 0 || sanitizedPrice <= 0) {
+        alert('Ange giltiga värden..');
+        return false;
+    } else {
+        return true;
     }
 }
 
