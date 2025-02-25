@@ -94,6 +94,7 @@ async function getMarket() {
         const btnAddCoinToPortfolio = document.createElement('button');
         btnAddCoinToPortfolio.classList.add('btnAddCoinToPortfolio');
         btnAddCoinToPortfolio.textContent = '➕';
+        btnAddCoinToPortfolio.style.fontSize = "15px";
     
         // Visa eller döljer info om vad knappen gör
         btnAddCoinToPortfolio.addEventListener('mouseover', showInfo); // Visa info när musen hovrar
@@ -304,18 +305,24 @@ async function renderPortfolio(coins){
         const btnIncreaseHolding = document.createElement('button'); 
         btnIncreaseHolding.classList.add('btnIncrease');
         btnIncreaseHolding.textContent = '➕';
+        btnIncreaseHolding.style.fontSize = "15px";
 
         const btnDecreaseHolding = document.createElement('button');
         btnDecreaseHolding.classList.add('btnDecrease'); 
         btnDecreaseHolding.textContent = '➖';
+        btnDecreaseHolding.style.fontSize = "15px";
 
         const btnShowCoinTransactions = document.createElement('button');
         btnShowCoinTransactions.classList.add('btnShowInfo');
-        btnShowCoinTransactions.textContent = '🧾';
+        btnShowCoinTransactions.textContent = '💱';
+        btnShowCoinTransactions.style.fontSize = "15px";
 
         const btnRemoveCoinFromPortfolio = document.createElement('button');
         btnRemoveCoinFromPortfolio.classList.add('btnRemove');
-        btnRemoveCoinFromPortfolio.textContent = '❌';
+        btnRemoveCoinFromPortfolio.textContent = '✘';
+        btnRemoveCoinFromPortfolio.style.color = 'red';
+        btnRemoveCoinFromPortfolio.style.fontSize = "15px";
+        btnRemoveCoinFromPortfolio.style.fontWeight = "bold";
 
         // Visa eller döljer info om vad elementen gör
         inputAmount.addEventListener('mouseover', showInfo);
@@ -407,7 +414,7 @@ async function addTransaction(coinId, name, ticker, type, amount, price, date) {
     });
 
     if (response.ok) {
-        getTransactions();
+        await getTransactions();
     } else {
         // Logga det fullständiga svaret för att få mer information om varför begäran misslyckades
         const errorDetails = await response.text();
@@ -419,7 +426,7 @@ async function addTransaction(coinId, name, ticker, type, amount, price, date) {
 // Hämta transaktioner från databasen
 async function getTransactions() {
     const transactions = await fetchTransactions();
-    renderTransactions(transactions);
+    await renderTransactions(transactions);
 }
 
 // Rendera transaktioner
@@ -427,7 +434,7 @@ async function renderTransactions(transactions) {
     tableBodyTransactions.replaceChildren(); // Rensa tabellen
 
     // Loopa igenom alla coins och skapa en rad i tabellen för varje coin
-    transactions.forEach(transaction => {
+    for (const transaction of transactions) {
 
         // Skapa själva raden som transaktionen ska ligga i
         const row = document.createElement('tr');
@@ -470,42 +477,82 @@ async function renderTransactions(transactions) {
             const btnEditTransaction = document.createElement('button');
             btnEditTransaction.classList.add('btnEditTransaction');
             btnEditTransaction.textContent = '✏️';
+            btnEditTransaction.style.fontSize = "15px";
             btnEditTransaction.onclick = () => { 
                 editTransaction(
                     btnEditTransaction, 
-                    btnUpdateTransaction, 
+                    btnUpdateTransaction,
+                    btnCancelChanges,
+                    btnDeleteTransaction, 
                     amountCell, 
                     priceCell);
             };
 
+            let isNumbersValid = false;
             const btnUpdateTransaction = document.createElement('button');
             btnUpdateTransaction.classList.add('btnApplyChanges');
-            btnUpdateTransaction.textContent = '✔️';
+            btnUpdateTransaction.textContent = '✓';
+            btnUpdateTransaction.style.color = 'green';
+            btnUpdateTransaction.style.fontSize = "15px";
+            btnUpdateTransaction.style.fontWeight = "bold";
             btnUpdateTransaction.style.display = 'none';
             btnUpdateTransaction.onclick = () => {
-                saveChanges(
-                    btnUpdateTransaction, 
+
+                console.log(isNumbersValid);
+                isNumbersValid = validateNumbers(amountCell.textContent, priceCell.textContent);
+                console.log(isNumbersValid);
+
+
+                if (isNumbersValid === true) {
+
+                    saveChanges(
+                        btnEditTransaction, 
+                        btnUpdateTransaction, 
+                        amountCell, 
+                        priceCell, 
+                        transaction.id);
+                    updateTransaction(
+                        transaction.id, 
+                        transaction.coinId,
+                        transaction.name,
+                        transaction.ticker,
+                        transaction.type,
+                        amountCell.textContent,
+                        priceCell.textContent,
+                        transaction.date);
+                }
+            };
+
+            const btnCancelChanges = document.createElement('button');
+            btnCancelChanges.classList.add('btnCancelChanges');
+            btnCancelChanges.textContent = '✘';
+            btnCancelChanges.style.color = 'green';
+            btnCancelChanges.style.fontSize = "15px";
+            btnCancelChanges.style.fontWeight = "bold";
+            btnCancelChanges.style.display = 'none';
+            btnCancelChanges.onclick = () => {
+                cancelChanges(
                     btnEditTransaction, 
-                    amountCell, priceCell, 
-                    transaction.id);
-                updateTransaction(
-                    transaction.id, 
-                    transaction.coinId,
-                    transaction.name,
-                    transaction.ticker,
-                    transaction.type,
-                    amountCell.textContent,
-                    priceCell.textContent,
-                    transaction.date);
+                    btnUpdateTransaction,
+                    btnCancelChanges,
+                    btnDeleteTransaction, 
+                    amountCell,
+                    priceCell,
+                    transaction.coinAmount, 
+                    transaction.coinPrice);
             };
 
             const btnDeleteTransaction = document.createElement('button');
             btnDeleteTransaction.classList.add('btnDeleteTransaction');
-            btnDeleteTransaction.textContent = '❌';
+            btnDeleteTransaction.textContent = '✘';
+            btnDeleteTransaction.style.color = 'red';
+            btnDeleteTransaction.style.fontSize = "15px";
+            btnDeleteTransaction.style.fontWeight = "bold";
+
             btnDeleteTransaction.onclick = () => deleteTransaction(transaction.id);
 
             // Lägger till knappen i actionCell
-            actionCell.append(btnEditTransaction, btnUpdateTransaction, btnDeleteTransaction);
+            actionCell.append(btnEditTransaction, btnUpdateTransaction, btnCancelChanges, btnDeleteTransaction);
         } else{
 
             // Dölj raden för 'Add'-transaktioner
@@ -517,7 +564,27 @@ async function renderTransactions(transactions) {
 
         // Lägger till raden i tabellen
         tableBodyTransactions.appendChild(row);
-    });
+    };
+}
+
+async function cancelChanges(btnEdit, btnUpdate, btnCancel, btnDelete, amountCell, priceCell, amount, price) {
+    btnUpdate.style.display = 'none'; 
+    btnEdit.style.display = 'inline-block';
+    btnCancel.style.display = 'none';
+    btnDelete.style.display = 'inline-block';
+
+    amountCell.style.backgroundColor = ''; 
+    priceCell.style.backgroundColor = ''; 
+
+    amountCell.textContent = amount;
+    priceCell.textContent = '$' + price;
+
+    amountCell.contentEditable = false; 
+    priceCell.contentEditable = false;
+
+    const selection = window.getSelection();
+    selection.removeAllRanges(); 
+
 }
 
 // Ta bort ett coin från portfolion
@@ -532,15 +599,17 @@ async function deleteCoin(coinId) {
 }
 
 // Redigera en transaktion
-async function editTransaction(btnEdit, btnUpdate, amountCell, priceCell) {
+async function editTransaction(btnEdit, btnUpdate, btnCancel, btnDelete, amountCell, priceCell) {
 
     // Visa eller dölj knappar
     btnEdit.style.display = 'none'; 
     btnUpdate.style.display = 'inline-block';
+    btnCancel.style.display = 'inline-block';
+    btnDelete.style.display = 'none';
 
     // Ändra bakgrundsfärg för att visa att raden är redigerbar
-    amountCell.style.backgroundColor = 'salmon'; 
-    priceCell.style.backgroundColor = 'salmon'; 
+    amountCell.style.backgroundColor = '#FFDAB9'; 
+    priceCell.style.backgroundColor = '#FFDAB9'; 
 
     // Gör cellerna redigerbara
     amountCell.contentEditable = true; 
@@ -564,12 +633,29 @@ async function markAllText(cell){
     selection.addRange(range);
 }
 
+function validateNumbers(amount, price){
+
+    const sanitizedAmount = sanitizeAndConvert(amount);
+    const sanitizedPrice = sanitizeAndConvert(price);
+
+    console.log(sanitizedAmount);
+    console.log(sanitizedPrice);
+
+    if (isNaN(sanitizedAmount) || isNaN(sanitizedPrice) || 
+        sanitizedAmount <= 0 || sanitizedPrice <= 0) {
+        alert('Ange giltiga värden..');
+        return false;
+    } else {
+        return true;
+    }
+}
+
 // Uppdatera en transaktion
-async function saveChanges(btnUpdate, btnEdit, amountCell, priceCell) {
+async function saveChanges(btnEdit, btnUpdate, amountCell, priceCell) {
     
     // Göm eller visa knappar
-    btnUpdate.style.display = 'none'; 
     btnEdit.style.display = 'inline-block';
+    btnUpdate.style.display = 'none'; 
 
     // Återställ bakgrundsfärg
     amountCell.style.backgroundColor = ''; 

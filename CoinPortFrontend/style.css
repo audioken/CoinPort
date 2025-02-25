@@ -37,14 +37,14 @@ h2{
 button{
     border: none;
     border-radius: 10px;
-    height: 25px;
-    width: 25px;
+    height: 35px;
+    width: 35px;
     margin: 2px;
     background-color: #ffffff;
 }
 
 button:hover{
-    background-color: #f0f0f0;
+    background-color: #feffb3;
 }
 
 button:active{
@@ -108,167 +108,6 @@ input:checked + .slider {
     border-radius: 50%;
 }
 
-/* .tableAllTitlesContainer{
-    background-color: #ffcb3d;
-    border-radius: 10px;
-    height: 50px;
-    min-width: 1000px;
-    display: flex;
-    justify-content: left;
-    align-items: center;
-}
-
-table {
-    background-color:rgb(236, 227, 215);
-    background-color:rgb(255, 255, 255);
-    padding: 10px;
-    width: 1000px;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.allTablesContainer{
-    margin-bottom: 100px;
-}
-
-.tableAllTitlesText{
-    margin-left: 20px;
-}
-
-#tableTitleTotalsContainer{
-    background-color: #f0b7f6;
-}
-
-#tableTitlePortfolioContainer{
-    background-color: #ffcb3d;
-}
-
-#tableTitleTransactionsContainer{
-    background-color: #a2ee5f;
-}
-
-#tableTitleMarketContainer{
-    background-color: #bddbe6;
-}
-
-th{
-    background-color: #e9d292;
-    padding: 10px;
-    border-radius: 10px;
-}
-
-td, th {
-    vertical-align: middle;
-}
-
-#tablePortfolio td:nth-child(8) {
-    white-space: nowrap; 
-}
-
-#tableTotals{
-    background-color: #fcf5fd;
-}
-
-#tablePortfolio{
-    background-color: #f9f1d9;
-}
-
-#tableTransactions{
-    background-color: rgb(227, 248, 230);
-}
-
-#tableMarket{
-    background-color: #ecf5fa;
-}
-
-table td {
-    border-radius: 10px;
-}
-
-#tableHeadTotals th{
-    background-color: #f7dff9;
-    font-size: 20px;
-}
-
-#tableHeadPortfolio th{
-    background-color: #e9d292;
-}
-
-#tableHeadTransactions th{
-    background-color: #cce9b3;
-}
-
-#tableHeadMarket th{
-    background-color: #d3dfe6;
-}
-
-.market {
-    border-bottom: 1px solid #d3d3d3;
-    border-radius: 10px;
-}
-
-.cellTotal{
-    font-size: 50px;
-    font-weight: 600;
-}
-
-.cellROI{
-    font-size: 30px;
-    font-weight: 500;
-}
-
-.cell24h{
-    font-size: 30px;
-    font-weight: 500;
-}
-
-tbody tr:hover td {
-    background-color: #ffffff;
-}
-
-
-
-table {
-    border-collapse: separate; 
-    border-radius: 12px; 
-    overflow: hidden; 
-    margin-top: -10px;
-    margin-bottom: 10px;
-    padding-top: 5px;
-    border-bottom: 1px solid #d3d3d3;
-    border-left: 1px solid #d3d3d3;
-    border-right: 1px solid #d3d3d3;
-}
-  
-td, th {
-    padding: 8px;
-    border-radius: 8px; 
-}
-
-input{
-    width: 120px;
-    padding: 6px 6px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-    border-radius: 10px;
-}
-
-#inputSearchCoin{
-    width: 80px;
-    margin-left: 10px;
-}
-
-
-.allTablesContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    gap: 10px;
-} */
-
 /* TABELLER */
 .allTablesContainer {
     display: flex;
@@ -312,10 +151,15 @@ table {
 }
 
 /* Specifika tabellbakgrunder */
-#tableTotals { background-color: #fcf5fd; }
+/* #tableTotals { background-color: #fcf5fd; }
 #tablePortfolio { background-color: #f9f1d9; }
 #tableTransactions { background-color: #e3f8e6; }
 #tableMarket { background-color: #ecf5fa; }
+
+#tableTotals { background-color: #fef9ff; }
+#tablePortfolio { background-color: #fffcf2; }
+#tableTransactions { background-color: #f9fffa; }
+#tableMarket { background-color: #f5fafd; } */
 
 /* Tabellens celler */
 th, td {
@@ -343,7 +187,11 @@ th {
 
 #tablePortfolio td:nth-child(8) { white-space: nowrap; }
 
-tbody tr:hover td { background-color: #ffffff; }
+tbody tr:hover td { background-color: #e7e7e7; }
+
+/* Radlinjer */
+tr{ border-bottom: 1px solid #d8d8d8; }
+tbody tr:last-child{ border-bottom: none; }
 
 .market {
     border-bottom: 1px solid #d3d3d3;
@@ -363,37 +211,51 @@ tbody tr:hover td { background-color: #ffffff; }
     table-layout: fixed;
 }
 
-#rankHeadCell {
-    width: 50px; 
+.tableTransactionsContainer tbody {
+    display: block;
+    max-height: 400px; 
+    overflow-y: auto;
 }
 
-#tableBodyMarket td:first-child {
-    width: 54px; 
+.tableTransactionsContainer thead, .tableTransactionsContainer tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
 }
 
-#coinHeadCell {
-    width: 150px; 
+.tablePortfolioContainer tbody {
+    display: block;
+    max-height: 400px; 
+    overflow-y: auto;
 }
 
-#tableBodyMarket td:nth-child(2) {
-    width: 154px; 
+.tablePortfolioContainer thead, .tablePortfolioContainer tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
 }
 
-#_24hHeadCell {
-    width: 80px; 
-}
+/* Justera bredden för kolumnerna i marknadstabellen */
+#headCellMarketRank { width: 50px; }
+#tableBodyMarket td:first-child { width: 54px; }
 
-#tableBodyMarket td:nth-child(5) {
-    width: 84px; 
-}
+#headCellMarketCoin { width: 150px; }
+#tableBodyMarket td:nth-child(2) { width: 154px; }
 
-#actionHeadCell {
-    width: 50px; 
-}
+#headCellMarket24h { width: 80px; }
+#tableBodyMarket td:nth-child(5) { width: 84px; }
 
-#tableBodyMarket td:last-child {
-    width: 54px; 
-}
+#headCellMarketAction { width: 50px; }
+#tableBodyMarket td:last-child { width: 54px; }
+
+#headCellPortfolioAction { width: 160px; }
+#tableBodyPortfolio td:last-child { width: 164px; }
+
+#headCellTransactionsTimestamp { width: 150px; }
+#tableBodyTransactions td:nth-child(7) { width: 154px; }
+
+#headCellTransactionsAction { width: 80px; }
+#tableBodyTransactions td:last-child { width: 84px; }
 
 /* INPUTS */
 input {
@@ -410,14 +272,14 @@ input {
 #inputSearchCoin {
     width: 80px;
     margin: -8px;
-    margin-left: 4px;
+    margin-left: 8px;
     margin-bottom: -4px;
 }
 
 /* Stil för sorteringspilarna */
 .sort {
     cursor: pointer;
-    margin-left: 5px;
+    margin-left: -2px;
     visibility: hidden; /* Dölj pilarna som standard */
 }
 
@@ -433,4 +295,6 @@ th:hover .sort {
 .sortCoin{
     margin-left: 10px;
 }
+
+
 

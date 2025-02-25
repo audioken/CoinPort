@@ -63,9 +63,9 @@
                     <th>24h <span class="sort" data-column="3" data-order="asc">▼</span></th>
                     <th>Holdings <span class="sort" data-column="4" data-order="asc">▼</span></th>
                     <th>Invested <span class="sort" data-column="5" data-order="asc">▼</span></th>
-                    <th>Current Value <span class="sort" data-column="6" data-order="asc">▼</span></th>
+                    <th>Value <span class="sort" data-column="6" data-order="asc">▼</span></th>
                     <th>ROI <span class="sort" data-column="7" data-order="asc">▼</span></th>
-                    <th>Action</th>
+                    <th id="headCellPortfolioAction">Action</th>
                   </tr>
                 </thead>
               <tbody id="tableBodyPortfolio">
@@ -86,14 +86,14 @@
             <table id="tableTransactions" class="tableTransactions">
               <thead>
                 <tr id="tableHeadTransactions">
-                  <th>Coin <span class="sort sortCoin" data-column="0" data-order="asc">▼</span></th>
-                  <th>Ticker <span class="sort sortCoin" data-column="1" data-order="asc">▼</span></th>
-                  <th>Type <span class="sort sortCoin" data-column="2" data-order="asc">▼</span></th>
-                  <th>Amount <span class="sort sortCoin" data-column="3" data-order="asc">▼</span></th>
-                  <th>Price <span class="sort sortCoin" data-column="4" data-order="asc">▼</span></th>
-                  <th>Value <span class="sort sortCoin" data-column="5" data-order="asc">▼</span></th>
-                  <th>Timestamp</th>
-                  <th>Action</th>
+                  <th>Coin <span class="sort" data-column="0" data-order="asc">▼</span></th>
+                  <th>Ticker <span class="sort" data-column="1" data-order="asc">▼</span></th>
+                  <th>Type <span class="sort" data-column="2" data-order="asc">▼</span></th>
+                  <th>Amount <span class="sort" data-column="3" data-order="asc">▼</span></th>
+                  <th>Price <span class="sort" data-column="4" data-order="asc">▼</span></th>
+                  <th>Value <span class="sort" data-column="5" data-order="asc">▼</span></th>
+                  <th id="headCellTransactionsTimestamp">Timestamp</th>
+                  <th id="headCellTransactionsAction">Action</th>
                 </tr>
               </thead>
               <tbody id="tableBodyTransactions">
@@ -114,13 +114,13 @@
             <table id="tableMarket" class="tableMarket">
               <thead>
                 <tr id="tableHeadMarket">
-                  <th id="rankHeadCell"># <span class="sort sortCoin" data-column="0" data-order="asc">▼</span></th>
-                  <th id="coinHeadCell">Coin <input type="text" id="inputSearchCoin" placeholder="search.."><span class="sort sortCoin" data-column="1" data-order="asc">▼</span></th>
+                  <th id="headCellMarketRank"># <span class="sort sortCoin" data-column="0" data-order="asc">▼</span></th>
+                  <th id="headCellMarketCoin">Coin <input type="text" id="inputSearchCoin" placeholder="search.."><span class="sort sortCoin" data-column="1" data-order="asc">▼</span></th>
                   <th>Ticker <span class="sort" data-column="2" data-order="asc">▼</span></th>
                   <th>Price <span class="sort" data-column="3" data-order="asc">▼</span></th>
-                  <th id="_24hHeadCell">24h <span class="sort" data-column="4" data-order="asc">▼</span></th>
+                  <th id="headCellMarket24h">24h <span class="sort" data-column="4" data-order="asc">▼</span></th>
                   <th>Market Cap <span class="sort sortMarketCap" data-column="5" data-order="asc">▼</span></th>
-                  <th id="actionHeadCell">Action</th>
+                  <th id="headCellMarketAction">Action</th>
                 </tr>
               </thead>
               <tbody id="tableBodyMarket" class="marketBodyScroll">
