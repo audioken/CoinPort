@@ -36,6 +36,7 @@ const tableBodyPortfolio = document.getElementById('tableBodyPortfolio');
 const tableBodyTransactions = document.getElementById('tableBodyTransactions');
 
 document.querySelector('.sortMarketCap').classList.add('active');
+document.querySelector('.sortPortfolioValue').classList.add('active');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// MAIN FUNCTIONS ///
@@ -93,6 +94,9 @@ async function getMarket() {
         priceChange24hPercentCell.style.color = getTrendColor(coin.priceChange24hPercent);
         priceCell.style.color = priceChange24hPercentCell.style.color;
 
+        const volumeCell = document.createElement('td');
+        volumeCell.textContent = '$' + parseFloat(coin.volume).toLocaleString('en-US');
+
         const marketCapCell = document.createElement('td');
         marketCapCell.textContent = '$' + parseFloat(coin.marketCap).toLocaleString('en-US');        
     
@@ -113,7 +117,7 @@ async function getMarket() {
         btnAddCoinToPortfolio.onclick = () => addCoin(coin.coinId, coin.name, coin.ticker, 'Add', 0, 0, Date.now());
         
         // Lägger till alla celler i sina tillhörande HTML-element
-        row.append(rankCell, nameCell, tickerCell, priceCell, priceChange24hPercentCell, marketCapCell, actionCell);
+        row.append(rankCell, nameCell, tickerCell, priceCell, priceChange24hPercentCell, volumeCell, marketCapCell, actionCell);
         actionCell.appendChild(btnAddCoinToPortfolio);
 
         // Lägger till raden i tabellen
@@ -677,17 +681,17 @@ async function restoreChanges(btnEdit, btnUpdate, btnRestore, btnDelete, amountC
 
 }
 
-// Ta bort ett coin från portfolion
+// Ta bort ett coin från portföljen
 async function deleteCoin(coinId) {
     const transactions = await fetchTransactions();
 
-    for (const transaction of transactions) {
-        if (transaction.coinId === coinId) {
-            await deleteTransaction(transaction.id, false);
-        }
-    }
+    // Filtrera ut de transaktioner som matchar coinId
+    const transactionsToDelete = transactions.filter(t => t.coinId === coinId);
 
-    // Uppdatera portfolion efter att transaktionerna tagits bort
+    // Kör alla borttagningar parallellt
+    await Promise.all(transactionsToDelete.map(t => deleteTransaction(t.id, false)));
+
+    // Uppdatera portföljen
     await getTransactions();
     await createPortfolio();
 }

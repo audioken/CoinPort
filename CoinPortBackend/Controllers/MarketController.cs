@@ -56,6 +56,7 @@ namespace CoinPortBackend.Controllers
                     PriceChange24h = c["price_change_24h"]?.Type == JTokenType.Float || c["price_change_24h"]?.Type == JTokenType.Integer
                         ? c["price_change_24h"].Value<decimal>()
                         : 0m,
+                    Volume = c["total_volume"]?.Value<decimal>() ?? 0m,
                     MarketCap = c["market_cap"]?.Value<decimal>() ?? 0m
                 });
 

@@ -257,6 +257,12 @@ tbody tr:last-child{ border-bottom: none; }
 #headCellMarket24h { width: 80px; }
 #tableBodyMarket td:nth-child(5) { width: 84px; }
 
+#headCellMarketVolume { width: 130px; }
+#tableBodyMarket td:nth-child(6) { width: 134px; }
+
+#headCellMarketMarketCap { width: 130px; }
+#tableBodyMarket td:nth-child(7) { width: 134px; }
+
 #headCellMarketAction { width: 50px; }
 #tableBodyMarket td:last-child { width: 54px; }
 
