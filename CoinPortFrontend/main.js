@@ -267,8 +267,17 @@ async function renderPortfolio(coins){
         const coinIdCell = document.createElement('td');
         coinIdCell.textContent = updatedCoinId; 
 
+        const img = document.createElement('img');
+        img.src = marketCoin.image;
+        img.width = 25;
+        img.height = 25;
+
         const nameCell = document.createElement('td');
-        nameCell.textContent = updatedName; 
+        nameCellText = document.createTextNode(updatedName);
+        // nameCell.textContent = updatedName; 
+
+        nameCell.appendChild(img);
+        nameCell.appendChild(nameCellText);
 
         const tickerCell = document.createElement('td');
         tickerCell.textContent = updatedTicker; 
@@ -890,9 +899,9 @@ function searchCoin() {
     const rows = document.querySelectorAll('#tableBodyMarket tr');
 
     rows.forEach(row => {
-        const coinName = row.querySelector('td:first-child').textContent.toLowerCase();
-        const coinTricker = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-        if (coinName.includes(searchInput) || coinTricker.includes(searchInput)) {
+        const coinName = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        const coinTicker = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+        if (coinName.includes(searchInput) || coinTicker.includes(searchInput)) {
             row.style.display = '';
         } else {
             row.style.display = 'none';
@@ -1017,6 +1026,14 @@ async function validateNumbers(amount, price){
 
 // Funktion för att sanera och konvertera cellvärden till nummer
 function sanitizeAndConvert(value) {
+
+    // Kontrollera om värdet matchar datumformatet YYYY-MM-DD HH:MM:SS
+    const dateMatch = value.match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/);
+
+    if (dateMatch) {
+        return new Date(value).getTime(); // Konvertera till tidsstämpel i millisekunder
+    }
+
     // Ta bort alla icke-numeriska tecken förutom punkt och minus
     const sanitizedValue = value.replace(/[^0-9.-]+/g, "");
     return parseFloat(sanitizedValue);

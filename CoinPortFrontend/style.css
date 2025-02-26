@@ -225,7 +225,7 @@ tbody tr:last-child{ border-bottom: none; }
 
 .tablePortfolioContainer tbody {
     display: block;
-    max-height: 400px; 
+    max-height: 800px; 
     overflow-y: auto;
 }
 
@@ -275,8 +275,15 @@ tbody tr:last-child{ border-bottom: none; }
     align-items: center; 
     justify-content: center; 
     gap: 8px; 
-    /* white-space: nowrap;  */
     height: 40px; 
+}
+
+#tablePortfolio tbody td:nth-child(1) { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 8px; 
+    height: 90px; 
 }
 
 
