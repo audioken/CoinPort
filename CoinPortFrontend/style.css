@@ -121,7 +121,7 @@ input:checked + .slider {
     background-color: #ffcb3d;
     border-radius: 10px;
     height: 50px;
-    min-width: 1200px;
+    min-width: 1250px;
     display: flex;
     justify-content: left;
     align-items: center;
@@ -140,7 +140,7 @@ input:checked + .slider {
 table {
     background-color: #fff;
     padding: 10px;
-    width: 1200px;
+    width: 1400px;
     border-radius: 12px;
     text-align: center;
     border-collapse: separate;
@@ -149,17 +149,6 @@ table {
     border: 1px solid #d3d3d3;
     padding-top: 5px;
 }
-
-/* Specifika tabellbakgrunder */
-/* #tableTotals { background-color: #fcf5fd; }
-#tablePortfolio { background-color: #f9f1d9; }
-#tableTransactions { background-color: #e3f8e6; }
-#tableMarket { background-color: #ecf5fa; }
-
-#tableTotals { background-color: #fef9ff; }
-#tablePortfolio { background-color: #fffcf2; }
-#tableTransactions { background-color: #f9fffa; }
-#tableMarket { background-color: #f5fafd; } */
 
 /* Tabellens celler */
 th, td {
@@ -239,29 +228,43 @@ tbody tr:last-child{ border-bottom: none; }
 #headCellPortfolioAction { width: 160px; }
 #tableBodyPortfolio td:last-child { width: 164px; }
 
+
 #headCellTransactionsTimestamp { width: 150px; }
 #tableBodyTransactions td:nth-child(7) { width: 154px; }
 
 #headCellTransactionsAction { width: 80px; }
 #tableBodyTransactions td:last-child { width: 84px; }
 
+
 #headCellMarketRank { width: 50px; }
 #tableBodyMarket td:first-child { width: 54px; }
+
+#headCellMarketCoin { width: 170px; }
+#tableBodyMarket td:nth-child(2) { width: 174px; }
 
 #headCellMarketTicker { width: 100px; }
 #tableBodyMarket td:nth-child(3) { width: 104px; }
 
-#headCellMarketPrice { width: 100px; }
-#tableBodyMarket td:nth-child(4) { width: 104px; }
+#headCellMarketPrice { width: 110px; }
+#tableBodyMarket td:nth-child(4) { width: 114px; }
 
-#headCellMarket24h { width: 80px; }
-#tableBodyMarket td:nth-child(5) { width: 84px; }
+#headCellMarket1h { width: 70px; }
+#tableBodyMarket td:nth-child(5) { width: 74px; }
+
+#headCellMarket24h { width: 70px; }
+#tableBodyMarket td:nth-child(6) { width: 74px; }
+
+#headCellMarket7d { width: 70px; }
+#tableBodyMarket td:nth-child(7) { width: 74px; }
 
 #headCellMarketVolume { width: 130px; }
-#tableBodyMarket td:nth-child(6) { width: 134px; }
+#tableBodyMarket td:nth-child(8) { width: 134px; }
 
 #headCellMarketMarketCap { width: 130px; }
-#tableBodyMarket td:nth-child(7) { width: 134px; }
+#tableBodyMarket td:nth-child(9) { width: 134px; }
+
+#headCellMarketBullishPoints { width: 60px; }
+#tableBodyMarket td:nth-child(10) { width: 64px; }
 
 #headCellMarketAction { width: 50px; }
 #tableBodyMarket td:last-child { width: 54px; }
@@ -277,23 +280,27 @@ tbody tr:last-child{ border-bottom: none; }
 
 #tableMarket tbody td:nth-child(2) { 
     font-weight: 500; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    gap: 8px; 
-    height: 40px; 
+    vertical-align: middle;
+}
+
+#tableMarket tbody td:nth-child(2) img {
+    vertical-align: middle;
+    margin-right: 10px; 
+    margin-top: -5px;
 }
 
 #tablePortfolio tbody td:nth-child(1) { 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    gap: 8px; 
-    height: 90px; 
+    font-weight: 500; 
+    vertical-align: middle;
 }
 
+#tablePortfolio tbody td:nth-child(1) img {
+    vertical-align: middle;
+    margin-right: 10px; 
+    margin-top: -5px;
+}
 
-/* INPUTS */
+/* Alla inputs */
 input {
     width: 120px;
     padding: 6px;
@@ -316,21 +323,17 @@ input {
 .sort {
     cursor: pointer;
     margin-left: -2px;
-    visibility: hidden; /* Dölj pilarna som standard */
+    visibility: hidden; 
 }
 
 th:hover .sort {
-    visibility: visible; /* Visa pilarna när du hovrar över kolumnhuvudet */
+    visibility: visible; 
 }
 
 .sort.active, .sortMarketCap.active{
-    visibility: visible; /* Visa den aktiva pilen */
+    visibility: visible;
 }
 
-/* Stil för sorteringspilarna */
 .sortCoin{
     margin-left: 10px;
 }
-
-
-

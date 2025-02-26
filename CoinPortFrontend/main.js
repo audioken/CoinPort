@@ -60,10 +60,16 @@ async function getMarket() {
 
     marketData = {}; // Nollställ minnet av CoinGecko-data
 
-    coins.forEach(coin => {
+    for (const coin of coins) {
         marketData[coin.coinId] = coin; // Spara coinet med coinId som nyckel
-        
+
         const row = document.createElement('tr'); // Skapa en rad
+
+        if (coin.coinId === 'bitcoin') {
+            console.log(coin.priceChange1hPercent);
+            console.log(coin.priceChange24hPercent);
+            console.log(coin.priceChange7dPercent);
+        }
     
         // Skapa celler för varje värde i coin-objektet
         const coinIdCell = document.createElement('td');
@@ -89,16 +95,27 @@ async function getMarket() {
         const priceCell = document.createElement('td');
         priceCell.textContent = formatPrice(parseFloat(coin.price));
 
+        const priceChange1hPercentCell = document.createElement('td');
+        priceChange1hPercentCell.textContent = parseFloat(coin.priceChange1hPercent).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
+        priceChange1hPercentCell.style.color = getTrendColor(coin.priceChange1hPercent);
+
         const priceChange24hPercentCell = document.createElement('td');
         priceChange24hPercentCell.textContent = parseFloat(coin.priceChange24hPercent).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
         priceChange24hPercentCell.style.color = getTrendColor(coin.priceChange24hPercent);
         priceCell.style.color = priceChange24hPercentCell.style.color;
 
+        const priceChange7dPercentCell = document.createElement('td');
+        priceChange7dPercentCell.textContent = parseFloat(coin.priceChange7dPercent).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + '%';
+        priceChange7dPercentCell.style.color = getTrendColor(coin.priceChange7dPercent);
+
         const volumeCell = document.createElement('td');
         volumeCell.textContent = '$' + parseFloat(coin.volume).toLocaleString('en-US');
 
         const marketCapCell = document.createElement('td');
-        marketCapCell.textContent = '$' + parseFloat(coin.marketCap).toLocaleString('en-US');        
+        marketCapCell.textContent = '$' + parseFloat(coin.marketCap).toLocaleString('en-US'); 
+        
+        const bullishPointsCell = document.createElement('td');
+        bullishPointsCell.textContent = await calculateBullishPoints(coin.marketCap, coin.volume, coin.priceChange1hPercent, coin.priceChange24hPercent, coin.priceChange7dPercent);
     
         // Skapa en cell för knappen som lägger till coinet i portfolion
         const actionCell = document.createElement('td');
@@ -117,13 +134,62 @@ async function getMarket() {
         btnAddCoinToPortfolio.onclick = () => addCoin(coin.coinId, coin.name, coin.ticker, 'Add', 0, 0, Date.now());
         
         // Lägger till alla celler i sina tillhörande HTML-element
-        row.append(rankCell, nameCell, tickerCell, priceCell, priceChange24hPercentCell, volumeCell, marketCapCell, actionCell);
+        row.append(
+            rankCell, nameCell, tickerCell, priceCell, priceChange1hPercentCell, priceChange24hPercentCell, 
+            priceChange7dPercentCell, volumeCell, marketCapCell, bullishPointsCell, actionCell);
         actionCell.appendChild(btnAddCoinToPortfolio);
 
         // Lägger till raden i tabellen
         tableBodyMarket.appendChild(row);
-    });
+    };
     
+}
+
+// Beräkna poäng för att avgöra om ett coin är bullish
+async function calculateBullishPoints(marketCap, volume, change1h, change24h, change7d) {
+
+    let bullishPoints = 0;
+
+    bullishPoints += await calculateBPVolumeToMarketCapRatio(volume, marketCap);
+
+    bullishPoints += await calculateBPPriceTrends(change1h, change24h, change7d);
+
+    return bullishPoints;
+}
+
+// Beräkna poäng för prisförändringar
+async function calculateBPPriceTrends(change1h, change24h, change7d) {
+
+    // Funktion för att beräkna poäng för en enskild tidsperiod (1h, 24h eller 7d)
+    function calculatePoints(change) {
+
+        // Om ingen förändring eller negativ förändring, ge 0 poäng
+        if (change < 0) { return 0; }
+
+        // Om förändringen är positiv, ge poäng baserat på hur stor förändringen är
+        if (change <= 10) { return 1; } 
+        else if (change <= 15) { return 2; } 
+        else if (change <= 25) { return 3; } 
+        else if (change > 25) { return 4; }
+    }
+
+    // Beräkna poängen för varje tidsperiod (1h, 24h och 7d)
+    const points1h = calculatePoints(change1h);
+    const points24h = calculatePoints(change24h);
+    const points7d = calculatePoints(change7d);
+
+    // Summera poängen och returnera resultatet
+    return points1h + points24h + points7d;
+}
+
+// Beräkna poäng för volym jämfört med market cap
+async function calculateBPVolumeToMarketCapRatio(volume, marketCap) {
+    if (volume <= 0 || marketCap <= 0) return 0; 
+
+    let ratio = volume / marketCap;
+    let points = Math.min(Math.floor(ratio * 10), 6);
+
+    return points;
 }
 
 // Lägg till ett coin i portfolion

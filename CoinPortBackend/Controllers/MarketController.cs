@@ -13,14 +13,17 @@ namespace CoinPortBackend.Controllers
         public MarketController(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient; // Spara instansen i ett fält för att göra HTTP-anrop
-            _apiKey = configuration["CoinGeckoApiKey"]; // Hämta API-nyckeln från appsettings.json
 
-            // TODO: Lägg till validering för att säkerställa att _apiKey inte är null eller tom
+            if (configuration == null) { throw new ArgumentNullException(nameof(configuration), "Configuration can't be null."); }
+
+            _apiKey = configuration["CoinGeckoApiKey"]!; // Hämta API-nyckeln från appsettings.json
+
+            if (string.IsNullOrEmpty(_apiKey)) { throw new ArgumentNullException(nameof(_apiKey), "API-key can't be null or empty."); }
         }
 
         // Hämta de 2000 största coinsen från coingecko
         [HttpGet]
-        public async Task<IActionResult> GetAllCoinsFromCoingecko()
+        public async Task<IActionResult> GetMarket()
         {
             // Kontrollera om headern redan finns, annars lägg till den
             if (!_httpClient.DefaultRequestHeaders.Contains("x-cg-demo-api-key"))
@@ -36,7 +39,7 @@ namespace CoinPortBackend.Controllers
             for (int page = 1; page <= totalPages; page++)
             {
                 // Bygg URL för varje sida
-                var url = $"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page={coinsPerPage}&page={page}&sparkline=false";
+                var url = $"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page={coinsPerPage}&page={page}&sparkline=false&price_change_percentage=1h,24h,7d";
 
                 // Hämta data från API:et
                 var response = await _httpClient.GetStringAsync(url);
@@ -50,11 +53,17 @@ namespace CoinPortBackend.Controllers
                     Name = c["name"]?.ToString() ?? "Unknown",
                     Ticker = c["symbol"]?.ToString().ToUpper() ?? "N/A",
                     Price = c["current_price"]?.Value<decimal>() ?? 0m,
-                    PriceChange24hPercent = c["price_change_percentage_24h"] != null && decimal.TryParse(c["price_change_percentage_24h"]?.ToString(), out var percentChange)
+                    PriceChange1hPercent = c["price_change_percentage_1h_in_currency"] != null && decimal.TryParse(c["price_change_percentage_1h_in_currency"]?.ToString(), out var percentChange1h)
+                        ? Math.Round(percentChange1h, 2)
+                        : 0m,
+                    PriceChange24hPercent = c["price_change_percentage_24h_in_currency"] != null && decimal.TryParse(c["price_change_percentage_24h_in_currency"]?.ToString(), out var percentChange)
                         ? Math.Round(percentChange, 2)
                         : 0m,
+                    PriceChange7dPercent = c["price_change_percentage_7d_in_currency"] != null && decimal.TryParse(c["price_change_percentage_7d_in_currency"]?.ToString(), out var percentChange7d)
+                        ? Math.Round(percentChange7d, 2)
+                        : 0m,
                     PriceChange24h = c["price_change_24h"]?.Type == JTokenType.Float || c["price_change_24h"]?.Type == JTokenType.Integer
-                        ? c["price_change_24h"].Value<decimal>()
+                        ? c["price_change_24h"]?.Value<decimal>()
                         : 0m,
                     Volume = c["total_volume"]?.Value<decimal>() ?? 0m,
                     MarketCap = c["market_cap"]?.Value<decimal>() ?? 0m
@@ -65,6 +74,5 @@ namespace CoinPortBackend.Controllers
 
             return Ok(allCoins); // Returnera alla coins i en sammanfattad lista
         }
-
     }
 }

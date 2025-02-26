@@ -1,7 +1,7 @@
 [
   {
     "ContainingType": "CoinPortBackend.Controllers.MarketController",
-    "Method": "GetAllCoinsFromCoingecko",
+    "Method": "GetMarket",
     "RelativePath": "market",
     "HttpMethod": "GET",
     "IsController": true,
